@@ -1,0 +1,50 @@
+:root {
+    --build-icon-size: 0.60;
+}
+.buildWeaponIcon {
+    display: inline-block;
+    flex-shrink: 0;
+    width: calc(64px * var(--build-icon-size));
+    height: calc(64px * var(--build-icon-size));
+    background-image: url("../../../assets/gear.png");
+    background-size: calc(1280px * var(--build-icon-size)) calc(832px * var(--build-icon-size)); /* or set to sheet width/height if scaling */
+    background-repeat: no-repeat;
+}
+.buildContainer {
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+.buildWeaponContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+}
+.buildWeaponInfo {
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+}
+.weaponTitle {
+    font-weight: 700;
+}
+.weaponRarity {
+    font-weight: 600;
+    font-size: 14px;
+}
+.rarity1 { color: #B3B8B5 }
+.rarity2 { color: #E4E2E0 }
+.rarity3 { color: #B3CD2E }
+.rarity4 { color: #48BB51 }
+.rarity5 { color: #5BB9BE }
+.rarity6 { color: #5964E1 }
+.rarity7 { color: #9A5FF1 }
+.rarity8 { color: #CF7046 }

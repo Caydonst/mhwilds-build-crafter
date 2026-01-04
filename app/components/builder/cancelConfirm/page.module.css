@@ -1,0 +1,48 @@
+.cancelConfirmWrapper {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+}
+.cancelConfirmWrapper.open {
+    display: flex;
+}
+.cancelConfirmContainer {
+    padding: 50px;
+    background: #040404;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.cancelConfirmContainer p {
+    color: #fff;
+}
+.btnContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.btnContainer button {
+    width: 100px;
+    height: 30px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.btnContainer button:hover {
+    background: rgba(255, 255, 255, 0.05);
+}

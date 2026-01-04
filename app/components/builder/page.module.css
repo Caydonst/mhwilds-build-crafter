@@ -1,0 +1,432 @@
+:root {
+    --weapon-icon-size: 0.40;
+}
+.builderWrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+.builderWrapper.open {
+    visibility: visible;
+    opacity: 1;
+}
+.builderContainer {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    background: #040404;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;   /* important: don’t center vertically */
+    align-items: stretch;          /* make children full width */
+    backdrop-filter: blur(30px);
+    z-index: 1;
+}
+.buildGeneratorHeader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 0 0 50px;
+    width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+.mainContainer {
+    display: flex;
+    width: 100%;
+    flex: 1 1 auto;                /* grow to fill, shrink if needed */
+    min-height: 0;
+    position: relative;
+
+}
+.buildInfoContainer,
+.generatedBuildsContainer {
+    width: 50%;
+    /* remove height: 100%; let flexbox handle it */
+    min-height: 0;
+}
+.buildInfoContainer::-webkit-scrollbar,
+.generatedBuildsContainer::-webkit-scrollbar,
+.mainContainer::-webkit-scrollbar {
+    width: 20px;
+}
+.buildInfoContainer::-webkit-scrollbar-track,
+.generatedBuildsContainer::-webkit-scrollbar-track,
+.mainContainer::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 10px;
+}
+.buildInfoContainer::-webkit-scrollbar-thumb,
+.generatedBuildsContainer::-webkit-scrollbar-thumb,
+.mainContainer::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.3);
+    border-radius: 10px;
+    border: 6px solid transparent;
+    background-clip: padding-box;
+}
+.footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    flex: 0 0 50px;                /* “no flex, always 50px tall” */
+    gap: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.footer button {
+    width: 140px;
+    height: 34px;
+    border-radius: 5px;
+}
+.cancelBtn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.cancelBtn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+.saveBtn {
+    background: #2d7a4d;
+    border: 1px solid #57ff9d;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.saveBtn:hover {
+    background: #1d4f32;
+}
+.buildInfoContainer {
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    gap: 30px;
+    overflow: auto;                /* internal scroll here */
+}
+
+.buildNameContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    gap: 10px;
+}
+.buildNameLabel {
+    color: #fff;
+    font-size: 16px;
+}
+.buildNameInput {
+    width: 100%;
+    height: 50px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0 14px;
+    color: #fff;
+    outline: none;
+    border-radius: 10px;
+    font-size:  16px;
+}
+.weaponSelector {
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    padding: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    color: #fff;
+    position: relative;
+}
+.weaponSelectorLeft {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+.weaponSelector:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+.weaponDropdown {
+    display: none;
+    position: absolute;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    top: calc(100% + 10px);
+    left: 0;
+    width: 100%;
+    max-width: 400px;
+    background: #040404;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    z-index: 3;
+    overflow: hidden;
+    padding: 5px;
+}
+.weaponDropdown button {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    gap: 5px;
+}
+.weaponDropdown button:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+.weaponDropdown.open {
+    display: flex;
+}
+.dropDownIcon {
+    width: 20px;
+    height: 20px;
+    color: #fff;
+    flex-shrink: 0;
+}
+.skillSelectorContainer {
+    width: 100%;
+    color: #fff;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    gap: 10px;
+}
+.addSkillBtn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    width: 200px;
+    height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 14px;
+}
+.addSkillBtn:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+.generateBuildsBtnContainer {
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 200px;
+}
+.generateBuildsBtnContainer p {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+}
+.generateBuildsBtn {
+    width: 100%;
+    max-width: 200px;
+    height: 40px;
+    background: #2d7a4d;
+    border: 1px solid #57ff9d;
+    color: #fff;
+    border-radius: 8px;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.generateBuildsBtn:hover {
+    background: #1d4f32;
+}
+.generateBuildsBtn:disabled {
+    opacity: 0.5;
+    cursor: unset;
+}
+.generateBuildsBtn:disabled:hover {
+    background: #2d7a4d;
+}
+.generatedBuildsContainer {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+}
+.generatedBuildsContainer .header {
+    width: 100%;
+    flex: 0 0 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.generatedBuilds {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    flex: 1 1 auto;
+    width: 100%;
+    position: relative;
+    padding: 20px;
+}
+.noBuildsMsg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(255, 255, 255, 0.5);
+}
+.buildsContainer {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    flex: 1 1 auto;
+    width: 100%;
+    position: relative;
+    gap: 5px;
+}
+.centerArrow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 50;
+    width: 50px;
+    height: 50px;
+    background: #000;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.centerArrow > * {
+    width: 20px;
+    height: 20px;
+    color: rgba(255, 255, 255, 0.6);
+}
+.mainContainer hr {
+    border: none;
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    left: 50%;
+
+    width: 1px;
+    background: rgba(255, 255, 255, 0.1);
+}
+.weaponIcon {
+    display: inline-block;
+    flex-shrink: 0;
+    width: calc(64px * var(--weapon-icon-size));
+    height: calc(64px * var(--weapon-icon-size));
+    background-image: url("../../assets/gear.png");
+    background-size: calc(1280px * var(--weapon-icon-size)) calc(832px * var(--weapon-icon-size)); /* or set to sheet width/height if scaling */
+    background-repeat: no-repeat;
+}
+.bow {
+    background-position: calc((-64px * 13) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.charge-blade {
+    background-position: calc((-64px * 9) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.dual-blades {
+    background-position: calc((-64px * 3) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.great-sword {
+    background-position: calc((-64px * 1) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.gunlance {
+    background-position: calc((-64px * 5) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.hammer {
+    background-position: calc((-64px * 6) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.heavy-bowgun {
+    background-position: calc((-64px * 12) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.hunting-horn {
+    background-position: calc((-64px * 7) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.insect-glaive {
+    background-position: calc((-64px * 10) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.lance {
+    background-position: calc((-64px * 4) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.light-bowgun {
+    background-position: calc((-64px * 11) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.long-sword {
+    background-position: calc((-64px * 2) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.switch-axe {
+    background-position: calc((-64px * 8) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.sword-shield {
+    background-position: 0 calc(-64px * var(--weapon-icon-size));
+}
+
+@media (max-width: 800px) {
+    .builderContainer {
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        border: none;
+        border-radius: 0;
+    }
+    .mainContainer {
+        flex-direction: column;
+        overflow-y: auto;   /* scroll HERE on mobile */
+        /* flex: 1 1 auto and min-height: 0 are inherited from base */
+    }
+
+    .buildInfoContainer,
+    .generatedBuildsContainer {
+        width: 100%;
+        /* Let them size to content instead of forcing height */
+        height: auto;
+        min-height: auto;
+        overflow: visible;  /* or overflow: unset; both okay */
+        flex: 0 0 auto;     /* take up only as much space as content needs */
+    }
+
+    .builderContainer hr {
+        display: none;
+    }
+    .centerArrow {
+        display: none;
+    }
+    .footer {
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+    .builderContainer hr {
+        display: none;
+    }
+    @media (max-width: 500px) {
+        .weaponSelector {
+            font-size: 12px;
+        }
+    }
+}
