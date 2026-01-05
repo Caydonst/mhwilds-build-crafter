@@ -16,12 +16,27 @@ export type Skill = {
     kind: string,
     icon: SkillIcon
 }
+type WeaponSkillRank = {
+    id: number,
+    name: string,
+    description: string,
+    level: number
+}
+type WeaponSkills = {
+    id: number,
+    name: string,
+    description: string,
+    skill: WeaponSkillRank,
+    kind: string,
+    icon: SkillIcon
+}
 
 type Weapon = {
     id: number;
     type: string;
     name: string;
     rarity: number;
+    skills: SkillRank[];
 }
 type Armor = {
     id: number;

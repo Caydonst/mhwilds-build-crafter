@@ -7,6 +7,8 @@ import fetchAll from "@/app/api/buildGenerator/buildGenerator"
 
 export default function Home() {
     const [skillData, setSkillData] = useState(null);
+    const [weaponData, setWeaponData] = useState(null);
+    const [armorData, setArmorData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [builderOpen, setBuilderOpen] = useState(false);
@@ -15,7 +17,9 @@ export default function Home() {
         const fetchData = async () => {
             try {
                 const response = await fetchAll();
-                setSkillData(response)
+                setSkillData(response.skills)
+                setWeaponData(response.weapons)
+                setArmorData(response.armor)
             } catch (err) {
                 setError(err.message);
             } finally {

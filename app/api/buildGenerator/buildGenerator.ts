@@ -85,7 +85,7 @@ export async function fetchSkills(): Promise<any> {
         throw error; // Re-throw the error if necessary for the caller to handle
     }
 }
-let weapons: any[];
+let weapons;
 let armor;
 let skills;
 
@@ -97,7 +97,7 @@ export default async function fetchAll() {
     skills = await fetchSkills();
     console.log(skills);
 
-    return skills;
+    return {weapons, armor, skills};
 }
 
 export function generateBuild(skills: any, selectedWeapon: any) {
@@ -110,7 +110,7 @@ export function generateBuild(skills: any, selectedWeapon: any) {
                 skills.forEach((skill) => {
                     if (weaponSkill.skill.name === skill.name && weaponSkill.level === skill.level) {
                         const build: Build = {
-                            weapon: {id: index, type:weapon.kind, name: weapon.name, rarity: weapon.rarity},
+                            weapon: {id: index, type:weapon.kind, name: weapon.name, rarity: weapon.rarity, skills: weapon.skills},
                             helmet: null,
                             chest: null,
                             arms: null,

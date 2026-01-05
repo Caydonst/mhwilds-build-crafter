@@ -1,27 +1,7 @@
 import styles from "./page.module.css"
 import {ChevronDownIcon, ChevronUpIcon, XMarkIcon} from "@heroicons/react/24/outline"
 import React, {useEffect, useState, useRef} from "react";
-
-type SkillRank = {
-    id: number,
-    name: string,
-    description: string,
-    level: number
-}
-
-type SkillIcon = {
-    id: number,
-    kind: string,
-}
-
-type Skill = {
-    id: number,
-    name: string,
-    description: string,
-    ranks: SkillRank[],
-    kind: string,
-    icon: SkillIcon
-}
+import type {Skill} from "@/app/api/types/types"
 
 type SkillFilter = {
     id: number,

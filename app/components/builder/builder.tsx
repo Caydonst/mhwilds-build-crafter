@@ -17,10 +17,11 @@ type SkillFilter = {
 type props = {
     builderOpen: boolean;
     setBuilderOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    weaponData: any;
     skillData: Skill[];
 }
 
-export default function Builder({ builderOpen, setBuilderOpen, skillData }: props) {
+export default function Builder({ builderOpen, setBuilderOpen, weaponData, skillData }: props) {
     const [openConfirmContainer, setOpenConfirmContainer] = useState(false);
     const [skillFilters, setSkillFilters] = useState<SkillFilter[]>([{id: 0, name: "Select", level: 1}]);
     const [weapons, setWeapons] = useState<string[]>();
@@ -139,7 +140,7 @@ export default function Builder({ builderOpen, setBuilderOpen, skillData }: prop
                             {generatedBuilds.length > 0 ? (
                                 <div className={styles.buildsContainer}>
                                     {generatedBuilds.map((build: BuildType, index: number) => (
-                                        <Build build={build} key={index} />
+                                        <Build build={build} skillData={skillData} key={index} />
                                     ))}
                                 </div>
                             ) : (

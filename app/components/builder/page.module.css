@@ -53,18 +53,18 @@
     min-height: 0;
 }
 .buildInfoContainer::-webkit-scrollbar,
-.generatedBuildsContainer::-webkit-scrollbar,
+.generatedBuilds::-webkit-scrollbar,
 .mainContainer::-webkit-scrollbar {
     width: 20px;
 }
 .buildInfoContainer::-webkit-scrollbar-track,
-.generatedBuildsContainer::-webkit-scrollbar-track,
+.generatedBuilds::-webkit-scrollbar-track,
 .mainContainer::-webkit-scrollbar-track {
     background: transparent;
     border-radius: 10px;
 }
 .buildInfoContainer::-webkit-scrollbar-thumb,
-.generatedBuildsContainer::-webkit-scrollbar-thumb,
+.generatedBuilds::-webkit-scrollbar-thumb,
 .mainContainer::-webkit-scrollbar-thumb {
     background: rgba(255,255,255,0.3);
     border-radius: 10px;
@@ -285,6 +285,7 @@
     width: 100%;
     position: relative;
     padding: 20px;
+    overflow: auto;
 }
 .noBuildsMsg {
     position: absolute;

@@ -24,6 +24,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     gap: 10px;
     color: #fff;
 }
@@ -33,8 +34,32 @@
     align-items: start;
     flex-direction: column;
 }
+.weaponContainerHeader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.skillsContainer {
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    gap: 5px;
+}
+.skill {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 10px;
+    width: 100%;
+}
 .weaponTitle {
     font-weight: 700;
+    color: #fff;
 }
 .weaponRarity {
     font-weight: 600;
@@ -48,3 +73,55 @@
 .rarity6 { color: #5964E1 }
 .rarity7 { color: #9A5FF1 }
 .rarity8 { color: #CF7046 }
+
+.skillIcon {
+    display: inline-block;
+    flex-shrink: 0;
+    width: calc(100px * var(--size-factor));
+    height: calc(100px * var(--size-factor));
+    background-image: url("../../../assets/skills.png");
+    background-size: calc(1400px * var(--size-factor)) calc(100px * var(--size-factor)); /* or set to sheet width/height if scaling */
+    background-repeat: no-repeat;
+}
+.skill1 {
+    background-position: 0 0;
+}
+.skill2 {
+    background-position: calc(-100px * var(--size-factor)) 0;
+}
+.skill3 {
+    background-position: calc(-200px * var(--size-factor)) 0;
+}
+.skill4 {
+    background-position: calc(-300px * var(--size-factor)) 0;
+}
+.skill5 {
+    background-position: calc(-400px * var(--size-factor)) 0;
+}
+.skill6 {
+    background-position: calc(-500px * var(--size-factor)) 0;
+}
+.skill7 {
+    background-position: calc(-600px * var(--size-factor)) 0;
+}
+.skill8 {
+    background-position: calc(-700px * var(--size-factor)) 0;
+}
+.skill9 {
+    background-position: calc(-800px * var(--size-factor)) 0;
+}
+.skill10 {
+    background-position: calc(-900px * var(--size-factor)) 0;
+}
+.skill11 {
+    background-position: calc(-1000px * var(--size-factor)) 0;
+}
+.skill12 {
+    background-position: calc(-1100px * var(--size-factor)) 0;
+}
+.skill13 {
+    background-position: calc(-1200px * var(--size-factor)) 0;
+}
+.skill14 {
+    background-position: calc(-1300px * var(--size-factor)) 0;
+}
