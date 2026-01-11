@@ -6,7 +6,7 @@
     display: flex;
     justify-content: start;
     align-items: center;
-    gap: 20px;
+    gap: 10px;
     position: relative;
 }
 .skillFilterWrapper {
@@ -78,7 +78,7 @@
 }
 .skillLvlDropdown {
     position: absolute;
-    top: calc(100% + 10px);
+    top: calc(100% + 5px);
     left: 0;
     width: 100%;
     display: none;
@@ -138,7 +138,7 @@
     justify-content: start;
     align-items: center;
     flex-direction: column;
-    top: calc(100% + 10px);
+    top: calc(100% + 5px);
     left: 0;
     width: 100%;
     max-width: 400px;
@@ -148,6 +148,9 @@
     border-radius: 8px;
     z-index: 3;
     overflow: hidden;
+}
+.searchContainer input:focus {
+    border-color: #fff;
 }
 .searchContainer {
     position: sticky;
@@ -268,6 +271,10 @@
 @media (max-width: 500px) {
     .skillFilterContainer {
         font-size: 12px;
-        gap: 10px;
+    }
+}
+@media (max-width: 350px) {
+    .lvlText {
+        display: none;
     }
 }

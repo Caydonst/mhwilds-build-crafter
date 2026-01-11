@@ -1,16 +1,12 @@
 import styles from "./page.module.css"
 import {ChevronDownIcon, ChevronUpIcon, XMarkIcon} from "@heroicons/react/24/outline"
 import React, {useEffect, useState, useRef} from "react";
-import type {Skill} from "@/app/api/types/types"
+import type {Skill, SkillFilter} from "@/app/api/types/types"
 
-type SkillFilter = {
-    id: number,
-    name: string,
-}
 
 type props = {
     id: number;
-    skillData: Skill[];
+    skillData: Skill[] | null;
     onRemove: (id: number) => void;
     thisSkill: SkillFilter;
     skillFilters: SkillFilter[];
@@ -31,7 +27,7 @@ export default function SkillSelector({ id, thisSkill, skillFilters, setSkillFil
         console.log(skillFilters)
         const updatedSkillFilters = skillFilters.map(skillFilter => {
             if (skillFilter.id === id) {
-                return {...skillFilter, name: skill.name, level: 1}
+                return {...skillFilter, skillId: skill.id, name: skill.name, level: 1}
             }
             return skillFilter
         })
@@ -93,12 +89,15 @@ export default function SkillSelector({ id, thisSkill, skillFilters, setSkillFil
 
     const filteredSkills = React.useMemo(
         () =>
-            skillData
+            (skillData ?? [])
+                .filter((skill: Skill) =>
+                !skillFilters.some((f) => f.skillId === skill.id)
+            )
                 .filter(skill =>
                     skill.name.toLowerCase().startsWith(searchQuery.toLowerCase())
                 )
                 .sort((a, b) => a.icon.id - b.icon.id),
-        [skillData, searchQuery]
+        [skillData, skillFilters, searchQuery]
     );
 
     return (
@@ -122,23 +121,23 @@ export default function SkillSelector({ id, thisSkill, skillFilters, setSkillFil
                         </>
                     )}
                 </div>
+                {openSkillFilterDropdown && (
+                    <div className={`${styles.skillFilterDropdown} ${openSkillFilterDropdown ? styles.open : ""}`}>
+                        <div className={styles.searchContainer}>
+                            <input type={"text"} placeholder={"Search"} value={searchQuery} onChange={(e) => updateSearchQuery(e)} />
+                        </div>
+                        <div className={styles.skillsContainer}>
+                            {filteredSkills.map((skill, index) => (
+                                <button key={skill.id} onClick={() => selectSkill(skill)}><span className={`${styles.skillIcon} ${styles[`skill${skill.icon.id}`]}`} />{skill.name}</button>
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
-            {openSkillFilterDropdown && (
-                <div className={`${styles.skillFilterDropdown} ${openSkillFilterDropdown ? styles.open : ""}`} ref={skillDropdownRef}>
-                    <div className={styles.searchContainer}>
-                        <input type={"text"} placeholder={"Search"} value={searchQuery} onChange={(e) => updateSearchQuery(e)} />
-                    </div>
-                    <div className={styles.skillsContainer}>
-                        {filteredSkills.map((skill, index) => (
-                            <button key={index} onClick={() => selectSkill(skill)}><span className={`${styles.skillIcon} ${styles[`skill${skill.icon.id}`]}`} />{skill.name}</button>
-                        ))}
-                    </div>
-                </div>
-            )}
             {selectedSkill  &&
                 <div className={styles.lvlSelectorWrapper} ref={skillLvlDropdownRef}>
                     <div className={styles.lvlSelectorContainer} onClick={() => setOpenSkillLvlDropdown(!openSkillLvlDropdown)}>
-                        <p>Lvl</p>
+                        <p className={styles.lvlText}>Lvl</p>
                         <p>{skillLevel}</p>
                         <div className={styles.lvlSelector}>
                             <span className={styles.lvlDownBtn}><ChevronDownIcon /></span>

@@ -1,35 +1,31 @@
 import styles from "./page.module.css"
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import CancelConfirm from "./cancelConfirm/cancelConfirm"
 import SkillSelector from "./skillSelector/skillSelector"
 import {ChevronDownIcon, ChevronRightIcon, XMarkIcon} from "@heroicons/react/24/outline";
 import {generateBuild} from "@/app/api/buildGenerator/buildGenerator"
-import type {Skill, Build as BuildType} from "@/app/api/types/types"
+import type {Skill, Build as BuildType, Weapon, SkillFilter} from "@/app/api/types/types"
 import Build from "./build/build"
-
-
-type SkillFilter = {
-    id: number;
-    name: string;
-    level: number;
-}
 
 type props = {
     builderOpen: boolean;
     setBuilderOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    weaponData: any;
-    skillData: Skill[];
+    weaponData: Weapon[] | null;
+    skillData: Skill[] | null;
 }
 
 export default function Builder({ builderOpen, setBuilderOpen, weaponData, skillData }: props) {
     const [openConfirmContainer, setOpenConfirmContainer] = useState(false);
-    const [skillFilters, setSkillFilters] = useState<SkillFilter[]>([{id: 0, name: "Select", level: 1}]);
+    const [skillFilters, setSkillFilters] = useState<SkillFilter[]>([{id: 0, skillId: -1, name: "Select", level: 1}]);
     const [weapons, setWeapons] = useState<string[]>();
     const [weaponNames, setWeaponNames] = useState<string[]>(["Bow", "Charge Blade", "Dual Blades", "Great Sword", "Gunlance", "Hammer", "Heavy Bowgun", "Hunting Horn", "Insect Glaive", "Lance", "Light Bowgun", "Long Sword", "Switch Axe", "Sword & Shield"]);
-    const [selectedWeapon, setSelectedWeapon] = useState(null);
+    const [weaponKind, setWeaponKind] = useState<string | null>(null);
     const [openWeaponSelectorDropdown, setOpenWeaponSelectorDropdown] = useState(false);
     const [id, setId] = useState<number>(0);
-    const [generatedBuilds, setGeneratedBuilds] = useState<Build[]>([]);
+    const [generatedBuilds, setGeneratedBuilds] = useState<BuildType[]>([]);
+    const [isGenerating, setIsGenerating] = useState(false);
+
+    const weaponDropdownRef = useRef<HTMLDivElement | null>(null);
 
     function closeBuilder() {
         setBuilderOpen(false);
@@ -37,13 +33,13 @@ export default function Builder({ builderOpen, setBuilderOpen, weaponData, skill
     }
 
     function updateSkillFilters(id: number) {
-        setSkillFilters(prev => [...prev, {id: id+1, name: "Select"}])
-        setId(id);
-
+        const newId = id+1;
+        setSkillFilters(prev => [...prev, {id: newId, skillId: -1, name: "Select", level: 1}]);
+        setId(newId);
     }
 
     function hasValidSkill() {
-        if (selectedWeapon) {
+        if (weaponKind) {
             for (const { name } of skillFilters) {
                 if (name !== "Select") {
                     return true;
@@ -52,6 +48,11 @@ export default function Builder({ builderOpen, setBuilderOpen, weaponData, skill
         } else {
             return false;
         }
+    }
+
+    function updateWeapon(weapon: string) {
+        setWeaponKind(weapon)
+        setOpenWeaponSelectorDropdown(false);
     }
 
     useEffect(() => {
@@ -66,19 +67,48 @@ export default function Builder({ builderOpen, setBuilderOpen, weaponData, skill
 
     useEffect(() => {
         async function loadKinds() {
-            const res = await fetch("https://wilds.mhdb.io/en/weapons");
-            const weapons = await res.json();
-            setWeapons([...new Set(weapons.map(w => w.kind))]);
+            if (weaponData) {
+                setWeapons([...new Set(weaponData.map(w => w.kind))]);
+            }
         }
 
-        loadKinds();
-    }, []);
+        loadKinds().then(() => {return});
+    }, [weaponData]);
 
-    function generateBuilds(skillFilters: SkillFilter[], selectedWeapon: any) {
-        const builds = generateBuild(skillFilters, selectedWeapon)
-        console.log(builds);
-        setGeneratedBuilds(builds);
+    async function generateBuilds(skillFilters: SkillFilter[], weaponKind: string | null) {
+        setIsGenerating(true);
+
+        try {
+            const builds = await new Promise<BuildType[]>((resolve) => {
+                // Yield to the event loop so React can paint "isGenerating = true"
+                setTimeout(() => {
+                    const result = generateBuild(skillFilters, weaponKind);
+                    resolve(result);
+                }, 100);
+            });
+
+            console.log(builds);
+            setGeneratedBuilds(builds);
+        } finally {
+            setIsGenerating(false);
+        }
     }
+
+    useEffect(() => {
+        if (!openWeaponSelectorDropdown) return;
+
+        function handleClickOutside(e: MouseEvent) {
+            if (
+                weaponDropdownRef.current &&
+                !weaponDropdownRef.current.contains(e.target as Node)
+            ) {
+                setOpenWeaponSelectorDropdown(false);
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, [openWeaponSelectorDropdown]);
 
     return (
         <div className={styles.builderWrapper}>
@@ -92,29 +122,33 @@ export default function Builder({ builderOpen, setBuilderOpen, weaponData, skill
                             <label className={styles.buildNameLabel} htmlFor={"buildName"}>Build Name</label>
                             <input className={styles.buildNameInput} id={"buildName"} name={"buildName"} type={"text"} placeholder={"Build name"} />
                         </div>
-                        <div className={styles.buildWeaponContainer}>
-                            <p>Select Weapon:</p>
-                            <div className={styles.weaponSelector} onClick={() => setOpenWeaponSelectorDropdown(!openWeaponSelectorDropdown)}>
-                                {selectedWeapon ? (
-                                    <>
-                                        <div className={styles.weaponSelectorLeft}>
-                                            <span className={`${styles.weaponIcon} ${styles[`${selectedWeapon}`]}`}></span>
-                                            {weaponNames[weapons.indexOf(selectedWeapon)]}
-                                        </div>
-                                        <ChevronDownIcon className={styles.dropDownIcon} />
-                                    </>
-                                ) : (
-                                    <>
+                        <div className={styles.weaponSelectorContainer}>
+                            <p className={styles.weaponS}>Select Weapon:</p>
+                            <div className={styles.weaponSelectorWrapper} ref={weaponDropdownRef}>
+                                <div className={styles.weaponSelector} onClick={() => setOpenWeaponSelectorDropdown(!openWeaponSelectorDropdown)}>
+                                    {weaponKind ? (
+                                        <>
+                                            <div className={styles.weaponSelectorLeft}>
+                                                <span className={`${styles.weaponIcon} ${styles[`${weaponKind}`]}`}></span>
+                                                {weapons && (
+                                                    <span>{weaponNames[weapons.indexOf(weaponKind)]}</span>
+                                                )}
+                                            </div>
+                                            <ChevronDownIcon className={styles.dropDownIcon} />
+                                        </>
+                                    ) : (
+                                        <>
                                     <span>
                                         Select
                                     </span>
-                                        <ChevronDownIcon className={styles.dropDownIcon} />
-                                    </>
-                                )}
+                                            <ChevronDownIcon className={styles.dropDownIcon} />
+                                        </>
+                                    )}
+                                </div>
                                 {openWeaponSelectorDropdown && (
                                     <div className={`${styles.weaponDropdown} ${openWeaponSelectorDropdown ? styles.open : ""}`}>
                                         {weapons?.map((weapon, index) => (
-                                            <button key={index} onClick={() => setSelectedWeapon(weapon)}><span className={`${styles.weaponIcon} ${styles[`${weapon}`]}`} />{weaponNames[index]}</button>
+                                            <button key={index} onClick={() => updateWeapon(weapon)}><span className={`${styles.weaponIcon} ${styles[`${weapon}`]}`} />{weaponNames[index]}</button>
                                         ))}
                                     </div>
                                 )}
@@ -125,11 +159,24 @@ export default function Builder({ builderOpen, setBuilderOpen, weaponData, skill
                             {skillFilters.map((skill: SkillFilter) => (
                                 <SkillSelector key={skill.id} id={skill.id} thisSkill={skill} skillFilters={skillFilters} setSkillFilters={setSkillFilters} skillData={skillData} onRemove={removeSkillFilter} />
                             ))}
-                            <button className={styles.addSkillBtn} onClick={() => updateSkillFilters(id+1)}>+ Skill Filter</button>
+                            <button className={styles.addSkillBtn} onClick={() => updateSkillFilters(id)}>+ Skill Filter</button>
                         </div>
                         <div className={styles.generateBuildsBtnContainer}>
-                            <button className={styles.generateBuildsBtn} disabled={!hasValidSkill()} onClick={() => generateBuilds(skillFilters, selectedWeapon)}>Generate Builds</button>
-                            {!hasValidSkill() && (
+                            <button
+                                className={styles.generateBuildsBtn}
+                                disabled={!hasValidSkill() || isGenerating}
+                                onClick={() => generateBuilds(skillFilters, weaponKind)}
+                            >
+                                {isGenerating ? (
+                                    <span className={styles.spinnerWrapper}>
+                                        <span className={styles.spinner}></span>
+                                        Generating...
+                                    </span>
+                                ) : (
+                                    "Generate Builds"
+                                )}
+                            </button>
+                            {!hasValidSkill() && !isGenerating && (
                                 <p>Select a weapon and add skills to generate builds.</p>
                             )}
                         </div>
@@ -137,23 +184,30 @@ export default function Builder({ builderOpen, setBuilderOpen, weaponData, skill
                     <div className={styles.generatedBuildsContainer}>
                         <div className={styles.header}>Generated Builds</div>
                         <div className={styles.generatedBuilds}>
-                            {generatedBuilds.length > 0 ? (
-                                <div className={styles.buildsContainer}>
-                                    {generatedBuilds.map((build: BuildType, index: number) => (
-                                        <Build build={build} skillData={skillData} key={index} />
-                                    ))}
-                                </div>
+                            {isGenerating ? (
+                                <span className={styles.spinnerWrapperBuildsContainer}>
+                                    <span className={styles.spinnerBuildsContainer}></span>
+                                </span>
                             ) : (
-                                <p className={styles.noBuildsMsg}>No builds for this configuration.</p>
+                                generatedBuilds.length > 0 ? (
+                                    <div className={styles.buildsContainer}>
+                                        {generatedBuilds.map((build: BuildType, index: number) => (
+                                            <Build build={build} skillData={skillData} key={index} />
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className={styles.noBuildsMsg}>No builds for this configuration.</p>
+                                )
                             )}
+
                         </div>
                     </div>
-                    <div className={styles.centerArrow}><ChevronRightIcon /></div>
+
                     <hr />
                 </div>
                 <div className={styles.footer}>
                     <button className={styles.cancelBtn} onClick={() => setOpenConfirmContainer(true)}>Cancel</button>
-                    <button className={styles.saveBtn}>Save</button>
+                    {/*<button className={styles.saveBtn}>Save</button>*/}
                 </div>
             </div>
             <CancelConfirm
