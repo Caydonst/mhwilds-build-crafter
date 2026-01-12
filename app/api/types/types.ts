@@ -141,7 +141,6 @@ export interface ArmorSet {
     name: string;
     pieces: Armor[];
     bonus: ArmorSetBonus;
-    groupBonus: ArmorSetBonus;
 }
 
 export interface ArmorBySlot {
@@ -150,6 +149,7 @@ export interface ArmorBySlot {
     arms: Armor[];
     waist: Armor[];
     legs: Armor[];
+    armorSets: ArmorSet[]
 }
 
 /** ---------- Weapons ---------- **/

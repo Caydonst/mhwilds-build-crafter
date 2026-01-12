@@ -106,20 +106,38 @@ export function generateBuild(skillFilters: SkillFilter[], weaponKind: string | 
                 waist: chosenPieces.waist ?? {},
                 legs:  chosenPieces.legs ?? {},
                 charm: chosenPieces.charm ?? {},
-                setBonusSkills: setBonusSkills
+                //setBonusSkills: setBonusSkills
             };
 
             const armorSlots = ["head", "chest", "arms", "waist", "legs"] as const;
-            const armorSets: number[] = []
+            const armorSets = []
+            let counts;
 
-            armorSlots.forEach(slot => {
+            armorSlots.forEach((slot, index) => {
                 const piece = build[slot];
                 if (piece?.armorSet?.id) {
                     armorSets.push(piece.armorSet.id);
+                    //const armorSetName = armorBySlot.armorSets.filter(set => set.id === piece.armorSet?.id)
+                    //armorSets.push(armorSetName[0].bonus?.skill?.name)
                 }
             })
 
-            console.log(armorSets);
+            /*
+            - Count num of repeated numbers e.g. [3, 3, 3, 48, 53] 3: 3, 48: 1, 53: 1
+            - Check for ID in armorSets
+            - Check
+             */
+
+            //console.log(armorSets);
+            counts = armorSets.reduce((accumulator, currentValue) => {
+                // If the number already exists as a key, increment its count.
+                // Otherwise, initialize it to 1.
+                accumulator[currentValue] = (accumulator[currentValue] || 0) + 1;
+                return accumulator;
+            }, {});
+            console.log(counts);
+
+            
 
             builds.push(build);
             return;
