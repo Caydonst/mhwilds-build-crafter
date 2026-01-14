@@ -1,7 +1,7 @@
 "use client"
 import Image from "next/image";
 import styles from "./page.module.css";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import Builder from "@/app/components/builder/builder"
 import fetchAll from "@/app/api/apiCalls/apiCalls"
 import {Weapon, ArmorBySlot, CharmRank, Decoration, Skill} from "@/app/api/types/types"
@@ -37,19 +37,20 @@ export default function Home() {
         fetchData()
     }, [])
 
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
-
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
-
     return (
         <main className={styles.homeContainer}>
             <div className={styles.buildsContainer}>
-                <h1>My Builds</h1>
-                <button className={styles.customBuildBtn} onClick={() => setBuilderOpen(true)}>+ Custom Build</button>
+                {isLoading ? (
+                    <span className={styles.spinnerWrapper}>
+                        <span className={styles.spinner} />
+                        Loading resources...
+                    </span>
+                ) : (
+                    <>
+                        <h1>My Builds</h1>
+                        <button className={styles.customBuildBtn} onClick={() => setBuilderOpen(true)}>+ Custom Build</button>
+                    </>
+                )}
             </div>
             {builderOpen &&
                 <Builder builderOpen={builderOpen} setBuilderOpen={setBuilderOpen} weaponData={weaponData} skillData={skillData} />

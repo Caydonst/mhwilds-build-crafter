@@ -166,7 +166,7 @@ export default function Build({ index, build, skillData }: Props) {
                 {weapon && (
                     <div className={styles.buildPieceContainer}>
                         <div className={styles.pieceContainerHeader}>
-                            <span className={styles.buildPieceIcon} />
+                            <span className={`${styles.buildPieceIcon} ${styles[weapon.kind === null ? "sword-shield" : weapon.kind]}`} />
                             <div className={styles.buildPieceInfo}>
                                 <p className={styles.pieceTitle}>{weapon.name}</p>
                                 <p className={`${styles.pieceRarity} ${styles[`rarity${weapon.rarity}`]}`}>

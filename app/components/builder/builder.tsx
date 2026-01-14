@@ -257,9 +257,9 @@ export default function Builder({ builderOpen, setBuilderOpen, weaponData, skill
                             >
                                 {isGenerating ? (
                                     <span className={styles.spinnerWrapper}>
-                    <span className={styles.spinner} />
-                    Generating...
-                  </span>
+                                        <span className={styles.spinner} />
+                                        Generating...
+                                    </span>
                                 ) : (
                                     "Generate Builds"
                                 )}

@@ -64,8 +64,8 @@ type BestGainByKind = Record<DecorationKind, Record<SlotLevel, SkillGainMap>>;
 // If you already have an ID/name in your DB, you can find it instead.
 const FIXED_WEAPON: BuildWeapon = {
     id: -999999,                // pick a sentinel id that won't collide
-    name: "Artian",
-    kind: null,              // doesn't matter much unless your UI uses it
+    name: "Artian Weapon",
+    kind: "sword-shield",              // doesn't matter much unless your UI uses it
     rarity: 8,
     slots: [3, 3, 3],           // ✅ 3 level-3 slots
     skills: [],                 // ✅ no skills

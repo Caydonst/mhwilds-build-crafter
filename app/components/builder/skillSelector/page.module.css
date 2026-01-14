@@ -182,7 +182,7 @@
     overflow: auto;
 }
 .skillsContainer::-webkit-scrollbar {
-    width: 20px;
+    width: 14px;
 }
 
 .skillsContainer::-webkit-scrollbar-track {
@@ -193,8 +193,8 @@
 .skillsContainer::-webkit-scrollbar-thumb {
     background: rgba(255,255,255,0.3);
     border-radius: 10px;
-    border: 6px solid transparent;
     background-clip: padding-box;
+    border: 4px solid transparent;
     height: 50px;
 }
 .skillFilterDropdown.open {
@@ -270,7 +270,7 @@
 }
 @media (max-width: 500px) {
     .skillFilterContainer {
-        font-size: 12px;
+        font-size: 14px;
     }
 }
 @media (max-width: 350px) {
