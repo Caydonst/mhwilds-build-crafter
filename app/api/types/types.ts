@@ -48,6 +48,27 @@ export interface Sharpness {
 
 /** Decoration slots are just numbers in the API */
 export type DecorationSlot = number;
+export type SlotLevel = 1 | 2 | 3;
+
+export function isSlotLevel(x: unknown): x is SlotLevel {
+    return x === 1 || x === 2 || x === 3;
+}
+export type HasSlots = { slots: number[] };
+
+export function hasSlots(x: unknown): x is HasSlots {
+    return typeof x === "object" && x !== null && Array.isArray((x as HasSlots).slots);
+}
+
+export interface SlotHaving {
+    slots: ReadonlyArray<number>;
+}
+
+export function isSlotHaving(x: unknown): x is SlotHaving {
+    return typeof x === "object" && x !== null && Array.isArray((x as SlotHaving).slots);
+}
+
+export type DecorationKind = "armor" | "weapon";
+
 
 /** Stub of an item used in crafting costs */
 export interface CraftingItem {
@@ -238,6 +259,8 @@ export interface Weapon {
     series: WeaponSeries | null;
 } // :contentReference[oaicite:14]{index=14}
 
+export type BuildWeapon = Pick<Weapon, "id" | "kind" | "name" | "rarity" | "slots" | "skills">;
+
 
 /** ---------- Charms ---------- **/
 
@@ -311,7 +334,7 @@ export interface Decoration {
     description: string;
     slot: number;
     rarity: number;
-    kind: string;                // DecorationKind enum if defined elsewhere
+    kind: DecorationKind;                // DecorationKind enum if defined elsewhere
     skills: DecorationSkill[];
     icon: DecorationIcon;
 }
@@ -322,15 +345,13 @@ export interface SetBonusSkill {
 }
 
 export type ArmorBuild = {
-    //weapon: Weapon | null;
-    head: Armor;
-    chest: Armor;
-    arms: Armor;
-    waist: Armor;
-    legs: Armor;
-    charm: CharmRank;
-    //setBonusSkills: SetBonusSkill[];
-}
+    head: Armor | null;
+    chest: Armor | null;
+    arms: Armor | null;
+    waist: Armor | null;
+    legs: Armor | null;
+    charm: CharmRank | null;
+};
 
 interface Bonuses {
     skillSetBonuses: number[];
@@ -338,14 +359,17 @@ interface Bonuses {
 }
 
 export type DecoPlacement = {
-    slotLevel: 1|2|3;
+    slotLevel: SlotLevel;
     decoration: Decoration | null;
 };
 
+export type BuildDecorationSlot = "head" | "chest" | "arms" | "waist" | "legs" | "weapon";
 
-export type BuildDecorations = Partial<Record<"head" | "chest" | "arms" | "waist" | "legs", DecoPlacement[]>>;
+export type BuildDecorations = Record<BuildDecorationSlot, DecoPlacement[]>;
+
 
 export interface Build {
+    weapon: BuildWeapon;
     armor: ArmorBuild;
     bonuses: Bonuses;
     decorations: BuildDecorations;
