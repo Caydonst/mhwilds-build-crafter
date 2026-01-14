@@ -24,8 +24,10 @@ export default function Builder({ builderOpen, setBuilderOpen, weaponData, skill
     const [id, setId] = useState<number>(0);
     const [generatedBuilds, setGeneratedBuilds] = useState<BuildType[]>([]);
     const [isGenerating, setIsGenerating] = useState(false);
+    const [progress, setProgress] = useState({ tried: 0, total: 0, found: 0, pruned: 0 });
 
     const weaponDropdownRef = useRef<HTMLDivElement | null>(null);
+    const workerRef = useRef<Worker | null>(null);
 
     function closeBuilder() {
         setBuilderOpen(false);
@@ -55,15 +57,9 @@ export default function Builder({ builderOpen, setBuilderOpen, weaponData, skill
         setOpenWeaponSelectorDropdown(false);
     }
 
-    useEffect(() => {
-        console.log(skillFilters);
-    }, [skillFilters]);
-
     const removeSkillFilter = React.useCallback((idToRemove: number) => {
         setSkillFilters(prev => prev.filter(skill => skill.id !== idToRemove));
     }, []);
-
-    console.log(skillFilters[skillFilters.length-1]);
 
     useEffect(() => {
         async function loadKinds() {
@@ -76,23 +72,61 @@ export default function Builder({ builderOpen, setBuilderOpen, weaponData, skill
     }, [weaponData]);
 
     async function generateBuilds(skillFilters: SkillFilter[], weaponKind: string | null) {
+        // kill any previous run
+        workerRef.current?.terminate();
+
         setIsGenerating(true);
+        setProgress({ tried: 0, total: 0, found: 0, pruned: 0 });
 
-        try {
-            const builds = await new Promise<BuildType[]>((resolve) => {
-                // Yield to the event loop so React can paint "isGenerating = true"
-                setTimeout(() => {
-                    const result = generateBuild(skillFilters, weaponKind);
-                    resolve(result);
-                }, 100);
-            });
+        const worker = new Worker(
+            new URL("@/app/api/buildGenerator/buildWorker.ts", import.meta.url)
+        );
+        workerRef.current = worker;
 
-            console.log(builds);
-            setGeneratedBuilds(builds);
-        } finally {
+        worker.onmessage = (e) => {
+            const { type, payload } = e.data;
+
+            if (type === "progress") {
+                setProgress(payload);
+                return;
+            }
+
+            if (type === "done") {
+                setGeneratedBuilds(payload);
+                setIsGenerating(false);
+                worker.terminate();
+                workerRef.current = null;
+                return;
+            }
+
+            if (type === "error") {
+                console.error("Worker generator error:", payload);
+                setIsGenerating(false);
+                worker.terminate();
+                workerRef.current = null;
+            }
+        };
+
+        worker.onerror = (err) => {
+            console.error("Worker error:", err);
             setIsGenerating(false);
-        }
+            worker.terminate();
+            workerRef.current = null;
+        };
+
+        worker.postMessage({ skillFilters, weaponKind });
     }
+
+    function cancelGenerate() {
+        workerRef.current?.terminate();
+        workerRef.current = null;
+        setIsGenerating(false);
+    }
+
+    useEffect(() => {
+        console.log(generatedBuilds)
+    }, [generatedBuilds]);
+
 
     useEffect(() => {
         if (!openWeaponSelectorDropdown) return;
@@ -109,6 +143,11 @@ export default function Builder({ builderOpen, setBuilderOpen, weaponData, skill
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [openWeaponSelectorDropdown]);
+
+    const pct =
+        progress.total > 0 ? (progress.tried / progress.total) * 100 : 0;
+
+    const width = progress.tried > 0 ? Math.max(pct, 1) : 0; // min 1%
 
     return (
         <div className={styles.builderWrapper}>
@@ -185,14 +224,25 @@ export default function Builder({ builderOpen, setBuilderOpen, weaponData, skill
                         <div className={styles.header}>Generated Builds</div>
                         <div className={styles.generatedBuilds}>
                             {isGenerating ? (
-                                <span className={styles.spinnerWrapperBuildsContainer}>
-                                    <span className={styles.spinnerBuildsContainer}></span>
-                                </span>
+                                <div className={styles.progressContainer}>
+                                    <div className={styles.progress}>
+                                        <span className={styles.spinnerWrapper}>
+                                        <span className={styles.spinner}></span>
+                                        Generating builds...
+                                    </span>
+                                    </div>
+                                    <div className={styles.buildsFoundContainer}>
+                                        <h3>Builds Found</h3>
+                                        <p>{progress.found} / 10</p>
+                                    </div>
+                                    <button onClick={cancelGenerate}>Cancel</button>
+                                    {/*<div>Pruned: {progress.pruned.toLocaleString()}</div>*/}
+                                </div>
                             ) : (
                                 generatedBuilds.length > 0 ? (
                                     <div className={styles.buildsContainer}>
                                         {generatedBuilds.map((build: BuildType, index: number) => (
-                                            <Build build={build} skillData={skillData} key={index} />
+                                            <Build key={index} index={index} build={build} skillData={skillData} />
                                         ))}
                                     </div>
                                 ) : (

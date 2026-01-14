@@ -109,20 +109,11 @@ export interface Armor {
     rarity: number;
     defense: ArmorDefense;
     resistances: ArmorResistances;
-    /**
-     * Decoration slots. Position = slot index, value = max decoration level. :contentReference[oaicite:6]{index=6}
-     */
     slots: number[];
-    /**
-     * Skill ranks directly on the armor piece.
-     */
     skills: SkillRank[];
-    /**
-     * Armor set this piece belongs to (if any).
-     */
     armorSet: ArmorSetStub | null;
     crafting: ArmorCrafting;
-} // :contentReference[oaicite:7]{index=7}
+}
 
 interface ArmorSetBonusRank {
     id: number;
@@ -141,6 +132,7 @@ export interface ArmorSet {
     name: string;
     pieces: Armor[];
     bonus: ArmorSetBonus;
+    groupBonus: ArmorSetBonus;
 }
 
 export interface ArmorBySlot {
@@ -168,7 +160,8 @@ export type WeaponKind =
     | 'light-bowgun'
     | 'long-sword'
     | 'switch-axe'
-    | 'sword-shield'; // from Weapon Types table :contentReference[oaicite:8]{index=8}
+    | 'sword-shield'
+    | null;
 
 export type SpecialKind = 'element' | 'status'; // two subtypes listed for WeaponSpecial :contentReference[oaicite:9]{index=9}
 
@@ -328,7 +321,7 @@ export interface SetBonusSkill {
     level: number;
 }
 
-export type Build = {
+export type ArmorBuild = {
     //weapon: Weapon | null;
     head: Armor;
     chest: Armor;
@@ -336,7 +329,26 @@ export type Build = {
     waist: Armor;
     legs: Armor;
     charm: CharmRank;
-    setBonusSkills: SetBonusSkill[];
+    //setBonusSkills: SetBonusSkill[];
+}
+
+interface Bonuses {
+    skillSetBonuses: number[];
+    groupBonuses: number[];
+}
+
+export type DecoPlacement = {
+    slotLevel: 1|2|3;
+    decoration: Decoration | null;
+};
+
+
+export type BuildDecorations = Partial<Record<"head" | "chest" | "arms" | "waist" | "legs", DecoPlacement[]>>;
+
+export interface Build {
+    armor: ArmorBuild;
+    bonuses: Bonuses;
+    decorations: BuildDecorations;
 }
 
 export interface GearWithReqSkills {
@@ -364,3 +376,22 @@ export interface MaxSkillsPerSlotMap {
 }
 
 type MaxSkills = Record<number, number>;
+
+export interface BuildProgress {
+    tried: number;     // leaf combos evaluated
+    found: number;     // valid builds found (<=10)
+    pruned: number;    // optional
+    total: number;     // total upper-bound combos
+}
+
+export interface BuildData {
+    weapons: Weapon[];
+    armorBySlot: ArmorBySlot;
+    charms: CharmRank[];
+    decorations: Decoration[];
+    skills: Skill[];
+}
+
+export type SkillGainMap = Record<number, number>;
+export type SlotCounts = { 1: number; 2: number; 3: number };
+

@@ -55,7 +55,7 @@
 .buildInfoContainer::-webkit-scrollbar,
 .generatedBuilds::-webkit-scrollbar,
 .mainContainer::-webkit-scrollbar {
-    width: 20px;
+    width: 14px;
 }
 .buildInfoContainer::-webkit-scrollbar-track,
 .generatedBuilds::-webkit-scrollbar-track,
@@ -68,9 +68,8 @@
 .mainContainer::-webkit-scrollbar-thumb {
     background: rgba(255,255,255,0.3);
     border-radius: 10px;
-    border: 6px solid transparent;
     background-clip: padding-box;
-    height: 50px;
+    border: 4px solid transparent;
 }
 .footer {
     display: flex;
@@ -178,7 +177,6 @@
     top: calc(100% + 5px);
     left: 0;
     width: 100%;
-    max-width: 400px;
     background: #040404;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
@@ -256,6 +254,9 @@
     font-size: 12px;
 }
 .generateBuildsBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     max-width: 200px;
     height: 40px;
@@ -268,7 +269,7 @@
     transition: 0.3s;
 }
 .generateBuildsBtn:hover {
-    background: #1d4f32;
+    background: #24613d;
 }
 .generateBuildsBtn:disabled {
     opacity: 0.5;
@@ -298,6 +299,7 @@
     align-items: center;
     flex-direction: column;
     flex: 1 1 auto;
+    min-height: 300px;
     width: 100%;
     position: relative;
     padding: 20px;
@@ -354,12 +356,73 @@
     width: 1px;
     background: rgba(255, 255, 255, 0.1);
 }
+.progressContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: #fff;
+    gap: 20px;
+    padding: 20px 0;
+}
+.progress {
+    width: 100%;
+    max-width: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 14px;
+}
+.loadingBar {
+    width: 100%;
+    height: 8px;
+    background: #222;
+    border-radius: 4px;
+    overflow: hidden;
+}
+.progress h3 {
+    font-size: 18px;
+}
+.inner {
+    height: 100%;
+    background: #57ff9d;
+    transition: width 0.15s ease-out; /* smooth animation */
+}
+.buildsFoundContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.buildsFoundContainer h3 {
+    color: #fff;
+    font-size: 18px;
+}
+.progressContainer button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.progressContainer button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
 .spinnerWrapper {
     display: inline-flex;
     align-items: center;
     gap: 8px;
 }
-
 .spinner {
     width: 16px;
     height: 16px;
@@ -444,8 +507,7 @@
 .sword-shield {
     background-position: 0 calc(-64px * var(--weapon-icon-size));
 }
-
-@media (max-width: 800px) {
+@media (max-width: 1000px) {
     .builderContainer {
         left: 0;
         right: 0;
@@ -454,6 +516,8 @@
         border: none;
         border-radius: 0;
     }
+}
+@media (max-width: 800px) {
     .mainContainer {
         flex-direction: column;
         overflow-y: auto;   /* scroll HERE on mobile */
@@ -471,7 +535,7 @@
     }
     .generatedBuildsContainer {
         border-top: 1px solid rgba(255, 255, 255, 0.1);
-        min-height: 300px;
+        flex: 1 1 100%;
     }
     .builderContainer hr {
         display: none;
@@ -486,6 +550,24 @@
     }
     .builderContainer hr {
         display: none;
+    }
+    .progressContainer {
+        position: unset;
+        top: unset;
+        left: unset;
+        transform: unset;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        color: #fff;
+        gap: 20px;
+    }
+    @media (max-width: 600px) {
+        .weaponSelectorWrapper {
+            max-width: unset;
+        }
     }
     @media (max-width: 500px) {
         .buildInfoContainer {

@@ -1,60 +1,381 @@
 import {
+    ArmorBuild,
     Build,
     Weapon,
     Armor,
     ArmorBySlot,
-    Charm,
     CharmRank,
-    Skill,
     SkillFilter,
-    SetBonusSkill,
     GearWithReqSkills,
     GearWithRelevantSkills,
     RelevantSkillsMap,
-    MaxSkillsPerSlotMap
-} from "../types/types"
-import {
-    weapons,
-    armorBySlot,
-    charms,
-    decorations,
-    skills
-} from "@/app/api/apiCalls/apiCalls";
+    MaxSkillsPerSlotMap,
+    BuildProgress,
+    BuildData,
+    SkillGainMap,
+    SlotCounts,
+    DecoPlacement
+} from "../types/types";
 
-
-const gearSlots = [ "head", "chest", "arms", "waist", "legs", "charm" ] as const;
+const gearSlots = ["head", "chest", "arms", "waist", "legs", "charm"] as const;
 type GearSlot = typeof gearSlots[number];
 
+type SlotLevel = 1 | 2 | 3;
+type ArmorSlotKey = "head" | "chest" | "arms" | "waist" | "legs";
 
-export function generateBuild(skillFilters: SkillFilter[], weaponKind: string | null) {
-    // Filter out "empty" filters
-    const filters = skillFilters.filter(skill => skill.skillId !== -1);
-    const filteredDecos = decorations.filter(decoration => decoration.skills.some(decoSkill => skillFilters.some(skill => skill.skillId === decoSkill.skill.id)))
-    console.log("Filtered Decos:");
-    console.log(filteredDecos);
+// NEW/CHANGED: deco kind
+type DecoKind = "armor" | "weapon";
 
-    if (!weaponKind || filters.length === 0) {
-        return []; // we'll just return an array of builds
+// NEW/CHANGED: slots tracked by kind
+type SlotCountsByKind = Record<DecoKind, SlotCounts>;
+
+// NEW/CHANGED: decos grouped by kind and max slot
+type DecosByKindByL = Record<DecoKind, Record<SlotLevel, any[]>>;
+
+// NEW/CHANGED: best gain by kind and slot level
+type BestGainByKind = Record<DecoKind, Record<SlotLevel, SkillGainMap>>;
+
+/* =========================================================
+   FIXED WEAPON
+========================================================= */
+
+// NEW/CHANGED: Create/define the fixed weapon.
+// If you already have an ID/name in your DB, you can find it instead.
+const FIXED_WEAPON = {
+    id: -999999,                // pick a sentinel id that won't collide
+    name: "Artian",
+    kind: null,              // doesn't matter much unless your UI uses it
+    rarity: 8,
+    slots: [3, 3, 3],           // ✅ 3 level-3 slots
+    skills: [],                 // ✅ no skills
+}
+
+// NEW/CHANGED: fixed weapon slot counts (weapon-only)
+const FIXED_WEAPON_SLOT_COUNTS: SlotCounts = { 1: 0, 2: 0, 3: 3 };
+
+/* =========================================================
+   NEW: beam + bounds helpers
+========================================================= */
+
+function countSlots(piece: any): SlotCounts {
+    const c: SlotCounts = { 1: 0, 2: 0, 3: 0 };
+    for (const L of piece?.slots ?? []) {
+        if (L === 1 || L === 2 || L === 3) c[L]++;
+    }
+    return c;
+}
+
+function maxSlotsForCandidates(cands: any[]): SlotCounts {
+    const best: SlotCounts = { 1: 0, 2: 0, 3: 0 };
+    for (const p of cands) {
+        const c = countSlots(p);
+        best[1] = Math.max(best[1], c[1]);
+        best[2] = Math.max(best[2], c[2]);
+        best[3] = Math.max(best[3], c[3]);
+    }
+    return best;
+}
+
+function createMaxSlotsRemainingFromIndex(
+    ordered: GearSlot[],
+    candidatesBySlot: Record<GearSlot, any[]>
+) {
+    const perIndexMax: SlotCounts[] = ordered.map((slot) =>
+        maxSlotsForCandidates(candidatesBySlot[slot])
+    );
+    const out: Record<number, SlotCounts> = {};
+    out[ordered.length] = { 1: 0, 2: 0, 3: 0 };
+
+    for (let i = ordered.length - 1; i >= 0; i--) {
+        const next = out[i + 1];
+        const add = perIndexMax[i];
+        out[i] = { 1: next[1] + add[1], 2: next[2] + add[2], 3: next[3] + add[3] };
+    }
+    return out;
+}
+
+// Recompute maxRemainingFromIndex for an arbitrary recursion order
+function createMaxRemainingFromIndexForOrder(
+    skills: SkillFilter[],
+    maxSkillsPerSlot: MaxSkillsPerSlotMap,
+    ordered: GearSlot[]
+) {
+    const out: Record<number, Record<number, number>> = {};
+    const base: Record<number, number> = {};
+    for (const s of skills) base[s.skillId] = 0;
+
+    out[ordered.length] = { ...base };
+
+    for (let i = ordered.length - 1; i >= 0; i--) {
+        const slot = ordered[i] as keyof MaxSkillsPerSlotMap;
+        const prev = out[i + 1];
+        const add = (maxSkillsPerSlot as any)[slot] as Record<number, number>;
+
+        const combined: Record<number, number> = {};
+        for (const s of skills) {
+            const id = s.skillId;
+            combined[id] = (prev[id] ?? 0) + (add?.[id] ?? 0);
+        }
+        out[i] = combined;
+    }
+    return out;
+}
+
+type BeamState = {
+    depth: number;
+    chosen: Partial<Record<GearSlot, any>>;
+    totals: Record<number, number>;
+    // NEW/CHANGED: track ARMOR slot counts only here (weapon slots are constant)
+    slotsArmor: SlotCounts;
+    score: number;
+};
+
+// prefer meeting requirements, plus slots, plus rarity
+function scoreState(
+    st: BeamState,
+    orderedGearSlots: GearSlot[],
+    skillIds: number[],
+    requiredLevels: Record<number, number>
+) {
+    let satisfied = 0;
+    let remaining = 0;
+
+    for (const id of skillIds) {
+        const have = st.totals[id] ?? 0;
+        const req = requiredLevels[id] ?? 0;
+        satisfied += Math.min(have, req);
+        remaining += Math.max(0, req - have);
     }
 
-    // --- 1. Prepare skill bookkeeping ---
+    // NEW/CHANGED: include weapon slots in "slot value" to bias toward deco flexibility
+    const armorSlotVal =
+        st.slotsArmor[1] * 1 + st.slotsArmor[2] * 3 + st.slotsArmor[3] * 9;
+    const weaponSlotVal =
+        FIXED_WEAPON_SLOT_COUNTS[1] * 1 +
+        FIXED_WEAPON_SLOT_COUNTS[2] * 3 +
+        FIXED_WEAPON_SLOT_COUNTS[3] * 9;
 
+    const slotVal = armorSlotVal + weaponSlotVal;
+
+    let raritySum = 0;
+    for (let i = 0; i < st.depth; i++) {
+        const k = orderedGearSlots[i];
+        raritySum += st.chosen[k]?.rarity ?? 0;
+    }
+
+    return satisfied * 10_000 - remaining * 2_000 + slotVal * 200 + raritySum * 50;
+}
+
+/* =========================================================
+   NEW/CHANGED: DECORATION HELPERS (KIND-AWARE)
+========================================================= */
+
+function groupDecosByMaxSlotAndKind(decos: any[]): DecosByKindByL {
+    const out: DecosByKindByL = {
+        armor: { 1: [], 2: [], 3: [] },
+        weapon: { 1: [], 2: [], 3: [] },
+    };
+
+    for (const d of decos) {
+        const k = (d.kind as DecoKind) ?? "armor";
+        if (d.slot <= 1) out[k][1].push(d);
+        if (d.slot <= 2) out[k][2].push(d);
+        if (d.slot <= 3) out[k][3].push(d);
+    }
+    return out;
+}
+
+function buildBestGainPerSlotLevelAndKind(filters: SkillFilter[], decos: any[]): BestGainByKind {
+    const skillIds = filters.map((f) => f.skillId);
+
+    const best: BestGainByKind = {
+        armor: { 1: {}, 2: {}, 3: {} },
+        weapon: { 1: {}, 2: {}, 3: {} },
+    };
+
+    for (const kind of ["armor", "weapon"] as const) {
+        for (const L of [1, 2, 3] as const) {
+            for (const id of skillIds) best[kind][L][id] = 0;
+        }
+    }
+
+    for (const deco of decos) {
+        const kind = (deco.kind as DecoKind) ?? "armor";
+        const req = deco.slot as SlotLevel;
+
+        for (const s of deco.skills) {
+            const id = s.skill.id;
+            const lvl = s.level;
+
+            for (const L of [req, 2, 3] as const) {
+                if (L >= req && best[kind][L][id] !== undefined) {
+                    best[kind][L][id] = Math.max(best[kind][L][id], lvl);
+                }
+            }
+        }
+    }
+
+    return best;
+}
+
+function maxDecoPossibleForSkillByKind(
+    kind: DecoKind,
+    skillId: number,
+    slots: SlotCounts,
+    bestGainByKind: BestGainByKind
+) {
+    const bestGain = bestGainByKind[kind];
+    return (
+        slots[1] * (bestGain[1][skillId] ?? 0) +
+        slots[2] * (bestGain[2][skillId] ?? 0) +
+        slots[3] * (bestGain[3][skillId] ?? 0)
+    );
+}
+
+// NEW/CHANGED: compute max possible from BOTH armor + weapon slots
+function maxDecoPossibleForSkillCombined(
+    skillId: number,
+    slotsArmor: SlotCounts,
+    slotsWeapon: SlotCounts,
+    bestGainByKind: BestGainByKind
+) {
+    return (
+        maxDecoPossibleForSkillByKind("armor", skillId, slotsArmor, bestGainByKind) +
+        maxDecoPossibleForSkillByKind("weapon", skillId, slotsWeapon, bestGainByKind)
+    );
+}
+
+/* =========================================================
+   NEW/CHANGED: SOLVER THAT RESPECTS SLOT KIND
+========================================================= */
+
+type SlotRefKinded = { kind: DecoKind; slotLevel: SlotLevel };
+
+function solveDecorationsKinded(
+    needs: Record<number, number>,
+    slotRefs: SlotRefKinded[],
+    decosByKindL: DecosByKindByL,
+    skillIds: number[]
+): DecoPlacement[] | null {
+    const memo = new Map<string, DecoPlacement[] | null>();
+
+    const needsKey = (n: Record<number, number>) =>
+        skillIds.map((id) => n[id] ?? 0).join(",");
+
+    const applyDeco = (n: Record<number, number>, deco: any) => {
+        const out = { ...n };
+        for (const s of deco.skills) {
+            const id = s.skill.id;
+            if ((out[id] ?? 0) > 0) out[id] = Math.max(0, out[id] - s.level);
+        }
+        return out;
+    };
+
+    const allMet = (n: Record<number, number>) => skillIds.every((id) => (n[id] ?? 0) <= 0);
+
+    function dfs(i: number, n: Record<number, number>): DecoPlacement[] | null {
+        if (allMet(n)) {
+            // fill remaining slots as empties
+            return slotRefs.slice(i).map((r) => ({ slotLevel: r.slotLevel, decoration: null }));
+        }
+        if (i === slotRefs.length) return null;
+
+        const key = i + "|" + needsKey(n);
+        if (memo.has(key)) return memo.get(key)!;
+
+        const { kind, slotLevel: L } = slotRefs[i];
+        const candidates = decosByKindL[kind][L];
+
+        // try placing a helpful deco (of correct kind)
+        for (const deco of candidates) {
+            let helps = false;
+            for (const s of deco.skills) {
+                if ((n[s.skill.id] ?? 0) > 0) {
+                    helps = true;
+                    break;
+                }
+            }
+            if (!helps) continue;
+
+            const nextNeeds = applyDeco(n, deco);
+            const rest = dfs(i + 1, nextNeeds);
+            if (rest) {
+                const ans: DecoPlacement[] = [{ slotLevel: L, decoration: deco }, ...rest];
+                memo.set(key, ans);
+                return ans;
+            }
+        }
+
+        // leave empty
+        const emptyRest = dfs(i + 1, n);
+        const ans = emptyRest ? [{ slotLevel: L, decoration: null }, ...emptyRest] : null;
+        memo.set(key, ans);
+        return ans;
+    }
+
+    return dfs(0, needs);
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+export function generateBuild(
+    skillFilters: SkillFilter[],
+    weaponKind: string | null,
+    data: BuildData,
+    onProgress?: (p: BuildProgress) => void
+) {
+    const filters = skillFilters.filter((skill) => skill.skillId !== -1);
+
+    // NEW/CHANGED: Keep only decorations that contain at least 1 required skill,
+    // but DO NOT drop based on kind yet (we split later)
+    const filteredDecos = data.decorations.filter((decoration: any) =>
+        decoration.skills.some((decoSkill: any) =>
+            filters.some((skill) => skill.skillId === decoSkill.skill.id)
+        )
+    );
+
+    if (!weaponKind || filters.length === 0) return [];
+
+    console.log("Weapon Kind:" + weaponKind)
+
+    FIXED_WEAPON.kind = weaponKind;
+
+    // --- 1. Prepare skill bookkeeping ---
     const skillIds: number[] = [];
     const requiredLevels: Record<number, number> = {};
-    const currentSkillTotals: Record<number, number> = {};
-    const setBonusSkills: SetBonusSkill[] = [];
-
     for (const filter of filters) {
         const id = filter.skillId;
         skillIds.push(id);
         requiredLevels[id] = filter.level;
-        currentSkillTotals[id] = 0; // start with zero for each required skill
     }
 
+    // --- 1.5 Preprocess decorations helpers (NEW/CHANGED: kind-aware) ---
+    const bestGainByKind = buildBestGainPerSlotLevelAndKind(filters, filteredDecos);
+    const decosByKindL = groupDecosByMaxSlotAndKind(filteredDecos);
+
+    // cache expensive decoration solve across identical (slots, needs)
+    const decoSolveCache = new Map<string, DecoPlacement[] | null>();
+    const solveDecorationsCached = (needs: Record<number, number>, slotRefs: SlotRefKinded[]) => {
+        const needsKey = skillIds.map((id) => needs[id] ?? 0).join(",");
+        const slotKey = slotRefs.map((r) => `${r.kind[0]}${r.slotLevel}`).join(",");
+        const key = slotKey + "|" + needsKey;
+        if (decoSolveCache.has(key)) return decoSolveCache.get(key)!;
+
+        const res = solveDecorationsKinded(needs, slotRefs, decosByKindL, skillIds);
+        decoSolveCache.set(key, res);
+        return res;
+    };
+
     // --- 2. Preprocess gear ---
-
-    const gearWithReqSkills: GearWithReqSkills = getGearWithReqSkills(weaponKind, filters);
-
+    const gearWithReqSkills: GearWithReqSkills = getGearWithReqSkills(
+        weaponKind,
+        filters,
+        data.weapons,
+        data.armorBySlot,
+        data.charms
+    );
 
     let maxSkillsPerSlot: MaxSkillsPerSlotMap = {
         head: {},
@@ -67,139 +388,345 @@ export function generateBuild(skillFilters: SkillFilter[], weaponKind: string | 
 
     maxSkillsPerSlot = getMaxSkillsPerSlot(gearWithReqSkills, filters);
 
-    const maxRemainingFromIndex = createMaxRemainingFromIndex(filters, maxSkillsPerSlot);
-
-    // Map from slot name → candidate pieces in that slot
+    // candidates
     const candidatesBySlot: Record<GearSlot, any[]> = {
-        head:  gearWithReqSkills.heads,
+        head: gearWithReqSkills.heads,
         chest: gearWithReqSkills.chests,
-        arms:  gearWithReqSkills.arms,
+        arms: gearWithReqSkills.arms,
         waist: gearWithReqSkills.waists,
-        legs:  gearWithReqSkills.legs,
+        legs: gearWithReqSkills.legs,
         charm: gearWithReqSkills.charms,
     };
 
-    // --- 3. Search state ---
+    // --- Beam order: expand smallest candidate list first ---
+    const orderedGearSlots: GearSlot[] = [...gearSlots].sort(
+        (a, b) => candidatesBySlot[a].length - candidatesBySlot[b].length
+    );
 
-    const builds: Build[] = [];
-    const chosenPieces: Partial<Record<GearSlot, any>> = {};
-    const MAX_RESULTS = 10; // you can tweak or remove this if you want everything
+    // bounds for pruning during beam expansion
+    const maxRemainingFromIndex = createMaxRemainingFromIndexForOrder(filters, maxSkillsPerSlot, orderedGearSlots);
+    const maxSlotsRemainingFromIndex = createMaxSlotsRemainingFromIndex(orderedGearSlots, candidatesBySlot);
 
-    // --- 4. Recursive search function ---
+    const total =
+        candidatesBySlot.head.length *
+        candidatesBySlot.chest.length *
+        candidatesBySlot.arms.length *
+        candidatesBySlot.waist.length *
+        candidatesBySlot.legs.length *
+        candidatesBySlot.charm.length;
 
-    function search(slotIndex: number) {
-        // Base case: all slots filled
-        if (slotIndex === gearSlots.length) {
-            // Check if we meet all requiredLevels exactly
-            for (const skillId of skillIds) {
-                if (currentSkillTotals[skillId] < requiredLevels[skillId]) {
-                    return; // not a valid build
+    let tried = 0;
+    let pruned = 0;
+    let found = 0;
+
+    let lastReport = performance.now();
+    const report = (force = false) => {
+        if (!onProgress) return;
+        const now = performance.now();
+        if (force || now - lastReport > 50) {
+            lastReport = now;
+            onProgress({ tried, found, pruned, total });
+        }
+    };
+
+    const MAX_RESULTS = 10;
+
+    // ---- Beam settings ----
+    const BEAM_WIDTH = 600;
+    const TIME_LIMIT_MS = 3000;
+    const START = performance.now();
+
+    // ---- pruning predicate (NEW/CHANGED: includes weapon slots & weapon bestGain) ----
+    const canStillSucceed = (st: BeamState) => {
+        const remainingSkills = maxRemainingFromIndex[st.depth] ?? {};
+        const remainingArmorSlots = maxSlotsRemainingFromIndex[st.depth] ?? { 1: 0, 2: 0, 3: 0 };
+
+        // armor slots that could exist (chosen so far + best possible remaining armor slots)
+        const possibleArmorSlots: SlotCounts = {
+            1: st.slotsArmor[1] + remainingArmorSlots[1],
+            2: st.slotsArmor[2] + remainingArmorSlots[2],
+            3: st.slotsArmor[3] + remainingArmorSlots[3],
+        };
+
+        // weapon slots are fixed for every build
+        const possibleWeaponSlots = FIXED_WEAPON_SLOT_COUNTS;
+
+        for (const id of skillIds) {
+            const have = st.totals[id] ?? 0;
+            const maxFutureGear = remainingSkills[id] ?? 0;
+
+            const maxFromDecos = maxDecoPossibleForSkillCombined(
+                id,
+                possibleArmorSlots,
+                possibleWeaponSlots,
+                bestGainByKind
+            );
+
+            if (have + maxFutureGear + maxFromDecos < (requiredLevels[id] ?? 0)) return false;
+        }
+        return true;
+    };
+
+    // ---- initialize beam ----
+    const initTotals: Record<number, number> = {};
+    for (const id of skillIds) initTotals[id] = 0;
+
+    let beam: BeamState[] = [
+        { depth: 0, chosen: {}, totals: initTotals, slotsArmor: { 1: 0, 2: 0, 3: 0 }, score: 0 }
+    ];
+    beam[0].score = scoreState(beam[0], orderedGearSlots, skillIds, requiredLevels);
+
+    // ---- expand beam through each gear slot ----
+    for (let depth = 0; depth < orderedGearSlots.length; depth++) {
+        if (performance.now() - START > TIME_LIMIT_MS) break;
+
+        const slot = orderedGearSlots[depth];
+        const cands = candidatesBySlot[slot];
+
+        const nextBeam: BeamState[] = [];
+
+        for (const st of beam) {
+            if (performance.now() - START > TIME_LIMIT_MS) break;
+
+            for (const piece of cands) {
+                tried++;
+
+                // apply skills
+                const nextTotals = { ...st.totals };
+                const rs = piece.relevantSkills ?? {};
+                for (const id of skillIds) {
+                    const add = rs[id] ?? 0;
+                    if (add) nextTotals[id] = (nextTotals[id] ?? 0) + add;
                 }
+
+                // apply ARMOR slots only (weapon slots are fixed, not from armor pieces)
+                const nextSlotsArmor: SlotCounts = { ...st.slotsArmor };
+                for (const L of piece?.slots ?? []) {
+                    if (L === 1 || L === 2 || L === 3) nextSlotsArmor[L]++;
+                }
+
+                const nextChosen = { ...st.chosen, [slot]: piece };
+
+                const ns: BeamState = {
+                    depth: depth + 1,
+                    chosen: nextChosen,
+                    totals: nextTotals,
+                    slotsArmor: nextSlotsArmor,
+                    score: 0,
+                };
+
+                if (!canStillSucceed(ns)) {
+                    pruned++;
+                    continue;
+                }
+
+                ns.score = scoreState(ns, orderedGearSlots, skillIds, requiredLevels);
+                nextBeam.push(ns);
             }
-
-            // Build a Build object from chosenPieces
-            const build: Build = {
-                // You can attach weapon later if you want; for now we just store armor + charm
-                head:  chosenPieces.head ?? {},
-                chest: chosenPieces.chest ?? {},
-                arms:  chosenPieces.arms ?? {},
-                waist: chosenPieces.waist ?? {},
-                legs:  chosenPieces.legs ?? {},
-                charm: chosenPieces.charm ?? {},
-                //setBonusSkills: setBonusSkills
-            };
-
-            const armorSlots = ["head", "chest", "arms", "waist", "legs"] as const;
-            const armorSets = []
-            let counts;
-
-            armorSlots.forEach((slot, index) => {
-                const piece = build[slot];
-                if (piece?.armorSet?.id) {
-                    armorSets.push(piece.armorSet.id);
-                    //const armorSetName = armorBySlot.armorSets.filter(set => set.id === piece.armorSet?.id)
-                    //armorSets.push(armorSetName[0].bonus?.skill?.name)
-                }
-            })
-
-            /*
-            - Count num of repeated numbers e.g. [3, 3, 3, 48, 53] 3: 3, 48: 1, 53: 1
-            - Check for ID in armorSets
-            - Check
-             */
-
-            //console.log(armorSets);
-            counts = armorSets.reduce((accumulator, currentValue) => {
-                // If the number already exists as a key, increment its count.
-                // Otherwise, initialize it to 1.
-                accumulator[currentValue] = (accumulator[currentValue] || 0) + 1;
-                return accumulator;
-            }, {});
-            console.log(counts);
-
-            
-
-            builds.push(build);
-            return;
         }
 
-        // Optional: stop if enough builds found
-        if (builds.length >= MAX_RESULTS) return;
+        nextBeam.sort((a, b) => b.score - a.score);
+        beam = nextBeam.slice(0, BEAM_WIDTH);
 
-        const slot = gearSlots[slotIndex];
-        const candidates = candidatesBySlot[slot];
+        report();
+        if (beam.length === 0) break;
+    }
 
-        for (const piece of candidates) {
-            // 1) Apply this piece's skills (delta tracking for backtracking)
-            const delta: Record<number, number> = {};
+    // ---- finalize best states into actual builds (solve decos only for best) ----
+    const builds: Build[] = [];
+    beam.sort((a, b) => b.score - a.score);
 
-            for (const skillId of skillIds) {
-                const add = piece.relevantSkills[skillId] ?? 0;
-                if (add !== 0) {
-                    delta[skillId] = add;
-                    currentSkillTotals[skillId] += add;
-                }
+    for (const st of beam) {
+        if (builds.length >= MAX_RESULTS) break;
+        if (performance.now() - START > TIME_LIMIT_MS) break;
+        if (st.depth !== orderedGearSlots.length) continue;
+
+        const armorBuild: ArmorBuild = {
+            head: st.chosen.head ?? {},
+            chest: st.chosen.chest ?? {},
+            arms: st.chosen.arms ?? {},
+            waist: st.chosen.waist ?? {},
+            legs: st.chosen.legs ?? {},
+            charm: st.chosen.charm ?? {},
+        };
+
+        // remaining needs AFTER gear (armor/charm skills)
+        const needs: Record<number, number> = {};
+        for (const id of skillIds) {
+            needs[id] = Math.max(0, (requiredLevels[id] ?? 0) - (st.totals[id] ?? 0));
+        }
+        const allMet = skillIds.every((id) => needs[id] <= 0);
+
+        // build per-piece slot refs for ARMOR
+        const armorSlotKeys: ArmorSlotKey[] = ["head", "chest", "arms", "waist", "legs"];
+        type ArmorSlotRef = { piece: ArmorSlotKey; slotIndex: number; slotLevel: SlotLevel };
+        const armorSlotRefs: ArmorSlotRef[] = [];
+
+        for (const pieceKey of armorSlotKeys) {
+            const p = armorBuild[pieceKey] as any;
+            const slots = (p?.slots ?? []) as number[];
+            const list = slots
+                .filter((x): x is SlotLevel => x === 1 || x === 2 || x === 3)
+                .sort((a, b) => a - b);
+
+            for (let i = 0; i < list.length; i++) {
+                armorSlotRefs.push({ piece: pieceKey, slotIndex: i, slotLevel: list[i] });
             }
+        }
 
-            // 2) Prune if impossible to meet requirements from here
-            let impossible = false;
-            const remaining = maxRemainingFromIndex[slotIndex + 1];
+        // NEW/CHANGED: weapon slot refs (always 3x L3, kind="weapon")
+        const weaponSlotRefs: SlotRefKinded[] = [
+            { kind: "weapon", slotLevel: 3 },
+            { kind: "weapon", slotLevel: 3 },
+            { kind: "weapon", slotLevel: 3 },
+        ];
 
-            for (const skillId of skillIds) {
-                const current = currentSkillTotals[skillId];
-                const maxFuture = remaining[skillId]; // max we can still gain
-                const required = requiredLevels[skillId];
+        // NEW/CHANGED: combined slotRefs with kinds
+        // Order matters because solver returns placements aligned to this list.
+        // Put more restrictive first (armor often has L1/L2). Weapon L3 are easiest so keep them last.
+        const slotRefsKinded: SlotRefKinded[] = [
+            ...armorSlotRefs.map((r) => ({ kind: "armor" as const, slotLevel: r.slotLevel })),
+            ...weaponSlotRefs,
+        ];
 
-                // If even with perfect future pieces we can't hit required → prune
-                if (current + maxFuture < required) {
-                    impossible = true;
+        // Decorations result structure:
+        // - armor per piece arrays
+        // - weapon array length 3
+        const decorations: any = {
+            head: [],
+            chest: [],
+            arms: [],
+            waist: [],
+            legs: [],
+            weapon: [], // NEW/CHANGED
+        };
+
+        if (slotRefsKinded.length === 0) {
+            if (!allMet) continue;
+        } else if (allMet) {
+            // fill empties for armor slots
+            for (const ref of armorSlotRefs) {
+                decorations[ref.piece][ref.slotIndex] = { slotLevel: ref.slotLevel, decoration: null };
+            }
+            // fill empties for weapon slots
+            decorations.weapon = [
+                { slotLevel: 3, decoration: null },
+                { slotLevel: 3, decoration: null },
+                { slotLevel: 3, decoration: null },
+            ];
+        } else {
+            // fast feasibility check (avoid expensive solve if hopeless)
+            const armorCounts: SlotCounts = { 1: 0, 2: 0, 3: 0 };
+            for (const r of armorSlotRefs) armorCounts[r.slotLevel]++;
+
+            const weaponCounts: SlotCounts = FIXED_WEAPON_SLOT_COUNTS;
+
+            let possible = true;
+            for (const id of skillIds) {
+                const maxFromDecos = maxDecoPossibleForSkillCombined(id, armorCounts, weaponCounts, bestGainByKind);
+                if ((st.totals[id] ?? 0) + maxFromDecos < (requiredLevels[id] ?? 0)) {
+                    possible = false;
                     break;
                 }
             }
+            if (!possible) continue;
 
-            if (!impossible) {
-                // 3) Choose this piece and go deeper
-                chosenPieces[slot] = piece;
-                search(slotIndex + 1);
-                delete chosenPieces[slot];
+            // solve kinded decos across armor+weapon slots
+            const solvedFlat = solveDecorationsCached(needs, slotRefsKinded);
+            if (!solvedFlat) continue;
+
+            // map first N placements to armor slots in order, then remaining 3 to weapon
+            const armorPlacementCount = armorSlotRefs.length;
+
+            for (let i = 0; i < armorPlacementCount; i++) {
+                const ref = armorSlotRefs[i];
+                decorations[ref.piece][ref.slotIndex] = solvedFlat[i];
             }
 
-            // 4) Backtrack skill totals
-            for (const idStr of Object.keys(delta)) {
-                const id = Number(idStr);
-                currentSkillTotals[id] -= delta[id];
-            }
-
-            if (builds.length >= MAX_RESULTS) return;
+            // weapon placements are last 3
+            decorations.weapon = solvedFlat.slice(armorPlacementCount, armorPlacementCount + 3);
         }
+
+        const bonuses = getBonuses(armorBuild, data.armorBySlot);
+
+        builds.push({
+            armor: armorBuild,
+            bonuses: {
+                skillSetBonuses: bonuses.skillSetBonuses,
+                groupBonuses: bonuses.groupBonuses,
+            },
+            // NEW/CHANGED: include weapon (your Build type may need updating; cast if necessary)
+            weapon: FIXED_WEAPON,
+            decorations,
+        } as any as Build);
+
+        found = builds.length;
+        report(true);
     }
 
-    search(0);
-
+    report(true);
     return builds;
 }
 
-function getGearWithReqSkills(weaponKind: string | null, filters: SkillFilter[]) {
+/* =========================================================
+   KEEP EVERYTHING BELOW AS-IS
+   (getBonuses, getGearWithReqSkills, addRelevantSkillsToSlot,
+    getMaxSkillsPerSlot, createMaxRemainingFromIndex, maxBy,
+    buildBestGainPerSlotLevel, groupDecosByMaxSlot, solveDecorations,
+    addSlots/removeSlots, etc.)
+========================================================= */
+
+
+function getBonuses(build: ArmorBuild, armorBySlot: ArmorBySlot) {
+    const armorSlots = ["head", "chest", "arms", "waist", "legs"] as const;
+    const armorSets: number[] = []
+
+    armorSlots.forEach((slot) => {
+        const piece = build[slot];
+        if (piece?.armorSet?.id) {
+            armorSets.push(piece.armorSet.id);
+        }
+    })
+
+    /*
+    - Count num of repeated numbers e.g. [3, 3, 3, 48, 53] 3: 3, 48: 1, 53: 1
+    - Check for ID in armorSets
+    - Check
+     */
+
+    const counts = armorSets.reduce<Record<number, number>>((accumulator, currentValue) => {
+        // If the number already exists as a key, increment its count.
+        // Otherwise, initialize it to 1.
+        accumulator[currentValue] = (accumulator[currentValue] || 0) + 1;
+        return accumulator;
+    }, {});
+
+    const skillSetBonusIds = new Set<number>();
+    const groupBonusIds = new Set<number>();
+
+    Object.keys(counts).forEach((key) => {
+        const setId = Number(key);
+        const set = armorBySlot.armorSets.find(s => s.id === setId);
+        if (!set) return;
+
+        const setBonus = set.bonus;
+        if (setBonus && counts[setId] >= (setBonus.ranks[0]?.pieces ?? Infinity)) {
+            skillSetBonusIds.add(setBonus.skill.id);
+        }
+
+        const groupBonus = set.groupBonus;
+        if (groupBonus && counts[setId] >= (groupBonus.ranks[0]?.pieces ?? Infinity)) {
+            groupBonusIds.add(groupBonus.skill.id);
+        }
+    });
+
+    const skillSetBonuses = [...skillSetBonusIds];
+    const groupBonuses = [...groupBonusIds];
+
+    return {skillSetBonuses, groupBonuses};
+}
+
+function getGearWithReqSkills(weaponKind: string | null, filters: SkillFilter[], weapons: Weapon[], armorBySlot: ArmorBySlot, charms: CharmRank[]) {
     const candidateWeapons = weapons.filter(w => w.kind === weaponKind);
 
     const weaponsWithRelevant: GearWithRelevantSkills<Weapon>[] = addRelevantSkillsToSlot(candidateWeapons, filters);
@@ -210,20 +737,20 @@ function getGearWithReqSkills(weaponKind: string | null, filters: SkillFilter[])
     const legsWithRelevant: GearWithRelevantSkills<Armor>[] = addRelevantSkillsToSlot(armorBySlot.legs, filters);
     const charmsWithRelevant: GearWithRelevantSkills<CharmRank>[] = addRelevantSkillsToSlot(charms, filters);
 
+    const hasSkills = (item: { relevantSkills: Record<number, number> }) =>
+        Object.keys(item.relevantSkills).length > 0;
+
     const gearWithReqSkills = {
-        weapons: weaponsWithRelevant,
-        heads: headsWithRelevant,
-        chests: chestsWithRelevant,
-        arms: armsWithRelevant,
-        waists: waistsWithRelevant,
-        legs: legsWithRelevant,
-        charms: charmsWithRelevant,
+        weapons: weaponsWithRelevant.filter(piece => Object.keys(piece.relevantSkills).length > 0).sort((a, b) => b.rarity - a.rarity),
+        heads: headsWithRelevant.filter(piece => Object.keys(piece.relevantSkills).length > 0).sort((a, b) => b.rarity - a.rarity),
+        chests: chestsWithRelevant.filter(piece => Object.keys(piece.relevantSkills).length > 0).sort((a, b) => b.rarity - a.rarity),
+        arms: armsWithRelevant.filter(piece => Object.keys(piece.relevantSkills).length > 0).sort((a, b) => b.rarity - a.rarity),
+        waists: waistsWithRelevant.filter(piece => Object.keys(piece.relevantSkills).length > 0).sort((a, b) => b.rarity - a.rarity),
+        legs: legsWithRelevant.filter(piece => Object.keys(piece.relevantSkills).length > 0).sort((a, b) => b.rarity - a.rarity),
+        charms: charmsWithRelevant.filter(charm => Object.keys(charm.relevantSkills).length > 0).sort((a, b) => b.rarity - a.rarity),
     }
 
-    // sort each slot by rarity (highest -> lowest)
-    Object.values(gearWithReqSkills).forEach(slot => {
-        slot.sort((a, b) => b.rarity - a.rarity);
-    });
+    // sort((a, b) => Number(hasSkills(b)) - Number(hasSkills(a)) || b.rarity - a.rarity)
 
     return gearWithReqSkills
 }
@@ -296,10 +823,10 @@ function createMaxRemainingFromIndex(skills: SkillFilter[], maxSkillsPerSlot: Ma
             maxRemainingFromIndex[i] = entry;
         } else {
             const key = gearSlots[i]
-            console.log("maxRemainingFromIndex[i+1]:")
-            console.log(maxRemainingFromIndex[i+1])
-            console.log("maxSkillsPerSlot[key]")
-            console.log(maxSkillsPerSlot[key])
+            //console.log("maxRemainingFromIndex[i+1]:")
+            //console.log(maxRemainingFromIndex[i+1])
+            //console.log("maxSkillsPerSlot[key]")
+            //console.log(maxSkillsPerSlot[key])
             maxRemainingFromIndex[i] = combine(maxRemainingFromIndex[i+1], maxSkillsPerSlot[key]);
         }
     }
@@ -312,15 +839,6 @@ function createMaxRemainingFromIndex(skills: SkillFilter[], maxSkillsPerSlot: Ma
             return acc;
         }, {} as T);
     }
-}
-
-function checkMaxRemainingFromIndex(slotIndex: number, skillIds: number[], currentSkillTotals, maxRemainingFromIndex, required) {
-    skillIds.forEach((skillId) => {
-        if (currentSkillTotals[skillId] + maxRemainingFromIndex[slotIndex][skillId] <= required[skillId]) {
-            return false;
-        }
-    })
-    return true;
 }
 
 function maxBy(
@@ -340,5 +858,133 @@ function maxBy(
         maxSkills[skill.skillId] = levels.length ? Math.max(...levels) : 0;
     })
     return maxSkills;
+}
+
+function buildBestGainPerSlotLevel(filters: SkillFilter[], decos: any[]) {
+    const skillIds = filters.map((f) => f.skillId);
+    const bestGain: Record<1 | 2 | 3, SkillGainMap> = { 1: {}, 2: {}, 3: {} };
+
+    for (const L of [1, 2, 3] as const) {
+        for (const id of skillIds) bestGain[L][id] = 0;
+    }
+
+    for (const deco of decos) {
+        const req = deco.slot as 1 | 2 | 3;
+        for (const s of deco.skills) {
+            const id = s.skill.id;
+            const lvl = s.level;
+            for (const L of [req, 2, 3] as const) {
+                if (L >= req && bestGain[L][id] !== undefined) {
+                    bestGain[L][id] = Math.max(bestGain[L][id], lvl);
+                }
+            }
+        }
+    }
+
+    return bestGain;
+}
+
+function groupDecosByMaxSlot(decos: any[]) {
+    const byL: Record<1 | 2 | 3, any[]> = { 1: [], 2: [], 3: [] };
+    for (const d of decos) {
+        if (d.slot <= 1) byL[1].push(d);
+        if (d.slot <= 2) byL[2].push(d);
+        if (d.slot <= 3) byL[3].push(d);
+    }
+    return byL;
+}
+
+function maxDecoPossibleForSkill(skillId: number, slots: SlotCounts, bestGain: Record<1 | 2 | 3, SkillGainMap>) {
+    return (
+        slots[1] * (bestGain[1][skillId] ?? 0) +
+        slots[2] * (bestGain[2][skillId] ?? 0) +
+        slots[3] * (bestGain[3][skillId] ?? 0)
+    );
+}
+
+function expandSlots(counts: SlotCounts): (1 | 2 | 3)[] {
+    const arr: (1 | 2 | 3)[] = [];
+    for (let i = 0; i < counts[1]; i++) arr.push(1);
+    for (let i = 0; i < counts[2]; i++) arr.push(2);
+    for (let i = 0; i < counts[3]; i++) arr.push(3);
+    arr.sort((a, b) => a - b);
+    return arr;
+}
+
+function solveDecorations(
+    needs: Record<number, number>,
+    slotList: (1|2|3)[],
+    decosByL: Record<1|2|3, any[]>,
+    skillIds: number[]
+): DecoPlacement[] | null {
+
+    const memo = new Map<string, DecoPlacement[] | null>();
+
+    const needsKey = (n: Record<number, number>) =>
+        skillIds.map(id => n[id] ?? 0).join(",");
+
+    const applyDeco = (n: Record<number, number>, deco: any) => {
+        const out = { ...n };
+        for (const s of deco.skills) {
+            const id = s.skill.id;
+            if ((out[id] ?? 0) > 0) out[id] = Math.max(0, out[id] - s.level);
+        }
+        return out;
+    };
+
+    const allMet = (n: Record<number, number>) =>
+        skillIds.every(id => (n[id] ?? 0) <= 0);
+
+    function dfs(i: number, n: Record<number, number>): DecoPlacement[] | null {
+        if (allMet(n)) {
+            // Fill remaining slots with empties so caller gets 1 placement per slot
+            return slotList.slice(i).map(L => ({ slotLevel: L, decoration: null }));
+        }
+        if (i === slotList.length) return null;
+
+        const key = i + "|" + needsKey(n);
+        if (memo.has(key)) return memo.get(key)!;
+
+        const L = slotList[i];
+        const candidates = decosByL[L];
+
+        // try placing a helpful deco
+        for (const deco of candidates) {
+            let helps = false;
+            for (const s of deco.skills) {
+                if ((n[s.skill.id] ?? 0) > 0) { helps = true; break; }
+            }
+            if (!helps) continue;
+
+            const nextNeeds = applyDeco(n, deco);
+            const rest = dfs(i + 1, nextNeeds);
+            if (rest) {
+                const ans: DecoPlacement[] = [{ slotLevel: L, decoration: deco }, ...rest];
+                memo.set(key, ans);
+                return ans;
+            }
+        }
+
+        // leave empty
+        const emptyRest = dfs(i + 1, n);
+        const ans = emptyRest ? [{ slotLevel: L, decoration: null }, ...emptyRest] : null;
+        memo.set(key, ans);
+        return ans;
+    }
+
+    return dfs(0, needs);
+}
+
+function addSlots(counts: SlotCounts, piece: any) {
+    if (!piece?.slots) return;
+    for (const L of piece.slots) {
+        if (L === 1 || L === 2 || L === 3) counts[L]++;
+    }
+}
+function removeSlots(counts: SlotCounts, piece: any) {
+    if (!piece?.slots) return;
+    for (const L of piece.slots) {
+        if (L === 1 || L === 2 || L === 3) counts[L]--;
+    }
 }
 
