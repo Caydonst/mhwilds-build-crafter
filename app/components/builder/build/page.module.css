@@ -263,7 +263,7 @@
     background-position: calc((-64px * 8) * var(--build-icon-size)) calc((-64px * 8) * var(--build-icon-size));
 }
 .sword-shield {
-    background-position: 0 calc(-64px * var(--build-icon-size));
+    background-position: 0 calc((-64px * 8) * var(--build-icon-size));
 }
 .decoIcon {
     display: inline-block;
