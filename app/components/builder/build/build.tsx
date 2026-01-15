@@ -73,9 +73,13 @@ export default function Build({ index, build, skillData }: Props) {
         const fullSkill = findFullSkill(skillData, skillId);
         const max = getMaxSkillLevel(skillData, skillId);
 
+        if (fullSkill?.kind === "set") {
+            return;
+        }
+
         if (!aggregatedSkillsMap[skillId]) {
             // Prefer full skill object (has ranks/icons), else fallback
-            const chosenSkill = fullSkill ?? fallbackSkill;
+            const chosenSkill = fullSkill;
             if (!chosenSkill) return;
 
             aggregatedSkillsMap[skillId] = {
@@ -86,7 +90,11 @@ export default function Build({ index, build, skillData }: Props) {
             aggregatedSkillsMap[skillId].totalLevel[1] = max;
         }
 
-        aggregatedSkillsMap[skillId].totalLevel[0] += add;
+        if (aggregatedSkillsMap[skillId].totalLevel[0] < max && aggregatedSkillsMap[skillId].totalLevel[0] + add > max) {
+            aggregatedSkillsMap[skillId].totalLevel[0] = max;
+        } else {
+            aggregatedSkillsMap[skillId].totalLevel[0] += add;
+        }
     };
 
     // --- 1) Armor/charm skills ---
@@ -148,7 +156,8 @@ export default function Build({ index, build, skillData }: Props) {
         if (sk) groupBonusSkills.push(sk);
     }
 
-    const aggregatedSkills = Object.values(aggregatedSkillsMap);
+    const aggregatedSkills = Object.values(aggregatedSkillsMap).sort((a, b) => b.totalLevel[0] - a.totalLevel[0]);
+    console.log(aggregatedSkills);
 
     // Weapon (assumes your Build type has been updated to include weapon)
     const weapon: BuildWeapon | null = build.weapon ?? null;

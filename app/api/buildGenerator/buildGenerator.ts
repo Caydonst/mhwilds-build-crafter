@@ -25,6 +25,7 @@ import {
     DecoPlacement,
     BuildDecorations,
 } from "../types/types";
+import {filter} from "eslint-config-next";
 
 const gearSlots = ["head", "chest", "arms", "waist", "legs", "charm"] as const;
 type GearSlot = typeof gearSlots[number];
@@ -756,6 +757,9 @@ function getBonuses(build: ArmorBuild, armorBySlot: ArmorBySlot) {
     const skillSetBonuses = [...skillSetBonusIds];
     const groupBonuses = [...groupBonusIds];
 
+    console.log(skillSetBonuses);
+    console.log(groupBonuses);
+
     return {skillSetBonuses, groupBonuses};
 }
 
@@ -774,16 +778,22 @@ function getGearWithReqSkills(weaponKind: string | null, filters: SkillFilter[],
         Object.keys(item.relevantSkills).length > 0;
 
     const gearWithReqSkills = {
-        weapons: weaponsWithRelevant.filter(piece => Object.keys(piece.relevantSkills).length > 0).sort((a, b) => b.rarity - a.rarity),
-        heads: headsWithRelevant.filter(piece => Object.keys(piece.relevantSkills).length > 0).sort((a, b) => b.rarity - a.rarity),
-        chests: chestsWithRelevant.filter(piece => Object.keys(piece.relevantSkills).length > 0).sort((a, b) => b.rarity - a.rarity),
-        arms: armsWithRelevant.filter(piece => Object.keys(piece.relevantSkills).length > 0).sort((a, b) => b.rarity - a.rarity),
-        waists: waistsWithRelevant.filter(piece => Object.keys(piece.relevantSkills).length > 0).sort((a, b) => b.rarity - a.rarity),
-        legs: legsWithRelevant.filter(piece => Object.keys(piece.relevantSkills).length > 0).sort((a, b) => b.rarity - a.rarity),
-        charms: charmsWithRelevant.filter(charm => Object.keys(charm.relevantSkills).length > 0).sort((a, b) => b.rarity - a.rarity),
+        weapons: weaponsWithRelevant,
+        heads: headsWithRelevant,
+        chests: chestsWithRelevant,
+        arms: armsWithRelevant,
+        waists: waistsWithRelevant,
+        legs: legsWithRelevant,
+        charms: charmsWithRelevant,
     }
 
+    function hasRelevantSkills(gearSlot: GearWithRelevantSkills<Armor | Weapon>[]) {
+        return gearSlot.filter(piece => hasSkills(piece)).length > 0 ? weaponsWithRelevant.filter(piece => hasSkills(piece)) : weaponsWithRelevant.sort((a, b) => b.rarity - a.rarity)
+    }
     // sort((a, b) => Number(hasSkills(b)) - Number(hasSkills(a)) || b.rarity - a.rarity)
+
+    console.log("Gear with req skills:")
+    console.log(gearWithReqSkills);
 
     return gearWithReqSkills
 }

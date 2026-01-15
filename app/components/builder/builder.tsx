@@ -300,7 +300,7 @@ export default function Builder({ builderOpen, setBuilderOpen, weaponData, skill
                                     ))}
                                 </div>
                             ) : (
-                                <p className={styles.noBuildsMsg}>No builds for this configuration.</p>
+                                <p className={styles.noBuildsMsg}>No builds for this skill configuration.</p>
                             )}
                         </div>
                     </div>
