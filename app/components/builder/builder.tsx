@@ -171,19 +171,6 @@ export default function Builder({ builderOpen, setBuilderOpen, weaponData, skill
 
                 <div className={styles.mainContainer}>
                     <div className={styles.buildInfoContainer}>
-                        <div className={styles.buildNameContainer}>
-                            <label className={styles.buildNameLabel} htmlFor="buildName">
-                                Build Name
-                            </label>
-                            <input
-                                className={styles.buildNameInput}
-                                id="buildName"
-                                name="buildName"
-                                type="text"
-                                placeholder="Build name"
-                            />
-                        </div>
-
                         <div className={styles.weaponSelectorContainer}>
                             <p className={styles.weaponS}>Select Weapon:</p>
 
@@ -270,7 +257,7 @@ export default function Builder({ builderOpen, setBuilderOpen, weaponData, skill
                     </div>
 
                     <div className={styles.generatedBuildsContainer}>
-                        <div className={styles.header}>Generated Builds</div>
+
 
                         <div className={styles.generatedBuilds}>
                             {isGenerating ? (
@@ -310,7 +297,7 @@ export default function Builder({ builderOpen, setBuilderOpen, weaponData, skill
 
                 <div className={styles.footer}>
                     <button className={styles.cancelBtn} type="button" onClick={() => setOpenConfirmContainer(true)}>
-                        Cancel
+                        Close
                     </button>
                 </div>
             </div>

@@ -7,7 +7,16 @@
     left: 0;
     right: 0;
     bottom: 0;
+    animation: backgroundFade 0.3s;
     background: rgba(0, 0, 0, 0.5);
+}
+@keyframes backgroundFade {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 .builderWrapper.open {
     visibility: visible;
@@ -15,10 +24,10 @@
 }
 .builderContainer {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
+    top: 30px;
+    left: 30px;
+    right: 30px;
+    bottom: 30px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 15px;
     background: #040404;
@@ -26,8 +35,16 @@
     flex-direction: column;
     justify-content: flex-start;   /* important: don’t center vertically */
     align-items: stretch;          /* make children full width */
-    backdrop-filter: blur(30px);
     z-index: 1;
+    animation: fadeIn 0.3s;
+}
+@keyframes fadeIn {
+    from {
+        transform: translateY(-10px);
+    }
+    to {
+        transform: translateY(0);
+    }
 }
 .buildGeneratorHeader {
     display: flex;
@@ -299,7 +316,6 @@
     align-items: center;
     flex-direction: column;
     flex: 1 1 auto;
-    min-height: 300px;
     width: 100%;
     position: relative;
     padding: 20px;
@@ -517,7 +533,7 @@
         border-radius: 0;
     }
 }
-@media (max-width: 800px) {
+@media (max-width: 900px) {
     .mainContainer {
         flex-direction: column;
         overflow-y: auto;   /* scroll HERE on mobile */
@@ -536,6 +552,7 @@
     .generatedBuildsContainer {
         border-top: 1px solid rgba(255, 255, 255, 0.1);
         flex: 1 1 100%;
+        min-height: 300px;
     }
     .builderContainer hr {
         display: none;
@@ -564,20 +581,28 @@
         color: #fff;
         gap: 20px;
     }
-    @media (max-width: 600px) {
-        .weaponSelectorWrapper {
-            max-width: unset;
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
         }
     }
-    @media (max-width: 500px) {
-        .buildInfoContainer {
-            padding: 30px 10px;
-        }
-        .weaponSelector {
-            font-size: 14px;
-        }
-        .generatedBuilds {
-            padding: 10px;
-        }
+}
+@media (max-width: 500px) {
+    .buildInfoContainer {
+        padding: 30px 10px;
+    }
+    .weaponSelectorWrapper {
+        max-width: unset;
+    }
+    .weaponSelector {
+        font-size: 14px;
+    }
+    .generatedBuilds {
+        padding: 10px;
     }
 }

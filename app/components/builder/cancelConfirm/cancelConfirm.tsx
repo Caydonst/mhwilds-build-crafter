@@ -11,7 +11,7 @@ export default function CancelConfirm({ openConfirmContainer, setOpenConfirmCont
     return (
         <div className={`${styles.cancelConfirmWrapper} ${openConfirmContainer ? styles.open : ""}`}>
             <div className={styles.cancelConfirmContainer}>
-                <p>Cancel build?</p>
+                <p>Close builder?</p>
                 <div className={styles.btnContainer}>
                     <button className={styles.noBtn} onClick={() => setOpenConfirmContainer(false)}>No</button>
                     <button className={styles.yesBtn} onClick={() => closeBuilder()}>Yes</button>
