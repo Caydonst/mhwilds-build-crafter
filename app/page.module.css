@@ -1,55 +1,95 @@
 .homeContainer {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     width: 100%;
-    height: calc(100svh - 60px);
+    min-height: 100svh;
     background: transparent;
-    padding: 0 10px;
+    padding: 10px;
+    overflow: hidden;
+    position: relative;
+    gap: 70px;
 }
-.buildsContainer {
+.glowingCircle {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(
+            circle,
+            rgba(255, 255, 255, 0.5) 0%,   /* center brighter */
+            rgba(255, 255, 255, 0) 70%     /* edges fade out */
+    );
+    pointer-events: none; /* so it doesn't block clicks */
+    filter: blur(150px);
+    z-index: -1;
+}
+
+.mainContainer {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     max-width: 1200px;
     width: 100%;
-    height: 100%;
     background: transparent;
     gap: 20px;
+    padding-top: 80px;
 }
-.buildsContainer span {
+.mainContainer span {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+}
+.titleContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
     color: #fff;
+    text-align: center;
 }
-.homeContainer h1 {
-    color: #fff;
+.titleContainer h1 {
+    color: rgba(255, 255, 255, 0.5);
     font-size: 20px;
-    padding: 14px;
-    line-height: 1;
-    width: 100%;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.titleContainer h2 {
+    color: #fff;
+    font-size: 50px;
+}
+.buildGeneratorBtn {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-.customBuildBtn {
+    gap: 5px;
     width: 100%;
+    max-width: 400px;
     height: 60px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: transparent;
+    background: #2d7a4d;
+    border: 1px solid #57ff9d;
     color: #fff;
     border-radius: 15px;
     cursor: pointer;
     transition: 0.3s;
     font-size: 16px;
+    text-decoration: none;
 }
-.customBuildBtn:hover {
-    background: rgba(255, 255, 255, 0.05);
+.buildGeneratorBtn:disabled {
+    cursor: not-allowed;
+    background: #1d4f32;
+}
+.sparklesIcon {
+    width: 20px;
+    height: 20px;
+    color: #fff;
+}
+.buildGeneratorBtn:hover {
+    background: #1d4f32;
 }
 .spinnerWrapper {
     display: inline-flex;
@@ -57,15 +97,94 @@
     gap: 8px;
 }
 .spinner {
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
     border-radius: 999px;
-    border: 4px solid rgba(255, 255, 255, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.3);
     border-top-color: rgba(255, 255, 255, 1);
-    animation: spin 0.6s linear infinite;
+    animation: spin 0.8s linear infinite;
+}
+.worksContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1200px;
+    gap: 50px;
+}
+.worksContainer h2 {
+    color: #fff;
+    font-size: 24px;
+    text-align: center;
+    position: relative;
+}
+.worksContainer h2::after {
+    content: "";
+    position: absolute;
+    top: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%;
+    height: 2px;
+    background: #fff;
+}
+.worksCards {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.weaponSection,
+.filtersSection,
+.generateSection {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 1 1 300px;
+    aspect-ratio: 1;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    background: #040404;
+    text-align: center;
+    padding: 20px;
+    gap: 10px;
+    min-width: 300px;
+}
+.weaponSection h3,
+.filtersSection h3,
+.generateSection h3 {
+    color: #fff;
+    font-size: 20px;
+}
+.weaponSection p,
+.filtersSection p,
+.generateSection p {
+    color: rgba(255, 255, 255, 0.5);
 }
 @keyframes spin {
     to {
         transform: rotate(360deg);
+    }
+}
+@media (max-width: 500px) {
+    .glowingCircle {
+        top: 400px;
+        width: 300px;
+        filter: blur(150px);
+    }
+    .titleContainer h1 {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 18px;
+    }
+    .titleContainer h2 {
+        color: #fff;
+        font-size: 30px;
+    }
+    .worksContainer {
+        gap: 35px;
     }
 }

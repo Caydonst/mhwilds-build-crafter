@@ -2,7 +2,7 @@ import styles from "./page.module.css";
 import React, { useMemo, useCallback, useEffect, useRef, useState } from "react";
 import CancelConfirm from "./cancelConfirm/cancelConfirm";
 import SkillSelector from "./skillSelector/skillSelector";
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import { ChevronDownIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import type { Build as BuildType, Skill, SkillFilter, Weapon, WeaponKind } from "@/app/api/types/types";
 import Build from "./build/build";
 
@@ -167,7 +167,9 @@ export default function Builder({ builderOpen, setBuilderOpen, weaponData, skill
     return (
         <div className={styles.builderWrapper}>
             <div className={styles.builderContainer}>
-                <div className={styles.buildGeneratorHeader}>Build Generator</div>
+                <div className={styles.buildGeneratorHeader}>
+                    Build Generator
+                </div>
 
                 <div className={styles.mainContainer}>
                     <div className={styles.buildInfoContainer}>
@@ -293,12 +295,6 @@ export default function Builder({ builderOpen, setBuilderOpen, weaponData, skill
                     </div>
 
                     <hr />
-                </div>
-
-                <div className={styles.footer}>
-                    <button className={styles.cancelBtn} type="button" onClick={() => setOpenConfirmContainer(true)}>
-                        Close
-                    </button>
                 </div>
             </div>
 
