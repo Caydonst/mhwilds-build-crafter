@@ -102,7 +102,7 @@ export default function ArmorPiece({ gearPiece, slotKey, build }: Props) {
         <div className={styles.buildPieceContainer}>
             {gearPiece !== null ? (
                 <>
-                    {weapons.includes(gearPiece.kind) ? (
+                    {(!isCharmRank(gearPiece) && !isArmorPiece(gearPiece)) && gearPiece.kind && weapons.includes(gearPiece.kind) ? (
                         <div className={styles.pieceContainerHeader}>
                             <span className={`${styles.buildPieceIcon}`} style={{ backgroundPosition: `calc((-64px * ${weaponIndex[gearPiece.kind]}) * var(--build-icon-size)) calc((-64px * ${rarity}) * var(--build-icon-size))` }} />
                             <div className={styles.buildPieceInfo}>
