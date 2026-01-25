@@ -25,7 +25,6 @@ import {
     DecoPlacement,
     BuildDecorations,
 } from "../types/types";
-import {filter} from "eslint-config-next";
 
 const gearSlots = ["head", "chest", "arms", "waist", "legs", "charm"] as const;
 type GearSlot = typeof gearSlots[number];
@@ -39,11 +38,11 @@ type CharmWithRelevant = GearWithRelevantSkills<CharmRank>;
 type GearPiece = GearWithRelevantSkills<Armor> | GearWithRelevantSkills<CharmRank>;
 
 const isArmorPiece = (p: GearPiece | undefined): p is ArmorWithRelevant => {
-    return !!p && "defense" in p; // Armor has defense; CharmRank doesn't
+    return !!p && "defense" in p; // ArmorPiece has defense; CharmRank doesn't
 };
 
 const isCharmPiece = (p: GearPiece | undefined): p is CharmWithRelevant => {
-    return !!p && "charm" in p; // CharmRank has charm: { id }, Armor doesn't
+    return !!p && "charm" in p; // CharmRank has charm: { id }, ArmorPiece doesn't
 };
 
 
@@ -118,7 +117,6 @@ function createMaxSlotsRemainingFromIndex(
     }
     return out;
 }
-
 
 // Recompute maxRemainingFromIndex for an arbitrary recursion order
 function createMaxRemainingFromIndexForOrder(
@@ -347,6 +345,59 @@ function solveDecorationsKinded(
     return dfs(0, needs);
 }
 
+type ArmorSlotRef = { kind: "armor"; piece: ArmorSlotKey; slotIndex: number; slotLevel: SlotLevel };
+type WeaponSlotRef = { kind: "weapon"; weaponIndex: number; slotLevel: SlotLevel };
+type SlotRefFull = ArmorSlotRef | WeaponSlotRef;
+
+function packDecorationsToSmallestSlots(
+    slotRefs: SlotRefFull[],
+    solvedFlat: DecoPlacement[]
+): Map<SlotRefFull, DecoPlacement> {
+    // Gather actual placed decos (ignore nulls)
+    const placedDecos: Decoration[] = solvedFlat
+        .map(p => p.decoration)
+        .filter((d): d is Decoration => d != null);
+
+    // Sort decos by required slot DESC so big decos claim big slots first
+    placedDecos.sort((a, b) => (b.slot as number) - (a.slot as number));
+
+    // Available slots by kind, sorted ASC so we pick the smallest fitting slot
+    const armorSlots = slotRefs
+        .filter((r): r is ArmorSlotRef => r.kind === "armor")
+        .slice()
+        .sort((a, b) => a.slotLevel - b.slotLevel);
+
+    const weaponSlots = slotRefs
+        .filter((r): r is WeaponSlotRef => r.kind === "weapon")
+        .slice()
+        .sort((a, b) => a.slotLevel - b.slotLevel);
+
+    const out = new Map<SlotRefFull, DecoPlacement>();
+
+    // Pre-fill everything as empty
+    for (const ref of slotRefs) {
+        out.set(ref, { slotLevel: ref.slotLevel, decoration: null });
+    }
+
+    // Place each deco into the smallest possible slot of its kind
+    for (const deco of placedDecos) {
+        const req = deco.slot as SlotLevel; // 1|2|3
+        const pool = deco.kind === "armor" ? armorSlots : weaponSlots;
+
+        const idx = pool.findIndex(s => s.slotLevel >= req);
+        if (idx === -1) {
+            // Shouldn't happen because the solver already proved feasibility,
+            // but if it does, just skip (keeps nulls).
+            continue;
+        }
+
+        const chosenSlot = pool.splice(idx, 1)[0];
+        out.set(chosenSlot, { slotLevel: chosenSlot.slotLevel, decoration: deco });
+    }
+
+    return out;
+}
+
 /* =========================================================
    MAIN
 ========================================================= */
@@ -463,8 +514,8 @@ export function generateBuild(
     const MAX_RESULTS = 10;
 
     // ---- Beam settings ----
-    const BEAM_WIDTH = 600;
-    const TIME_LIMIT_MS = 3000;
+    const BEAM_WIDTH = 2000;
+    const TIME_LIMIT_MS = 10000;
     const START = performance.now();
 
     // ---- pruning predicate (NEW/CHANGED: includes weapon slots & weapon bestGain) ----
@@ -592,7 +643,7 @@ export function generateBuild(
         }
         const allMet = skillIds.every((id) => needs[id] <= 0);
 
-        // build per-piece slot refs for ARMOR
+        // build per-piece slot refs for ARMOR (KEEP ORIGINAL SLOT INDEX)
         const armorSlotKeys: ArmorSlotKey[] = ["head", "chest", "arms", "waist", "legs"];
         type ArmorSlotRef = { piece: ArmorSlotKey; slotIndex: number; slotLevel: SlotLevel };
         const armorSlotRefs: ArmorSlotRef[] = [];
@@ -600,14 +651,16 @@ export function generateBuild(
         for (const pieceKey of armorSlotKeys) {
             const p = armorBuild[pieceKey];
             const slots = p?.slots ?? [];
-            const list = slots
-                .filter((x): x is SlotLevel => x === 1 || x === 2 || x === 3)
-                .sort((a, b) => a - b);
 
-            for (let i = 0; i < list.length; i++) {
-                armorSlotRefs.push({ piece: pieceKey, slotIndex: i, slotLevel: list[i] });
+            for (let i = 0; i < slots.length; i++) {
+                const L = slots[i];
+                if (L === 1 || L === 2 || L === 3) {
+                    // slotIndex is the REAL index in the armor's slots array (e.g. [3,2,1])
+                    armorSlotRefs.push({ piece: pieceKey, slotIndex: i, slotLevel: L });
+                }
             }
         }
+
 
         // NEW/CHANGED: weapon slot refs (always 3x L3, kind="weapon")
         const weaponSlotRefs: SlotRefKinded[] = [
@@ -670,16 +723,32 @@ export function generateBuild(
             const solvedFlat = solveDecorationsCached(needs, slotRefsKinded);
             if (!solvedFlat) continue;
 
-            // map first N placements to armor slots in order, then remaining 3 to weapon
-            const armorPlacementCount = armorSlotRefs.length;
+            // Build full refs with identity (armor refs + weapon refs)
+            const fullSlotRefs: SlotRefFull[] = [
+                ...armorSlotRefs.map((r) => ({
+                    kind: "armor" as const,
+                    piece: r.piece,
+                    slotIndex: r.slotIndex,
+                    slotLevel: r.slotLevel,
+                })),
+                { kind: "weapon" as const, weaponIndex: 0, slotLevel: 3 },
+                { kind: "weapon" as const, weaponIndex: 1, slotLevel: 3 },
+                { kind: "weapon" as const, weaponIndex: 2, slotLevel: 3 },
+            ];
 
-            for (let i = 0; i < armorPlacementCount; i++) {
-                const ref = armorSlotRefs[i];
-                decorations[ref.piece][ref.slotIndex] = solvedFlat[i];
+            // Re-pack solved decorations into the smallest fitting slots
+            const packed = packDecorationsToSmallestSlots(fullSlotRefs, solvedFlat);
+
+            // Write packed results back into BuildDecorations
+            for (const ref of fullSlotRefs) {
+                const placement = packed.get(ref)!;
+
+                if (ref.kind === "armor") {
+                    decorations[ref.piece][ref.slotIndex] = placement;
+                } else {
+                    decorations.weapon[ref.weaponIndex] = placement;
+                }
             }
-
-            // weapon placements are last 3
-            decorations.weapon = solvedFlat.slice(armorPlacementCount, armorPlacementCount + 3);
         }
 
         const bonuses = getBonuses(armorBuild, data.armorBySlot);

@@ -1,5 +1,53 @@
 .builderPage {
     width: 100%;
+    height: calc(100svh - 100px);
+    padding: 10px;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+}
+.builderPageInner {
+    width: 100%;
+    height: 100%;
+    max-width: 1400px;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    gap: 20px;
+}
+.skillsContainer {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap:  5px;
+}
+.placeholder {
+    width: 100%;
+    background: gray;
+    height: 200px;
+}
+.gearContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.armorPieceContainer {
+    width: 100%;
+    cursor: pointer;
+}
+.armorPieceContainer:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+}
+.statsContainer {
+    width: 50%;
+}
+
+.builderPage {
+    width: 100%;
     height: 100svh;
     display: flex;
     justify-content: center;

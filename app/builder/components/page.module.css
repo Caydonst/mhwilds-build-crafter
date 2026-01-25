@@ -1,0 +1,287 @@
+:root {
+    --weapon-icon-size: 0.50;
+}
+
+.gearSelectorContainer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.15s;
+}
+.gearSelectorContainer.open {
+    visibility: visible;
+    opacity: 1;
+}
+@keyframes fadeIn {
+    from {
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+    }
+}
+@keyframes fadeDown {
+    from {
+        transform: translateY(-10px);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+.gearSelectorInner {
+    width: 100%;
+    max-width: 800px;
+    height: 100%;
+    max-height: 800px;
+    background: #080808;
+    border: 1px solid rgba(255,255,255,0.05);
+    padding: 20px;
+    border-radius: 15px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    transform: scale(0.9);
+    transition: 0.15s;
+}
+
+.gearSelectorContainer.open .gearSelectorInner {
+    transform: scale(1);
+}
+.gearSelectorInner .info {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    color: #fff;
+    gap: 20px;
+}
+.info .header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.info .header button {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: transparent;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.info .header button > * {
+    width: 22px;
+    height: 22px;
+    color: #fff;
+}
+.info .header button:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+.info .searchContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    gap: 5px;
+    width: 100%;
+}
+.info .searchContainer input {
+    width: 100%;
+    outline: none;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 10px;
+    color: #fff;
+    border-radius: 8px;
+    font-size: 16px;
+}
+.main {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    gap: 5px;
+    padding-right: 5px;
+}
+.mainInner {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    gap: 5px;
+}
+.gearContainer {
+    width: 100%;
+    cursor: pointer;
+    border-radius: 8px;
+}
+.gearContainer:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+.main::-webkit-scrollbar {
+    width: 10px;
+}
+.main::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+.main::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.3);
+    border-radius: 10px;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+}
+.inputFilterContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 5px;
+}
+.weaponSelectorWrapper {
+    height: 100%;
+    position: relative;
+}
+.weaponSelector {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    cursor: pointer;
+    color: #fff;
+    position: relative;
+    gap: 5px;
+    padding: 0 5px;
+    background: rgba(255, 255, 255, 0.03);
+}
+.weaponSelectorLeft {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+.weaponSelector:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+.weaponDropdown {
+    display: none;
+    position: absolute;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    top: calc(100% + 5px);
+    left: 0;
+    width: 100%;
+    background: #101010;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    z-index: 3;
+    overflow: hidden;
+    padding: 5px;
+}
+.weaponDropdown button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    gap: 5px;
+}
+.weaponDropdown button:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+.weaponDropdown.open {
+    display: flex;
+}
+.dropDownIcon {
+    width: 14px;
+    height: 14px;
+    color: #fff;
+    flex-shrink: 0;
+}
+.weaponSelectorContainer {
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    gap: 10px;
+    color: #fff;
+}
+
+.weaponIcon {
+    display: inline-block;
+    flex-shrink: 0;
+    width: calc(64px * var(--weapon-icon-size));
+    height: calc(64px * var(--weapon-icon-size));
+    background-image: url("../../assets/gear.png");
+    background-size: calc(1280px * var(--weapon-icon-size)) calc(832px * var(--weapon-icon-size)); /* or set to sheet width/height if scaling */
+    background-repeat: no-repeat;
+}
+.bow {
+    background-position: calc((-64px * 13) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.charge-blade {
+    background-position: calc((-64px * 9) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.dual-blades {
+    background-position: calc((-64px * 3) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.great-sword {
+    background-position: calc((-64px * 1) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.gunlance {
+    background-position: calc((-64px * 5) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.hammer {
+    background-position: calc((-64px * 6) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.heavy-bowgun {
+    background-position: calc((-64px * 12) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.hunting-horn {
+    background-position: calc((-64px * 7) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.insect-glaive {
+    background-position: calc((-64px * 10) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.lance {
+    background-position: calc((-64px * 4) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.light-bowgun {
+    background-position: calc((-64px * 11) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.long-sword {
+    background-position: calc((-64px * 2) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.switch-axe {
+    background-position: calc((-64px * 8) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.sword-shield {
+    background-position: 0 calc(-64px * var(--weapon-icon-size));
+}

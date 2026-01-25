@@ -55,11 +55,11 @@ export async function fetchArmorSets(): Promise<ArmorSet[]> {
 export async function getArmorByKind() {
     const armorSets: ArmorSet[] = await fetchArmorSets();
 
-    const head: Armor[] = armorSets.flatMap(set => set.pieces).filter(piece => piece.kind === "head" && piece.rarity >= 7);
-    const chest: Armor[] = armorSets.flatMap(set => set.pieces).filter(piece => piece.kind === "chest" && piece.rarity >= 7);
-    const arms: Armor[] = armorSets.flatMap(set => set.pieces).filter(piece => piece.kind === "arms" && piece.rarity >= 7);
-    const waist: Armor[] = armorSets.flatMap(set => set.pieces).filter(piece => piece.kind === "waist" && piece.rarity >= 7);
-    const legs: Armor[] = armorSets.flatMap(set => set.pieces).filter(piece => piece.kind === "legs" && piece.rarity >= 7);
+    const head: Armor[] = armorSets.flatMap(set => set.pieces).filter(piece => piece.kind === "head");
+    const chest: Armor[] = armorSets.flatMap(set => set.pieces).filter(piece => piece.kind === "chest");
+    const arms: Armor[] = armorSets.flatMap(set => set.pieces).filter(piece => piece.kind === "arms");
+    const waist: Armor[] = armorSets.flatMap(set => set.pieces).filter(piece => piece.kind === "waist");
+    const legs: Armor[] = armorSets.flatMap(set => set.pieces).filter(piece => piece.kind === "legs");
 
     return { head, chest, arms, waist, legs, armorSets };
 }

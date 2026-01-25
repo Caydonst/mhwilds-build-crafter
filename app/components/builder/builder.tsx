@@ -5,6 +5,7 @@ import SkillSelector from "./skillSelector/skillSelector";
 import { ChevronDownIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import type { Build as BuildType, Skill, SkillFilter, Weapon, WeaponKind } from "@/app/api/types/types";
 import Build from "./build/build";
+import BuildBreakdown from "./buildBreakdown/buildBreakdown"
 
 type Props = {
     builderOpen: boolean;
@@ -26,16 +27,16 @@ type WorkerMessage =
     | { type: "error"; payload: string };
 
 const weaponLabelMap: Record<Exclude<WeaponKind, null>, string> = {
-    bow: "Bow",
+    "bow": "Bow",
     "charge-blade": "Charge Blade",
     "dual-blades": "Dual Blades",
     "great-sword": "Great Sword",
-    gunlance: "Gunlance",
-    hammer: "Hammer",
+    "gunlance": "Gunlance",
+    "hammer": "Hammer",
     "heavy-bowgun": "Heavy Bowgun",
     "hunting-horn": "Hunting Horn",
     "insect-glaive": "Insect Glaive",
-    lance: "Lance",
+    "lance": "Lance",
     "light-bowgun": "Light Bowgun",
     "long-sword": "Long Sword",
     "switch-axe": "Switch Axe",
@@ -60,6 +61,8 @@ export default function Builder({ builderOpen, setBuilderOpen, weaponData, skill
         found: 0,
         pruned: 0,
     });
+    const [buildBreakdownOpen, setBuildBreakdownOpen] = useState(false);
+    const [selectedBuild, setSelectedBuild] = useState<BuildType | null>(null);
 
     const weaponDropdownRef = useRef<HTMLDivElement | null>(null);
     const workerRef = useRef<Worker | null>(null);
@@ -285,7 +288,7 @@ export default function Builder({ builderOpen, setBuilderOpen, weaponData, skill
                             ) : generatedBuilds.length > 0 ? (
                                 <div className={styles.buildsContainer}>
                                     {generatedBuilds.map((build, buildIndex) => (
-                                        <Build key={buildIndex} index={buildIndex} build={build} skillData={skillData} />
+                                        <Build key={buildIndex} index={buildIndex} build={build} skillData={skillData} setBuildBreakdownOpen={setBuildBreakdownOpen} setSelectedBuild={setSelectedBuild} />
                                     ))}
                                 </div>
                             ) : (
@@ -297,7 +300,9 @@ export default function Builder({ builderOpen, setBuilderOpen, weaponData, skill
                     <hr />
                 </div>
             </div>
-
+            {buildBreakdownOpen && (
+                <BuildBreakdown setBuildBreakdownOpen={setBuildBreakdownOpen} build={selectedBuild} skillData={skillData} />
+            )}
             <CancelConfirm
                 openConfirmContainer={openConfirmContainer}
                 setOpenConfirmContainer={setOpenConfirmContainer}

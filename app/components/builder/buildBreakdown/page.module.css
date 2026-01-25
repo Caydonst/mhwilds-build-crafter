@@ -1,0 +1,288 @@
+.buildBreakdownWrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.6);
+}
+.buildBreakdownContainer {
+    position: absolute;
+    top: 20px;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #040404;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 15px;
+    overflow: hidden;
+    padding: 10px;
+    width: 100%;
+    max-width: 500px;
+}
+.header {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    background: transparent;
+    flex-shrink: 0;
+}
+.mainContainer {
+    height: calc(100% - 60px);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    padding: 0 10px;
+    gap: 20px;
+}
+.statsContainer {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+}
+.attackStatsContainer,
+.defenseStatsContainer {
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    gap: 5px;
+}
+.gearContainerWrapper {
+    width: 25%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 5px;
+}
+.gearContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    gap: 5px;
+    overflow: auto;
+    padding-bottom: 10px;
+}
+.gearPieceWrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.gearPieceWrapper:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+.gearPieceWrapper.selected {
+    background: rgba(255, 255, 255, 0.05);
+}
+.selectedGearInfoWrapper {
+    width: 25%;
+    height: 100%;
+    padding-bottom: 10px;
+}
+.selectedGearInfo {
+    width: 100%;
+    border-radius: 8px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+    color: #fff;
+}
+.gearPieceName {
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.gearPieceRarity {
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+.gearPieceStatsContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: #fff;
+    gap: 5px;
+}
+.gearPieceStats {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.gearPieceStatsContainer .title {
+    width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 5px 0;
+}
+.defense {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 5px 0;
+    margin-bottom: 5px;
+}
+.res {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 24px;
+    color: #fff;
+}
+.left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.left span {
+    width: 8px;
+    height: 8px;
+    transform: rotate(45deg);
+}
+.defense span {
+    background: gray;
+}
+.res:nth-child(2) .left span {
+    background: red;
+}
+.res:nth-child(3) .left span {
+    background: royalblue;
+}
+.res:nth-child(4) .left span {
+    background: yellow;
+}
+.res:nth-child(5) .left span {
+    background: deepskyblue;
+}
+.res:nth-child(6) .left span {
+    background: purple;
+}
+.gearPieceSkills {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    gap: 5px;
+}
+.gearPieceSkills .title {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);;
+    width: 100%;
+    padding: 5px 0;
+}
+.equipmentSkills {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 5px;
+}
+.selectedGearHeader {
+    padding: 10px;
+    color: #fff;
+}
+.skillsContainer {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+    width: 25%;
+    height: 100%;
+}
+.statsContainer::-webkit-scrollbar,
+.gearContainer::-webkit-scrollbar,
+.skillsContainer::-webkit-scrollbar {
+    width: 16px;
+}
+.statsContainer::-webkit-scrollbar-track,
+.gearContainer::-webkit-scrollbar-track,
+.skillsContainer::-webkit-scrollbar-track {
+    background: transparent;
+}
+.statsContainer::-webkit-scrollbar-thumb,
+.gearContainer::-webkit-scrollbar-thumb,
+.skillsContainer::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.3);
+    border-radius: 10px;
+    background-clip: padding-box;
+    border: 6px solid transparent;
+}
+.equipSkillsContainer,
+.setBonusSkillsContainer {
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+}
+.attackStatsText,
+.defenseStatsText,
+.setBonusSkillsText {
+    color: #fff;
+    font-weight: 600;
+    width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    padding: 5px 0;
+}
+.closeBtn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    transition: 0.3s;
+    cursor: pointer;
+}
+.closeBtn > * {
+    width: 26px;
+    height: 26px;
+    color: #fff;
+}
+.closeBtn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}

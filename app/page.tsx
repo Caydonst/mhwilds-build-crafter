@@ -18,8 +18,8 @@ export default function Home() {
                     <h1>Monster Hunter Wilds</h1>
                     <h2>Build Generator</h2>
                 </div>
-                <Link href="/builder" className={styles.buildGeneratorBtn}>
-                    <SparklesIcon className={styles.sparklesIcon}/>Open Generator
+                <Link href="/generator" className={styles.buildGeneratorBtn}>
+                    <SparklesIcon className={styles.sparklesIcon}/>Launch Generator
                 </Link>
             </div>
             <div className={styles.worksContainer}>

@@ -1,12 +1,12 @@
-type SkillRank = {
+export type SkillRank = {
     id: number,
     name: string,
     description: string,
     level: number
-    skill?: {
+    skill: {
         id: number;
-        name?: string;
-        gameId?: number;
+        name: string;
+        gameId: number;
     }
 }
 type SkillIcon = {
@@ -89,7 +89,7 @@ export interface CraftingCost {
 }
 
 
-/** ---------- Armor ---------- **/
+/** ---------- ArmorPiece ---------- **/
 
 export type ArmorKind = 'head' | 'chest' | 'arms' | 'waist' | 'legs'; // :contentReference[oaicite:5]{index=5}
 
@@ -119,8 +119,15 @@ export interface ArmorCrafting {
 }
 
 /**
- * Armor pieces (head/chest/arms/waist/legs)
+ * ArmorPiece pieces (head/chest/arms/waist/legs)
  */
+export interface ArmorSkill {
+    description: string;
+    id: number
+    level: number;
+    name: string | null
+    skill: Skill
+}
 export interface Armor {
     id: number;
     name: string;
@@ -131,7 +138,7 @@ export interface Armor {
     defense: ArmorDefense;
     resistances: ArmorResistances;
     slots: number[];
-    skills: SkillRank[];
+    skills: ArmorSkill[];
     armorSet: ArmorSetStub | null;
     crafting: ArmorCrafting;
 }
@@ -292,7 +299,7 @@ export interface CharmRank {
     description: string;
     level: number;
     rarity: number;
-    skills: CharmRankSkill[];
+    skills: ArmorSkill[];
     crafting: CharmRankCrafting;
 }
 
@@ -418,4 +425,14 @@ export interface BuildData {
 
 export type SkillGainMap = Record<number, number>;
 export type SlotCounts = { 1: number; 2: number; 3: number };
+
+export type BuilderBuild = {
+    weapon: Weapon | null;
+    head: Armor | null;
+    chest: Armor | null;
+    arms: Armor | null;
+    waist: Armor | null;
+    legs: Armor | null;
+    charm: CharmRank | null;
+}
 
