@@ -3,7 +3,7 @@ import {ChevronDownIcon, XMarkIcon} from "@heroicons/react/24/outline"
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import {useGameData} from "@/app/hooks/useGameData";
 import ArmorPiece from "@/app/components/builder/build/buildComponents/armorPiece"
-import type {Armor, CharmRank, WeaponKind, BuilderBuild} from "@/app/api/types/types";
+import type {Armor, CharmRank, WeaponKind, BuilderBuild, Weapon} from "@/app/api/types/types";
 
 type ArmorSlotKey = "weapon" | "head" | "chest" | "arms" | "waist" | "legs" | "charm";
 
@@ -12,7 +12,7 @@ interface Props {
     setWeaponSelectorOpen: React.Dispatch<React.SetStateAction<boolean>>;
     type: ArmorSlotKey;
     build: BuilderBuild;
-    setBuild: Dispatch<React.SetStateAction<BuilderBuild>>;
+    setBuild: React.Dispatch<React.SetStateAction<BuilderBuild>>;
 }
 
 export default function WeaponSelector({ weaponSelectorOpen, setWeaponSelectorOpen, type, build, setBuild }: Props) {
