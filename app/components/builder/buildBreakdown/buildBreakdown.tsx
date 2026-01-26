@@ -24,6 +24,11 @@ export default function BuildBreakdown({setBuildBreakdownOpen, build, skillData}
     const [selectedGearPiece, setSelectedGearPiece] = useState<Armor | CharmRank | null>(null);
     const [buildStats, setBuildStats] = useState(null);
 
+    function isArmorWithResistances(piece: Armor | CharmRank | null): piece is Armor {
+        return !!piece && "resistances" in piece;
+    }
+
+
     useEffect(() => {
         console.log(build);
         const buildStats = {
@@ -37,17 +42,18 @@ export default function BuildBreakdown({setBuildBreakdownOpen, build, skillData}
             }
         }
 
-        type ResistanceKey = keyof typeof buildStats.resistances;
-        type ArmorKey = keyof typeof build.armor
-
         if (build) {
             (Object.keys(buildStats.resistances) as (keyof typeof buildStats.resistances)[])
                 .forEach((key) => {
+
                     Object.values(build.armor).forEach((armor) => {
-                        if  (armor?.resistances !== undefined) {
-                            buildStats.resistances[key] += armor?.resistances[key];
+
+                        if (isArmorWithResistances(armor)) {
+                            buildStats.resistances[key] += armor.resistances[key];
                         }
+
                     });
+
                 });
         }
         ARMOR_SLOTS.forEach(slot => {
