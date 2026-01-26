@@ -18,11 +18,24 @@ type ArmorSlotKey = "head" | "chest" | "arms" | "waist" | "legs";
 
 type ArmorOrCharm = Armor | CharmRank;
 
+type Resistances = {
+    fire: number;
+    water: number;
+    thunder: number;
+    ice: number;
+    dragon: number;
+};
+
+type BuildStats = {
+    defense: number;
+    resistances: Resistances;
+};
+
 const ARMOR_SLOTS: readonly ArmorSlotKey[] = ["head", "chest", "arms", "waist", "legs"] as const;
 
 export default function BuildBreakdown({setBuildBreakdownOpen, build, skillData}: props) {
     const [selectedGearPiece, setSelectedGearPiece] = useState<Armor | CharmRank | null>(null);
-    const [buildStats, setBuildStats] = useState(null);
+    const [buildStats, setBuildStats] = useState<BuildStats | null>(null);
 
     function isArmorWithResistances(piece: Armor | CharmRank | null): piece is Armor {
         return !!piece && "resistances" in piece;
