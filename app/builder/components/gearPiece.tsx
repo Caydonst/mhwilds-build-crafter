@@ -1,20 +1,22 @@
-import styles from "../page.module.css"
+import styles from "./page.module.css"
 import type {Build, SlotLevel, Armor, CharmRank, Weapon} from "@/app/api/types/types";
 import React from "react";
 
-type ArmorSlotKey = "head" | "chest" | "arms" | "waist" | "legs";
-type GearSlotKey = ArmorSlotKey | "charm";
+type ArmorSlotKey = "weapon" | "head" | "chest" | "arms" | "waist" | "legs" | "charm";
+type GearSlotKey = "head" | "chest" | "arms" | "waist" | "legs" | "charm";
 type WeaponArmorCharm = Weapon | Armor | CharmRank;
 const ARMOR_KINDS = ["head", "chest", "arms", "waist", "legs"] as const;
 type ArmorKind = typeof ARMOR_KINDS[number];
 
 interface Props {
     gearPiece: WeaponArmorCharm | null
-    slotKey: string;
+    slotKey: ArmorSlotKey;
     build: Build | null;
+    openGearSelector: (slot: ArmorSlotKey) => void;
+    openWeaponSelector: (slot: ArmorSlotKey) => void;
 }
 
-export default function ArmorPiece({ gearPiece, slotKey, build }: Props) {
+export default function GearPiece({ gearPiece, slotKey, build, openGearSelector, openWeaponSelector }: Props) {
 
     const weapons = [
         "bow",
@@ -52,11 +54,11 @@ export default function ArmorPiece({ gearPiece, slotKey, build }: Props) {
     type WeaponKind = typeof weapons[number];
 
     function isWeaponPiece(piece: WeaponArmorCharm | null | undefined): piece is Weapon {
-        return !!piece && weapons.includes((piece as any).kind);
+        return !!piece && "kind" in piece;
     }
 
     function isArmorPiece(piece: WeaponArmorCharm | null | undefined): piece is Armor {
-        return !!piece && ARMOR_KINDS.includes((piece as any).kind);
+        return !!piece && "kind" in piece;
     }
 
     function isCharmRank(piece: WeaponArmorCharm | null | undefined): piece is CharmRank {
@@ -85,7 +87,7 @@ export default function ArmorPiece({ gearPiece, slotKey, build }: Props) {
 
         // sprite row index: charm uses fixed, armor uses kind lookup
         const spriteX =
-            slotKey === "charm"
+            isCharmRank(gearPiece)
                 ? armorIndex.charm
                 : isArmorPiece(gearPiece)
                     ? armorIndex[gearPiece.kind]
@@ -105,12 +107,17 @@ export default function ArmorPiece({ gearPiece, slotKey, build }: Props) {
         console.log(gearPiece?.kind)
     }
 
+    function test(slot: string) {
+        console.log("deco click");
+        console.log(slot);
+    }
+
     return (
         <div className={styles.buildPieceContainer}>
             {gearPiece !== null ? (
                 <>
                     {(isWeaponPiece(gearPiece) && gearPiece.kind && weapons.includes(gearPiece.kind) ? (
-                        <div className={styles.pieceContainerHeader}>
+                        <div className={styles.pieceContainerHeader} onClick={() => openWeaponSelector(slotKey)}>
                             <span className={`${styles.buildPieceIcon}`} style={{ backgroundPosition: `calc((-64px * ${weaponIndex[gearPiece.kind]}) * var(--build-icon-size)) calc((-64px * ${rarity}) * var(--build-icon-size))` }} />
                             <div className={styles.buildPieceInfo}>
                                 <p className={styles.pieceTitle}>{gearPiece.name}</p>
@@ -123,7 +130,7 @@ export default function ArmorPiece({ gearPiece, slotKey, build }: Props) {
                             </div>
                         </div>
                     ) : (
-                        <div className={styles.pieceContainerHeader}>
+                        <div className={styles.pieceContainerHeader} onClick={() => openGearSelector(slotKey)}>
                   <span
                       className={styles.buildPieceIcon}
                       style={{ backgroundPosition: bgPos }}
@@ -141,33 +148,37 @@ export default function ArmorPiece({ gearPiece, slotKey, build }: Props) {
                     ))}
 
                     {/* ✅ Decorations only for THIS piece */}
-                    <div className={styles.decoSlotsContainer}>
-                        {!isCharmRank(gearPiece) && gearPiece.slots.map((s, i) => {
-                            const placement = build?.decorations?.[slotKey as ArmorSlotKey]?.[i];
-                            const key = `${slotKey}-slot-${i}`;
-                            return (
-                                <div key={key} className={styles.slot}>
-                                    {s === 0 ? (
-                                        <div className={styles.decoDash}>
-                                            <p>-</p>
+                    {(isWeaponPiece(gearPiece) || isArmorPiece(gearPiece)) && gearPiece.slots.length > 0 && (
+                        <>
+                            <div className={styles.decoSlotsContainer}>
+                                {gearPiece.slots.map((s, i) => {
+                                    //const placement = build?.decorations?.[slotKey as ArmorSlotKey]?.[i];
+                                    const key = `${slotKey}-slot-${i}`;
+                                    return (
+                                        <div key={key} className={styles.slot} onClick={() => test(slotKey)}>
+                                            {s === 0 ? (
+                                                <div className={styles.decoDash}>
+                                                    <p>-</p>
+                                                </div>
+                                            ) : (
+                                                <span className={`${styles.decoIcon} ${styles[`deco${s}`]}`} />
+                                            )}
+                                            {/*{placement && placement.slotLevel <= s && (
+                                                <p>{placement.decoration?.name ?? ""}</p>
+                                            )}*/}
                                         </div>
-                                    ) : (
-                                        <span className={`${styles.decoIcon} ${styles[`deco${s}`]}`} />
-                                    )}
-                                    {placement && placement.slotLevel <= s && (
-                                        <p>{placement.decoration?.name ?? ""}</p>
-                                    )}
-                                </div>
-                            );
-                        })}
-                    </div>
+                                    );
+                                })}
+                            </div>
+                        </>
+                    )}
 
                     {/* Optional: you can render charm info differently if you want */}
-                    {slotKey === "charm" && isCharmRank(gearPiece) && null}
+                    {isCharmRank(gearPiece) && null}
                 </>
             ) : (
                 <>
-                    <div className={styles.pieceContainerHeader}>
+                    <div className={styles.pieceContainerHeader} onClick={() => openGearSelector(slotKey)}>
                   <span
                       className={styles.buildPieceIcon}
                       style={{ backgroundPosition: bgPos }}

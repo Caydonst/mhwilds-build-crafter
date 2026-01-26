@@ -8,6 +8,7 @@ import WeaponSelector from "./components/weaponSelector"
 import type {BuilderBuild, Skill as SkillType} from "@/app/api/types/types"
 import {addDecoSkillsToAggregate, addSkillLevel} from "@/app/components/builder/build/buildComponents/helperFunctions";
 import Skill from "@/app/components/builder/build/buildComponents/skill";
+import GearPiece from "@/app/builder/components/gearPiece";
 
 type ArmorSlotKey = "weapon" | "head" | "chest" | "arms" | "waist" | "legs" | "charm";
 
@@ -104,21 +105,9 @@ export default function Builder() {
                         <div className={styles.gearContainer}>
                             {ARMOR_SLOTS.map((slot) => (
                                 slot === "weapon" ? (
-                                    <div
-                                        key={slot}
-                                        className={styles.armorPieceContainer}
-                                        onClick={() => openWeaponSelector(slot)}
-                                    >
-                                        <ArmorPiece slotKey={slot} gearPiece={build[slot]} build={null} />
-                                    </div>
+                                    <GearPiece key={slot} slotKey={slot} gearPiece={build[slot]} build={null} openGearSelector={openGearSelector} openWeaponSelector={openWeaponSelector} />
                                 ) : (
-                                    <div
-                                        key={slot}
-                                        className={styles.armorPieceContainer}
-                                        onClick={() => openGearSelector(slot)}
-                                    >
-                                        <ArmorPiece slotKey={slot} gearPiece={build[slot]} build={null} />
-                                    </div>
+                                    <GearPiece key={slot} slotKey={slot} gearPiece={build[slot]} build={null} openGearSelector={openGearSelector} openWeaponSelector={openWeaponSelector} />
                                 )
                             ))}
                         </div>

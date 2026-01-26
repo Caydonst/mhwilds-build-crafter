@@ -236,6 +236,110 @@
     color: #fff;
 }
 
+.buildPieceContainer {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 10px;
+    color: #fff;
+    width: 100%;
+    height: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 6px;
+    background: rgba(255, 255, 255, 0.02);
+}
+.buildPieceInfo {
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    gap: 5px;
+}
+.gearPieceSkillsContainer {
+    color: gray;
+    font-size: 14px;
+}
+.pieceContainerHeader {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.pieceContainerHeader:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+.decoSlotsContainer {
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+}
+.slot {
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+    height: 24px;
+    cursor: pointer;
+}
+.slot:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+.decoDash {
+    height: 100%;
+    padding-left: 8px;
+    color: #b3b3b3;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.skillsContainer {
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+.decoIcon {
+    display: inline-block;
+    flex-shrink: 0;
+    width: calc(33px * var(--deco-icon-size));
+    height: calc(33px * var(--deco-icon-size));
+    background-image: url("@/app/assets/decorations.png");
+    background-size: calc(660px * var(--deco-icon-size)) calc(840px * var(--deco-icon-size)); /* or set to sheet width/height if scaling */
+    background-repeat: no-repeat;
+}
+.deco1 {
+    background-position: 0 0;
+}
+.deco2 {
+    background-position: calc((-33px * 5) * var(--deco-icon-size)) 0;
+}
+.deco3 {
+    background-position: calc((-33px * 10) * var(--deco-icon-size)) 0;
+}
+.buildPieceIcon {
+    display: inline-block;
+    flex-shrink: 0;
+    width: calc(64px * var(--build-icon-size));
+    height: calc(64px * var(--build-icon-size));
+    background-image: url("@/app/assets/gear.png");
+    background-size: calc(1280px * var(--build-icon-size)) calc(832px * var(--build-icon-size)); /* or set to sheet width/height if scaling */
+    background-repeat: no-repeat;
+}
 .weaponIcon {
     display: inline-block;
     flex-shrink: 0;
@@ -286,4 +390,14 @@
 }
 .sword-shield {
     background-position: 0 calc(-64px * var(--weapon-icon-size));
+}
+@media (min-width: 900px) and (max-width: 1000px) {
+    .buildPieceContainer {
+        flex-direction: column;
+    }
+}
+@media (max-width: 500px) {
+    .buildPieceContainer {
+        flex-direction: column;
+    }
 }

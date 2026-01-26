@@ -11,7 +11,7 @@
     height: 100%;
     max-width: 1400px;
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-items: start;
     gap: 20px;
 }
@@ -73,5 +73,18 @@
 @keyframes spin {
     to {
         transform: rotate(360deg);
+    }
+}
+@media(max-width: 900px) {
+    .builderPageInner {
+        flex-direction: column;
+    }
+    .skillsContainer {
+        order: 1;
+        width: 100%;
+    }
+    .statsContainer {
+        width: 100%;
+        order: 2;
     }
 }
