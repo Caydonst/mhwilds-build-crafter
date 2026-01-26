@@ -5,6 +5,8 @@ import React from "react";
 type ArmorSlotKey = "head" | "chest" | "arms" | "waist" | "legs";
 type GearSlotKey = ArmorSlotKey | "charm";
 type WeaponArmorCharm = Weapon | Armor | CharmRank;
+const ARMOR_KINDS = ["head", "chest", "arms", "waist", "legs"] as const;
+type ArmorKind = typeof ARMOR_KINDS[number];
 
 interface Props {
     gearPiece: WeaponArmorCharm | null
@@ -13,18 +15,6 @@ interface Props {
 }
 
 export default function ArmorPiece({ gearPiece, slotKey, build }: Props) {
-
-    function isArmorPiece(piece: WeaponArmorCharm | null | undefined): piece is Armor {
-        return !!piece && "kind" in piece && "slots" in piece;
-    }
-
-    function isCharmRank(piece: WeaponArmorCharm | null | undefined): piece is CharmRank {
-        return !!piece && "charm" in piece && !("kind" in piece);
-    }
-
-    function isSlotLevel(x: number): x is SlotLevel {
-        return x === 1 || x === 2 || x === 3;
-    }
 
     const weapons = [
         "bow",
@@ -59,6 +49,24 @@ export default function ArmorPiece({ gearPiece, slotKey, build }: Props) {
         "sword-shield": 0,
     }
 
+    type WeaponKind = typeof weapons[number];
+
+    function isWeaponPiece(piece: WeaponArmorCharm | null | undefined): piece is Weapon {
+        return !!piece && weapons.includes((piece as any).kind);
+    }
+
+    function isArmorPiece(piece: WeaponArmorCharm | null | undefined): piece is Armor {
+        return !!piece && ARMOR_KINDS.includes((piece as any).kind);
+    }
+
+    function isCharmRank(piece: WeaponArmorCharm | null | undefined): piece is CharmRank {
+        return !!piece && "charm" in piece && !("kind" in piece);
+    }
+
+    function isSlotLevel(x: number): x is SlotLevel {
+        return x === 1 || x === 2 || x === 3;
+    }
+
     const armorIndex: Record<GearSlotKey, number> = {
         head: 14,
         chest: 15,
@@ -91,7 +99,6 @@ export default function ArmorPiece({ gearPiece, slotKey, build }: Props) {
             isArmorPiece(gearPiece)
                 ? ([...gearPiece.slots.filter(isSlotLevel), ...ZEROS].slice(0, 3))
                 : [...ZEROS];
-        console.log(armorSlots);
     }
 
     if (!isArmorPiece(gearPiece) && !isCharmRank(gearPiece)) {
@@ -102,7 +109,7 @@ export default function ArmorPiece({ gearPiece, slotKey, build }: Props) {
         <div className={styles.buildPieceContainer}>
             {gearPiece !== null ? (
                 <>
-                    {(!isCharmRank(gearPiece) && !isArmorPiece(gearPiece)) && gearPiece.kind && weapons.includes(gearPiece.kind) ? (
+                    {(isWeaponPiece(gearPiece) && gearPiece.kind && weapons.includes(gearPiece.kind) ? (
                         <div className={styles.pieceContainerHeader}>
                             <span className={`${styles.buildPieceIcon}`} style={{ backgroundPosition: `calc((-64px * ${weaponIndex[gearPiece.kind]}) * var(--build-icon-size)) calc((-64px * ${rarity}) * var(--build-icon-size))` }} />
                             <div className={styles.buildPieceInfo}>
@@ -131,7 +138,7 @@ export default function ArmorPiece({ gearPiece, slotKey, build }: Props) {
                                 </div>
                             </div>
                         </div>
-                    )}
+                    ))}
 
                     {/* ✅ Decorations only for THIS piece */}
                     <div className={styles.decoSlotsContainer}>

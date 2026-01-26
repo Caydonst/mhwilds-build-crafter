@@ -50,7 +50,11 @@ export default function WeaponSelector({ weaponSelectorOpen, setWeaponSelectorOp
         return Array.from(new Set(kinds));
     }, [weapons]);
 
-    const filteredWeapons = weapons.filter(weapon => weapon.kind === weaponFilter);
+    const filteredWeapons = useMemo(
+        () => (weapons ? weapons.filter(w => w.kind === weaponFilter) : []),
+        [weapons, weaponFilter]
+    );
+
 
     function updateWeapon(weapon: Exclude<WeaponKind, null>) {
         setWeaponKind(weapon);
@@ -59,11 +63,9 @@ export default function WeaponSelector({ weaponSelectorOpen, setWeaponSelectorOp
     }
 
     function addWeapon(weapon: Weapon) {
-        setBuild({
-            ...build,
-            weapon: weapon,
-        })
+        setBuild(prev => ({ ...prev, weapon: weapon }));
         setWeaponSelectorOpen(false);
+
     }
 
     useEffect(() => {

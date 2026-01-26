@@ -1,7 +1,7 @@
 "use client"
 import styles from "./page.module.css"
 import {useGameData} from "@/app/hooks/useGameData";
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useMemo} from "react";
 import ArmorPiece from "@/app/components/builder/build/buildComponents/armorPiece";
 import GearSelector from "./components/gearSelector"
 import WeaponSelector from "./components/weaponSelector"
@@ -50,20 +50,6 @@ export default function Builder() {
         build.legs,
         build.charm,
     ]
-
-
-    for (const piece of pieces) {
-        if (piece) {
-            for (const s of piece.skills) {
-
-                const id = s.skill?.id;
-                if (!id) continue;
-
-                // s.skill is NOT your full Skill type, so use skillData as source of truth if present
-                addSkillLevel(skills, id, s.level ?? 0, aggregatedSkillsMap);
-            }
-        }
-    }
 // --- 2) ArmorPiece decorations skills ---
     //for (const slot of ARMOR_SLOTS) {
     //    addDecoSkillsToAggregate(skills, aggregatedSkillsMap, build.decorations?.[slot]);
@@ -73,8 +59,21 @@ export default function Builder() {
     //addDecoSkillsToAggregate(skills, aggregatedSkillsMap, build.decorations?.weapon);
 
 
-    const aggregatedSkills = Object.values(aggregatedSkillsMap).sort((a, b) => b.totalLevel[0] - a.totalLevel[0]);
-    console.log(aggregatedSkills);
+    const aggregatedSkills = useMemo(() => {
+        const map: Record<number, AggregatedSkill> = {};
+        const pieces = [build.weapon, build.head, build.chest, build.arms, build.waist, build.legs, build.charm];
+
+        for (const piece of pieces) {
+            if (!piece) continue;
+            for (const s of piece.skills) {
+                const id = s.skill?.id;
+                if (!id) continue;
+                addSkillLevel(skills, id, s.level ?? 0, map);
+            }
+        }
+
+        return Object.values(map).sort((a, b) => b.totalLevel[0] - a.totalLevel[0]);
+    }, [build, skills]);
 
     function openGearSelector(slot: ArmorSlotKey) {
         setType(slot)
@@ -127,8 +126,12 @@ export default function Builder() {
                             <div className={styles.placeholder}></div>
                         </div>
                     </div>
-                    <WeaponSelector weaponSelectorOpen={weaponSelectorOpen} setWeaponSelectorOpen={setWeaponSelectorOpen} type={type} build={build} setBuild={setBuild} />
-                    <GearSelector gearSelectorOpen={gearSelectorOpen} setGearSelectorOpen={setGearSelectorOpen} type={type} build={build} setBuild={setBuild} />
+                    {weaponSelectorOpen && (
+                        <WeaponSelector weaponSelectorOpen={weaponSelectorOpen} setWeaponSelectorOpen={setWeaponSelectorOpen} type={type} build={build} setBuild={setBuild} />
+                    )}
+                    {gearSelectorOpen && (
+                        <GearSelector gearSelectorOpen={gearSelectorOpen} setGearSelectorOpen={setGearSelectorOpen} type={type} build={build} setBuild={setBuild} />
+                    )}
                 </>
             )}
 

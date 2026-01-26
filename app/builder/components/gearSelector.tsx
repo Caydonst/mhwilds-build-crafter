@@ -27,11 +27,9 @@ export default function GearSelector({ gearSelectorOpen, setGearSelectorOpen, ty
     }
 
     function addArmor(armor: Armor | CharmRank) {
-        setBuild({
-            ...build,
-            [type]: armor,
-        })
+        setBuild(prev => ({ ...prev, [type]: armor }));
         setGearSelectorOpen(false);
+
     }
 
     return (
@@ -49,7 +47,6 @@ export default function GearSelector({ gearSelectorOpen, setGearSelectorOpen, ty
                 </div>
                 <div className={styles.main}>
                     <div className={styles.mainInner}>
-                        {}
                         {gear && gear.map((piece, i) => (
                             <div key={i} className={styles.gearContainer} onClick={() => addArmor(piece)}>
                                 <ArmorPiece gearPiece={piece} slotKey={type} build={null} />
