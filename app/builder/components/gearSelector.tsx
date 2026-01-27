@@ -38,7 +38,7 @@ export default function GearSelector({ gearSelectorOpen, setGearSelectorOpen, ty
 
             // Create empty deco placements for this piece
             const emptySlots: DecoPlacement[] = armor.slots.map(() => ({
-                slotLevel: 0,
+                slotLevel: 1,
                 decoration: null,
             }));
 

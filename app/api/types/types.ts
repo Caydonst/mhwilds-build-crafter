@@ -339,7 +339,7 @@ export interface Decoration {
     gameId: number;
     name: string;
     description: string;
-    slot: number;
+    slot: SlotLevel;
     rarity: number;
     kind: DecorationKind;                // DecorationKind enum if defined elsewhere
     skills: DecorationSkill[];
