@@ -5,17 +5,22 @@ import React, {useState, useEffect, useMemo} from "react";
 import ArmorPiece from "@/app/components/builder/build/buildComponents/armorPiece";
 import GearSelector from "./components/gearSelector"
 import WeaponSelector from "./components/weaponSelector"
-import type {BuilderBuild, Skill as SkillType} from "@/app/api/types/types"
+import type {BuilderBuild, DecoPlacement, Skill as SkillType} from "@/app/api/types/types"
 import {addDecoSkillsToAggregate, addSkillLevel} from "@/app/components/builder/build/buildComponents/helperFunctions";
 import Skill from "@/app/components/builder/build/buildComponents/skill";
 import GearPiece from "@/app/builder/components/gearPiece";
+import DecoSelector from "./components/decoSelector"
 
 type ArmorSlotKey = "weapon" | "head" | "chest" | "arms" | "waist" | "legs" | "charm";
 
 export default function Builder() {
-    const { skills, weapons, armorBySlot, charms, decorations, isLoading, error } = useGameData();
+    const { skills, isLoading, error } = useGameData();
     const [weaponSelectorOpen, setWeaponSelectorOpen] = useState<boolean>(false);
     const [gearSelectorOpen, setGearSelectorOpen] = useState<boolean>(false);
+    const [decoSelectorOpen, setDecoSelectorOpen] = useState<boolean>(false);
+    const [slotLevel, setSlotLevel] = useState<number>(0);
+    const [decoKind, setDecoKind] = useState<string>("weapon");
+    const [decoSlotIndex, setDecoSlotIndex] = useState<number>(0);
     const [type, setType] = useState<ArmorSlotKey>("head")
     const [build, setBuild] = useState<BuilderBuild>({
         weapon: null,
@@ -25,7 +30,19 @@ export default function Builder() {
         waist: null,
         legs: null,
         charm: null,
+        decorations: {
+            weapon: [],
+            head: [],
+            chest: [],
+            arms: [],
+            waist: [],
+            legs: [],
+        },
     });
+
+    useEffect(() => {
+        console.log(build);
+    }, [build]);
 
     const ARMOR_SLOTS: ArmorSlotKey[] = ["weapon", "head", "chest", "arms", "waist", "legs", "charm"]
 
@@ -73,6 +90,12 @@ export default function Builder() {
             }
         }
 
+        if (build.decorations) {
+            (Object.keys(build.decorations) as (keyof typeof build.decorations)[]).forEach((slot) => {
+                addDecoSkillsToAggregate(skills, map, build.decorations[slot]);
+            });
+        }
+
         return Object.values(map).sort((a, b) => b.totalLevel[0] - a.totalLevel[0]);
     }, [build, skills]);
 
@@ -83,6 +106,57 @@ export default function Builder() {
     function openWeaponSelector(slot: ArmorSlotKey) {
         setType(slot)
         setWeaponSelectorOpen(true)
+    }
+    function openDecoSelector(slotLevel: number, decoKind: string, slot: ArmorSlotKey, slotIndex: number) {
+        setType(slot);
+        setSlotLevel(slotLevel);
+        setDecoKind(decoKind);
+        setDecoSlotIndex(slotIndex);
+        setDecoSelectorOpen(true);
+        console.log(decoKind);
+    }
+    function deleteBuildItem(slotKey: ArmorSlotKey) {
+        setBuild((prev) => {
+            if (slotKey === "charm") {
+                return {
+                    ...prev,
+                    [slotKey]: null,
+                };
+            }
+
+            const emptySlots: DecoPlacement[] = [];
+
+            return {
+                ...prev,
+                [slotKey]: null,
+                decorations: {
+                    ...prev.decorations,
+                    [slotKey]: emptySlots,
+                },
+            };
+        });
+    }
+    function deleteDecoration(slotKey: ArmorSlotKey, slotIndex: number) {
+        setBuild((prev) => {
+            if (!prev.decorations) return prev;
+
+            // charms don't have deco slots
+            if (slotKey === "charm") return prev;
+
+            const nextSlot = [...prev.decorations[slotKey]];
+            nextSlot[slotIndex] = {
+                slotLevel: 0,
+                decoration: null,
+            };
+
+            return {
+                ...prev,
+                decorations: {
+                    ...prev.decorations,
+                    [slotKey]: nextSlot,
+                },
+            };
+        });
     }
 
     return (
@@ -104,11 +178,7 @@ export default function Builder() {
                         </div>
                         <div className={styles.gearContainer}>
                             {ARMOR_SLOTS.map((slot) => (
-                                slot === "weapon" ? (
-                                    <GearPiece key={slot} slotKey={slot} gearPiece={build[slot]} build={null} openGearSelector={openGearSelector} openWeaponSelector={openWeaponSelector} />
-                                ) : (
-                                    <GearPiece key={slot} slotKey={slot} gearPiece={build[slot]} build={null} openGearSelector={openGearSelector} openWeaponSelector={openWeaponSelector} />
-                                )
+                                <GearPiece key={slot} slotKey={slot} gearPiece={build[slot]} build={build} deleteBuildItem={deleteBuildItem} openGearSelector={openGearSelector} openWeaponSelector={openWeaponSelector} openDecoSelector={openDecoSelector} deleteDecoration={deleteDecoration} />
                             ))}
                         </div>
                         <div className={styles.statsContainer}>
@@ -120,6 +190,9 @@ export default function Builder() {
                     )}
                     {gearSelectorOpen && (
                         <GearSelector gearSelectorOpen={gearSelectorOpen} setGearSelectorOpen={setGearSelectorOpen} type={type} build={build} setBuild={setBuild} />
+                    )}
+                    {decoSelectorOpen && (
+                        <DecoSelector decoSlotIndex={decoSlotIndex} slotLevel={slotLevel} kind={decoKind} decoSelectorOpen={decoSelectorOpen} setDecoSelectorOpen={setDecoSelectorOpen} build={build} setBuild={setBuild} type={type} />
                     )}
                 </>
             )}

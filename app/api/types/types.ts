@@ -48,7 +48,7 @@ export interface Sharpness {
 
 /** Decoration slots are just numbers in the API */
 export type DecorationSlot = number;
-export type SlotLevel = 1 | 2 | 3;
+export type SlotLevel = number;
 
 export function isSlotLevel(x: unknown): x is SlotLevel {
     return x === 1 || x === 2 || x === 3;
@@ -434,5 +434,6 @@ export type BuilderBuild = {
     waist: Armor | null;
     legs: Armor | null;
     charm: CharmRank | null;
+    decorations: BuildDecorations;
 }
 

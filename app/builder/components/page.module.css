@@ -3,7 +3,7 @@
 }
 
 .gearSelectorContainer {
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
@@ -256,6 +256,9 @@
     flex-direction: column;
     gap: 5px;
 }
+.pieceTitle {
+    font-weight: 500;
+}
 .gearPieceSkillsContainer {
     color: gray;
     font-size: 14px;
@@ -266,12 +269,38 @@
     align-items: center;
     gap: 10px;
     width: 100%;
-    padding: 10px;
+    padding: 10px 40px 10px 10px;
     border-radius: 6px;
     cursor: pointer;
+    position: relative;
 }
 .pieceContainerHeader:hover {
+    background: transparent;
+}
+.pieceContainerHeader:hover:not(:has(button:hover)) {
     background: rgba(255, 255, 255, 0.05);
+}
+.deleteBtn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    border: none;
+    background: transparent;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+}
+.deleteBtn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+.deleteBtn > * {
+    width: 22px;
+    height: 22px;
+    color: #fff;
 }
 .decoSlotsContainer {
     display: flex;
@@ -290,11 +319,37 @@
     align-items: center;
     gap: 5px;
     font-size: 14px;
-    height: 24px;
+    height: 30px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.02);
+}
+.slot:hover:not(:has(button:hover)) {
+    background: rgba(255, 255, 255, 0.05);
+}
+.slottedDeco {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding-right: 5px;
+}
+.decoDeleteBtn {
+    border: none;
+    background: transparent;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
     cursor: pointer;
 }
-.slot:hover {
-    background: rgba(255, 255, 255, 0.05);
+.decoDeleteBtn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+.decoDeleteBtn > * {
+    width: 22px;
+    height: 22px;
+    color: #fff;
 }
 .decoDash {
     height: 100%;
@@ -312,6 +367,24 @@
     flex-direction: column;
     gap: 20px;
     width: 100%;
+}
+.decorationContainer {
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding: 5px;
+    gap: 5px;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+}
+.decoName {
+    font-size: 14px;
+}
+.decoSkill {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
 }
 .decoIcon {
     display: inline-block;
@@ -399,5 +472,11 @@
 @media (max-width: 500px) {
     .buildPieceContainer {
         flex-direction: column;
+    }
+    .gearSelectorInner {
+        max-width: unset;
+        max-height: unset;
+        border-radius: 0;
+        border: none;
     }
 }

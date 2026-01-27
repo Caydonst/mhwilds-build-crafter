@@ -1,6 +1,7 @@
 import styles from "./page.module.css"
-import type {Build, SlotLevel, Armor, CharmRank, Weapon} from "@/app/api/types/types";
+import type {BuilderBuild, SlotLevel, Armor, CharmRank, Weapon} from "@/app/api/types/types";
 import React from "react";
+import {XMarkIcon} from "@heroicons/react/24/outline";
 
 type ArmorSlotKey = "weapon" | "head" | "chest" | "arms" | "waist" | "legs" | "charm";
 type GearSlotKey = "head" | "chest" | "arms" | "waist" | "legs" | "charm";
@@ -11,12 +12,15 @@ type ArmorKind = typeof ARMOR_KINDS[number];
 interface Props {
     gearPiece: WeaponArmorCharm | null
     slotKey: ArmorSlotKey;
-    build: Build | null;
+    build: BuilderBuild | null;
+    deleteBuildItem: (slotKey: ArmorSlotKey) => void;
     openGearSelector: (slot: ArmorSlotKey) => void;
     openWeaponSelector: (slot: ArmorSlotKey) => void;
+    openDecoSelector: (slotLevel: number, decoKind: string, slotKey: ArmorSlotKey, slotIndex: number) => void;
+    deleteDecoration: (slot: ArmorSlotKey, slotIndex: number) => void;
 }
 
-export default function GearPiece({ gearPiece, slotKey, build, openGearSelector, openWeaponSelector }: Props) {
+export default function GearPiece({ gearPiece, slotKey, build, deleteBuildItem, openGearSelector, openWeaponSelector, openDecoSelector, deleteDecoration }: Props) {
 
     const weapons = [
         "bow",
@@ -50,8 +54,6 @@ export default function GearPiece({ gearPiece, slotKey, build, openGearSelector,
         "switch-axe": 8,
         "sword-shield": 0,
     }
-
-    type WeaponKind = typeof weapons[number];
 
     function isWeaponPiece(piece: WeaponArmorCharm | null | undefined): piece is Weapon {
         return !!piece && "kind" in piece;
@@ -101,15 +103,15 @@ export default function GearPiece({ gearPiece, slotKey, build, openGearSelector,
             isArmorPiece(gearPiece)
                 ? ([...gearPiece.slots.filter(isSlotLevel), ...ZEROS].slice(0, 3))
                 : [...ZEROS];
+    } else {
+        rarity = 0
+        if (slotKey !== "weapon") {
+            bgPos = `calc((-64px * ${armorIndex[slotKey]}) * var(--build-icon-size)) calc((-64px * ${rarity}) * var(--build-icon-size))`;
+        }
     }
 
     if (!isArmorPiece(gearPiece) && !isCharmRank(gearPiece)) {
         console.log(gearPiece?.kind)
-    }
-
-    function test(slot: string) {
-        console.log("deco click");
-        console.log(slot);
     }
 
     return (
@@ -128,6 +130,7 @@ export default function GearPiece({ gearPiece, slotKey, build, openGearSelector,
                                     ))}
                                 </div>
                             </div>
+                            <button className={styles.deleteBtn} onClick={(e) => {e.stopPropagation(); deleteBuildItem(slotKey);}}><XMarkIcon /></button>
                         </div>
                     ) : (
                         <div className={styles.pieceContainerHeader} onClick={() => openGearSelector(slotKey)}>
@@ -144,6 +147,7 @@ export default function GearPiece({ gearPiece, slotKey, build, openGearSelector,
                                     ))}
                                 </div>
                             </div>
+                            <button className={styles.deleteBtn} onClick={(e) => {e.stopPropagation(); deleteBuildItem(slotKey);}}><XMarkIcon /></button>
                         </div>
                     ))}
 
@@ -152,20 +156,31 @@ export default function GearPiece({ gearPiece, slotKey, build, openGearSelector,
                         <>
                             <div className={styles.decoSlotsContainer}>
                                 {gearPiece.slots.map((s, i) => {
-                                    //const placement = build?.decorations?.[slotKey as ArmorSlotKey]?.[i];
                                     const key = `${slotKey}-slot-${i}`;
+                                    let placement;
+                                    if (slotKey !== "charm") {
+                                        placement = build?.decorations?.[slotKey]?.[i];
+                                    }
+                                    const canFit = placement?.slotLevel != null && placement.slotLevel <= s; // optional check
+
                                     return (
-                                        <div key={key} className={styles.slot} onClick={() => test(slotKey)}>
-                                            {s === 0 ? (
-                                                <div className={styles.decoDash}>
-                                                    <p>-</p>
+                                        <div
+                                            key={key}
+                                            className={styles.slot}
+                                            onClick={() => openDecoSelector(s, slotKey === "weapon" ? "weapon" : "armor", slotKey, i)}
+                                        >
+                                            <span className={`${styles.decoIcon} ${styles[`deco${s}`]}`} />
+
+                                            {/* Inlaid deco display */}
+                                            {s > 0 && placement?.decoration && canFit && (
+                                                <div className={styles.slottedDeco}>
+                                                    <p className={styles.inlaidDecoName}>{placement.decoration.name}</p>
+                                                    <button className={styles.decoDeleteBtn} onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        deleteDecoration(slotKey, i);
+                                                    }}><XMarkIcon /></button>
                                                 </div>
-                                            ) : (
-                                                <span className={`${styles.decoIcon} ${styles[`deco${s}`]}`} />
                                             )}
-                                            {/*{placement && placement.slotLevel <= s && (
-                                                <p>{placement.decoration?.name ?? ""}</p>
-                                            )}*/}
                                         </div>
                                     );
                                 })}
@@ -178,15 +193,21 @@ export default function GearPiece({ gearPiece, slotKey, build, openGearSelector,
                 </>
             ) : (
                 <>
-                    <div className={styles.pieceContainerHeader} onClick={() => openGearSelector(slotKey)}>
-                  <span
-                      className={styles.buildPieceIcon}
-                      style={{ backgroundPosition: bgPos }}
-                  />
-                        <div className={styles.buildPieceInfo}>
-                            <p className={styles.pieceTitle}>None</p>
+                    {slotKey === "weapon" ? (
+                        <div className={styles.pieceContainerHeader} onClick={() => openWeaponSelector(slotKey)}>
+                            <span className={styles.buildPieceIcon} style={{ backgroundPosition: bgPos }}></span>
+                            <div className={styles.buildPieceInfo}>
+                                <p className={styles.pieceTitle}>None</p>
+                            </div>
                         </div>
-                    </div>
+                    ) : (
+                        <div className={styles.pieceContainerHeader} onClick={() => openGearSelector(slotKey)}>
+                            <span className={styles.buildPieceIcon} style={{ backgroundPosition: bgPos }}></span>
+                            <div className={styles.buildPieceInfo}>
+                                <p className={styles.pieceTitle}>None</p>
+                            </div>
+                        </div>
+                    )}
                 </>
             )}
         </div>

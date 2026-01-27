@@ -25,7 +25,7 @@
 }
 .placeholder {
     width: 100%;
-    background: gray;
+    background: transparent;
     height: 200px;
 }
 .gearContainer {
