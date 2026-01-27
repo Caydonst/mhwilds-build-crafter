@@ -145,7 +145,7 @@ export default function Builder() {
 
             const nextSlot = [...prev.decorations[slotKey]];
             nextSlot[slotIndex] = {
-                slotLevel: 0,
+                slotLevel: 1,
                 decoration: null,
             };
 
