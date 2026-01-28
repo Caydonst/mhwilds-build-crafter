@@ -2,7 +2,7 @@ import styles from "./page.module.css"
 import {XMarkIcon} from "@heroicons/react/24/outline";
 import Decoration from "./decoration";
 import type {Decoration as DecoType, BuilderBuild, BuildDecorations} from "@/app/api/types/types"
-import React, {useMemo} from "react";
+import React, {useMemo, useState} from "react";
 import {useGameData} from "@/app/hooks/useGameData";
 
 type ArmorSlotKey = "weapon" | "head" | "chest" | "arms" | "waist" | "legs" | "charm";
@@ -20,6 +20,7 @@ interface Props {
 
 export default function DecoSelector({ decoSlotIndex, slotLevel, kind, decoSelectorOpen, setDecoSelectorOpen, build, setBuild, type }: Props) {
     const { decorations, isLoading, error } = useGameData();
+    const [searchQuery, setSearchQuery] = useState<string>("");
 
     const DEFAULT_DECOS: BuildDecorations = {
         weapon: [],
@@ -62,6 +63,18 @@ export default function DecoSelector({ decoSlotIndex, slotLevel, kind, decoSelec
         setDecoSelectorOpen(false);
     }
 
+    function updateSearchQuery(event: React.ChangeEvent<HTMLInputElement>) {
+        setSearchQuery(event.target.value);
+    }
+
+    const searchedDecos = React.useMemo(() => {
+        const query = searchQuery.toLowerCase();
+
+        return (filteredDecos ?? []).filter(piece =>
+            piece.name.toLowerCase().includes(query)
+        );
+    }, [searchQuery, filteredDecos]);
+
     return (
         <div className={decoSelectorOpen ? `${styles.gearSelectorContainer} ${styles.open}` : styles.gearSelectorContainer}>
             <div className={styles.gearSelectorInner}>
@@ -72,12 +85,12 @@ export default function DecoSelector({ decoSlotIndex, slotLevel, kind, decoSelec
                     </div>
                     <div className={styles.searchContainer}>
                         <p>{thisKind.charAt(0).toUpperCase() + thisKind.slice(1)} Decoration</p>
-                        <input type={"text"} placeholder={"Search"} />
+                        <input type={"text"} placeholder={"Search"} value={searchQuery} onChange={(e) => updateSearchQuery(e)} />
                     </div>
                 </div>
                 <div className={styles.main}>
                     <div className={styles.mainInner}>
-                        {filteredDecos && filteredDecos.map((deco: DecoType, i) => (
+                        {searchedDecos && searchedDecos.map((deco: DecoType, i) => (
                             <div key={i} className={styles.gearContainer}>
                                 <Decoration deco={deco} addDecoration={addDecoration} />
                             </div>

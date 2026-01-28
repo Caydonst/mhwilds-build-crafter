@@ -19,6 +19,7 @@ export default function WeaponSelector({ weaponSelectorOpen, setWeaponSelectorOp
     const [weaponFilter, setWeaponFilter] = useState("charge-blade");
     const [weaponKind, setWeaponKind] = useState<WeaponKind>(null);
     const [openWeaponSelectorDropdown, setOpenWeaponSelectorDropdown] = useState(false);
+    const [searchQuery, setSearchQuery] = useState<string>("");
     const { weapons } = useGameData();
 
     const weaponDropdownRef = useRef<HTMLDivElement | null>(null);
@@ -45,15 +46,27 @@ export default function WeaponSelector({ weaponSelectorOpen, setWeaponSelectorOp
 
         const kinds = weapons
             .map((w) => w.kind)
-            .filter((k): k is Exclude<WeaponKind, null> => k !== null);
+            .filter((k): k is Exclude<WeaponKind, null> => k !== null && k !== weaponFilter);
 
         return Array.from(new Set(kinds));
-    }, [weapons]);
+    }, [weapons, weaponFilter]);
 
     const filteredWeapons = useMemo(
         () => (weapons ? weapons.filter(w => w.kind === weaponFilter) : []),
         [weapons, weaponFilter]
     );
+
+    function updateSearchQuery(event: React.ChangeEvent<HTMLInputElement>) {
+        setSearchQuery(event.target.value);
+    }
+
+    const searchedWeapons = React.useMemo(() => {
+        const query = searchQuery.toLowerCase();
+
+        return (filteredWeapons ?? []).filter(piece =>
+            piece.name.toLowerCase().startsWith(query)
+        );
+    }, [searchQuery, filteredWeapons]);
 
 
     function updateWeapon(weapon: Exclude<WeaponKind, null>) {
@@ -92,7 +105,7 @@ export default function WeaponSelector({ weaponSelectorOpen, setWeaponSelectorOp
                     <div className={styles.searchContainer}>
                         <p>Weapon</p>
                         <div className={styles.inputFilterContainer}>
-                            <input type={"text"} placeholder={"Search"} />
+                            <input type={"text"} placeholder={"Search"} onChange={(e) => updateSearchQuery(e)} />
                             <div className={styles.weaponSelectorWrapper} ref={weaponDropdownRef}>
                                 <div
                                     className={styles.weaponSelector}
@@ -130,8 +143,7 @@ export default function WeaponSelector({ weaponSelectorOpen, setWeaponSelectorOp
                 </div>
                 <div className={styles.main}>
                     <div className={styles.mainInner}>
-                        {}
-                        {filteredWeapons && filteredWeapons.map((piece, i) => (
+                        {searchedWeapons && searchedWeapons.map((piece, i) => (
                             <div key={i} className={styles.gearContainer} onClick={() => addWeapon(piece)}>
                                 <ArmorPiece gearPiece={piece} slotKey={type} build={null} />
                             </div>

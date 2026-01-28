@@ -13,11 +13,11 @@ export default function Decoration({ deco, addDecoration }: Props) {
             <span className={`${styles.decoIcon} ${styles[`deco${deco.slot}`]}`} />
             <div className={styles.decoInfo}>
                 <p className={styles.decoName}>{deco.name}</p>
-                <p className={styles.decoSkills}>
+                <div className={styles.decoSkills}>
                     {deco.skills.map((skill, i) => (
                         <p key={i} className={styles.decoSkill}>{skill.skill.name} {skill.level}</p>
                     ))}
-                </p>
+                </div>
             </div>
         </div>
     )

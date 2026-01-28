@@ -3,7 +3,7 @@ import {XMarkIcon} from "@heroicons/react/24/outline"
 import React, {useState} from "react";
 import {useGameData} from "@/app/hooks/useGameData";
 import ArmorPiece from "@/app/components/builder/build/buildComponents/armorPiece"
-import type {BuilderBuild, Armor, CharmRank, DecoPlacement} from "@/app/api/types/types";
+import type {BuilderBuild, Armor, CharmRank, DecoPlacement, Skill} from "@/app/api/types/types";
 
 type ArmorSlotKey = "weapon" | "head" | "chest" | "arms" | "waist" | "legs" | "charm";
 
@@ -17,8 +17,9 @@ interface Props {
 
 export default function GearSelector({ gearSelectorOpen, setGearSelectorOpen, type, build, setBuild }: Props) {
     const { weapons, armorBySlot, charms } = useGameData();
+    const [searchQuery, setSearchQuery] = useState<string>("");
 
-    let gear;
+    let gear: (Armor | CharmRank)[];
 
     if (type !== "weapon" && type !== "charm") {
         gear = armorBySlot?.[type] ?? [];
@@ -56,6 +57,21 @@ export default function GearSelector({ gearSelectorOpen, setGearSelectorOpen, ty
         setGearSelectorOpen(false);
     }
 
+    function updateSearchQuery(event: React.ChangeEvent<HTMLInputElement>) {
+        setSearchQuery(event.target.value);
+    }
+
+   
+    const filteredGear = React.useMemo(() => {
+        const query = searchQuery.toLowerCase();
+
+        return (gear ?? []).filter(piece =>
+            piece.name.toLowerCase().startsWith(query)
+        );
+        // @ts-expect-error : Error
+    }, [searchQuery, gear]);
+
+
     return (
         <div className={gearSelectorOpen ? `${styles.gearSelectorContainer} ${styles.open}` : styles.gearSelectorContainer}>
             <div className={styles.gearSelectorInner}>
@@ -66,13 +82,13 @@ export default function GearSelector({ gearSelectorOpen, setGearSelectorOpen, ty
                     </div>
                     <div className={styles.searchContainer}>
                         <p>{type.charAt(0).toUpperCase() + type.slice(1)}</p>
-                        <input type={"text"} placeholder={"Search"} />
+                        <input type={"text"} placeholder={"Search"} value={searchQuery} onChange={(e) => updateSearchQuery(e)} />
                     </div>
                 </div>
                 <div className={styles.main}>
                     <div className={styles.mainInner}>
-                        {gear && gear.map((piece, i) => (
-                            <div key={i} className={styles.gearContainer} onClick={() => addArmor(piece)}>
+                        {filteredGear && filteredGear.map((piece) => (
+                            <div key={piece.id} className={styles.gearContainer} onClick={() => addArmor(piece)}>
                                 <ArmorPiece gearPiece={piece} slotKey={type} build={null} />
                             </div>
                         ))}
