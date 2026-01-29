@@ -1,5 +1,6 @@
 :root {
     --weapon-icon-size: 0.50;
+    --stats-icon-size: 0.35;
 }
 
 .gearSelectorContainer {
@@ -280,6 +281,35 @@
 .pieceContainerHeader:hover:not(:has(button:hover)) {
     background: rgba(255, 255, 255, 0.05);
 }
+.weaponStatsContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.rawValContainer,
+.affinityValContainer,
+.elementValContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.rawValContainer p,
+.affinityValContainer p,
+.elementValContainer p {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
+}
+.weaponSharpness {
+    width: 100px;
+    height: 10px;
+    display: flex;
+    border: 1px solid #fff;
+    background: #000;
+}
+.sharpnessColor {
+    height: 100%;
+}
 .deleteBtn {
     position: absolute;
     top: 5px;
@@ -464,6 +494,54 @@
 .sword-shield {
     background-position: 0 calc(-64px * var(--weapon-icon-size));
 }
+
+.statsIcon {
+    display: inline-block;
+    flex-shrink: 0;
+    width: calc(64px * var(--stats-icon-size));
+    height: calc(64px * var(--stats-icon-size));
+    background-image: url("../../assets/status.png");
+    background-size: calc(512px * var(--stats-icon-size)) calc(1024px * var(--stats-icon-size)); /* or set to sheet width/height if scaling */
+    background-repeat: no-repeat;
+}
+
+.damageIcon {
+    background-position: calc((-64px * 1) * var(--stats-icon-size)) calc((-64px * 3) * var(--stats-icon-size));
+}
+.affinityIcon {
+    background-position: calc((-64px * 3) * var(--stats-icon-size)) calc((-64px * 3) * var(--stats-icon-size));
+}
+.fire {
+    background-position: calc((-64px * 3) * var(--stats-icon-size)) calc((-64px * 0) * var(--stats-icon-size));
+}
+.water {
+    background-position: calc((-64px * 4) * var(--stats-icon-size)) calc((-64px * 0) * var(--stats-icon-size));
+}
+.thunder {
+    background-position: calc((-64px * 5) * var(--stats-icon-size)) calc((-64px * 0) * var(--stats-icon-size));
+}
+.ice {
+    background-position: calc((-64px * 6) * var(--stats-icon-size)) calc((-64px * 0) * var(--stats-icon-size));
+}
+.dragon {
+    background-position: calc((-64px * 7) * var(--stats-icon-size)) calc((-64px * 0) * var(--stats-icon-size));
+}
+.poison {
+    background-position: calc((-64px * 0) * var(--stats-icon-size)) calc((-64px * 1) * var(--stats-icon-size));
+}
+.paralysis {
+    background-position: calc((-64px * 2) * var(--stats-icon-size)) calc((-64px * 1) * var(--stats-icon-size));
+}
+.stun {
+    background-position: calc((-64px * 3) * var(--stats-icon-size)) calc((-64px * 1) * var(--stats-icon-size));
+}
+.sleep {
+    background-position: calc((-64px * 4) * var(--stats-icon-size)) calc((-64px * 1) * var(--stats-icon-size));
+}
+.blast {
+    background-position: calc((-64px * 5) * var(--stats-icon-size)) calc((-64px * 1) * var(--stats-icon-size));
+}
+
 @media (min-width: 900px) and (max-width: 1000px) {
     .buildPieceContainer {
         flex-direction: column;

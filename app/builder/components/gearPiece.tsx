@@ -123,6 +123,36 @@ export default function GearPiece({ gearPiece, slotKey, build, deleteBuildItem, 
                             <span className={`${styles.buildPieceIcon}`} style={{ backgroundPosition: `calc((-64px * ${weaponIndex[gearPiece.kind]}) * var(--build-icon-size)) calc((-64px * ${rarity}) * var(--build-icon-size))` }} />
                             <div className={styles.buildPieceInfo}>
                                 <p className={styles.pieceTitle}>{gearPiece.name}</p>
+                                <div className={styles.weaponStatsContainer}>
+                                    <div className={styles.rawValContainer}>
+                                        <span className={`${styles.statsIcon} ${styles.damageIcon}`}></span>
+                                        <p>{gearPiece.damage.raw}</p>
+                                    </div>
+                                    <div className={styles.affinityValContainer}>
+                                        <span  className={`${styles.statsIcon} ${styles.affinityIcon}`}></span>
+                                        <p>{gearPiece.affinity}%</p>
+                                    </div>
+                                    {gearPiece.specials.length !== 0 && (
+                                        <div className={styles.elementValContainer}>
+                                            {gearPiece.specials[0].hasOwnProperty("status") ? (
+                                                <>
+                                                    <span className={`${styles.statsIcon} ${styles[`${gearPiece.specials[0].status}`]}`}></span>
+                                                    <p>{gearPiece.specials[0].damage.raw}</p>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <span className={`${styles.statsIcon} ${styles[`${gearPiece.specials[0].element}`]}`}></span>
+                                                    <p>{gearPiece.specials[0].element}</p>
+                                                </>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                                <div className={styles.weaponSharpness}>
+                                    {gearPiece.sharpness && Object.entries(gearPiece.sharpness).map(([color, value]) => (
+                                        <div key={color} className={styles.sharpnessColor} style={{ width: `${value / 400 * 100}px`, background: `${color}`}}></div>
+                                    ))}
+                                </div>
                                 <div className={styles.gearPieceSkillsContainer}>
 
                                     {gearPiece.skills.map((skill, i) => (
