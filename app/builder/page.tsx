@@ -39,6 +39,7 @@ export default function Builder() {
             legs: [],
         },
     });
+    const [selectedPage, setSelectedPage] = useState<string>("gear");
 
     useEffect(() => {
         console.log(build);
@@ -160,7 +161,7 @@ export default function Builder() {
     }
 
     return (
-        <main className={styles.builderPage}>
+        <main className={styles.builderPageWrapper}>
             {isLoading ? (
                 <span className={styles.spinnerWrapper}>
                     <span className={styles.spinner}></span>
@@ -168,13 +169,49 @@ export default function Builder() {
                 </span>
             ) : (
                 <>
-                    <div className={styles.builderPageInner}>
+                    <div className={styles.desktopHeader}>
+                        <div className={styles.headerInner}>
+                            <div className={styles.skillsHeaderDesktop}>Skills</div>
+                            <div className={styles.gearHeaderDesktop}>Gear</div>
+                            <div className={styles.statsHeaderDesktop}>Stats</div>
+                        </div>
+                    </div>
+                    <div className={styles.mobileHeader}>
+                        <div className={styles.headerInner}>
+                            <button
+                                className={`${styles.gearHeaderMobile} ${selectedPage === "gear" ? styles.selected : ""}`}
+                                onClick={() => setSelectedPage("gear")}
+                            >
+                                Gear
+                            </button>
+
+                            <button
+                                className={`${styles.skillsHeaderMobile} ${selectedPage === "skills" ? styles.selected : ""}`}
+                                onClick={() => setSelectedPage("skills")}
+                            >
+                                Skills
+                            </button>
+
+                            <button
+                                className={`${styles.statsHeaderMobile} ${selectedPage === "stats" ? styles.selected : ""}`}
+                                onClick={() => setSelectedPage("stats")}
+                            >
+                                Stats
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className={styles.builderPageInnerDesktop}>
                         <div className={styles.skillsContainer}>
-                            {aggregatedSkills.map(({ skill, totalLevel }) => {
-                                return (
-                                    <Skill key={skill.id} skill={skill} skillData={skills} totalLevel={totalLevel} />
-                                );
-                            })}
+                            {aggregatedSkills.length > 0 ? (
+                                aggregatedSkills.map(({ skill, totalLevel }) => {
+                                    return (
+                                        <Skill key={skill.id} skill={skill} skillData={skills} totalLevel={totalLevel} />
+                                    );
+                                })
+                            ) : (
+                                <p className={styles.noSkills}>No skills</p>
+                            )}
                         </div>
                         <div className={styles.gearContainer}>
                             {ARMOR_SLOTS.map((slot) => (
@@ -182,8 +219,35 @@ export default function Builder() {
                             ))}
                         </div>
                         <div className={styles.statsContainer}>
-                            <div className={styles.placeholder}></div>
+                            <div className={styles.placeholder}>Coming Soon</div>
                         </div>
+                    </div>
+                    <div className={styles.builderPageInnerMobile}>
+                        {selectedPage === "gear" && (
+                            <div className={styles.gearContainer}>
+                                {ARMOR_SLOTS.map((slot) => (
+                                    <GearPiece key={slot} slotKey={slot} gearPiece={build[slot]} build={build} deleteBuildItem={deleteBuildItem} openGearSelector={openGearSelector} openWeaponSelector={openWeaponSelector} openDecoSelector={openDecoSelector} deleteDecoration={deleteDecoration} />
+                                ))}
+                            </div>
+                        )}
+                        {selectedPage === "skills" && (
+                            <div className={styles.skillsContainer}>
+                                {aggregatedSkills.length > 0 ? (
+                                    aggregatedSkills.map(({ skill, totalLevel }) => {
+                                            return (
+                                                <Skill key={skill.id} skill={skill} skillData={skills} totalLevel={totalLevel} />
+                                            );
+                                        })
+                                ) : (
+                                    <p className={styles.noSkills}>No skills</p>
+                                )}
+                            </div>
+                        )}
+                        {selectedPage === "stats" && (
+                            <div className={styles.statsContainer}>
+                                <div className={styles.placeholder}>Coming Soon</div>
+                            </div>
+                        )}
                     </div>
                     {weaponSelectorOpen && (
                         <WeaponSelector weaponSelectorOpen={weaponSelectorOpen} setWeaponSelectorOpen={setWeaponSelectorOpen} type={type} build={build} setBuild={setBuild} />

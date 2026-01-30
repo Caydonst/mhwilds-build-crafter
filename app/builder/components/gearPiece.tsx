@@ -148,11 +148,13 @@ export default function GearPiece({ gearPiece, slotKey, build, deleteBuildItem, 
                                         </div>
                                     )}
                                 </div>
-                                <div className={styles.weaponSharpness}>
-                                    {gearPiece.sharpness && Object.entries(gearPiece.sharpness).map(([color, value]) => (
-                                        <div key={color} className={styles.sharpnessColor} style={{ width: `${value / 400 * 100}px`, background: `${color}`}}></div>
-                                    ))}
-                                </div>
+                                {gearPiece.sharpness && (
+                                    <div className={styles.weaponSharpness}>
+                                        {Object.entries(gearPiece.sharpness).map(([color, value]) => (
+                                            <div key={color} className={styles.sharpnessColor} style={{ width: `${(value / 400) * 100}px`, backgroundColor: color}}></div>
+                                        ))}
+                                    </div>
+                                )}
                                 <div className={styles.gearPieceSkillsContainer}>
 
                                     {gearPiece.skills.map((skill, i) => (
