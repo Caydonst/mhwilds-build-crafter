@@ -351,12 +351,12 @@
     align-items: center;
     gap: 5px;
     font-size: 14px;
-    height: 30px;
+    min-height: 30px;
     cursor: pointer;
     background: rgba(255, 255, 255, 0.05);
 }
 .slot:hover:not(:has(button:hover)) {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.1);
 }
 .slottedDeco {
     display: flex;
@@ -543,8 +543,7 @@
 .blast {
     background-position: calc((-64px * 5) * var(--stats-icon-size)) calc((-64px * 1) * var(--stats-icon-size));
 }
-
-@media (min-width: 900px) and (max-width: 1000px) {
+@media (min-width: 800px) and (max-width: 1100px) {
     .buildPieceContainer {
         flex-direction: column;
     }

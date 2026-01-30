@@ -163,10 +163,12 @@ export default function Builder() {
     return (
         <main className={styles.builderPageWrapper}>
             {isLoading ? (
-                <span className={styles.spinnerWrapper}>
+                <div className={styles.spinnerContainer}>
+                    <span className={styles.spinnerWrapper}>
                     <span className={styles.spinner}></span>
                     Loading resources...
                 </span>
+                </div>
             ) : (
                 <>
                     <div className={styles.desktopHeader}>

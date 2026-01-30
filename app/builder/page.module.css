@@ -1,5 +1,6 @@
 .builderPageWrapper {
     width: 100%;
+    min-height: 100svh;
     display: flex;
     justify-content: start;
     align-items: center;
@@ -21,7 +22,7 @@
 }
 .headerInner {
     width: 100%;
-    max-width: 1400px;
+    max-width: 1600px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -71,7 +72,7 @@
 }
 .builderPageInnerDesktop {
     width: 100%;
-    max-width: 1400px;
+    max-width: 1600px;
     display: flex;
     justify-content: start;
     align-items: start;
@@ -80,7 +81,7 @@
 }
 .builderPageInnerMobile {
     width: 100%;
-    max-width: 1400px;
+    max-width: 1600px;
     display: none;
     justify-content: start;
     align-items: start;
@@ -134,6 +135,13 @@
     align-items: center;
     position: relative;
 }
+.spinnerContainer {
+    height: 100svh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
 .spinnerWrapper {
     display: flex;
     justify-content: center;
@@ -155,7 +163,7 @@
         transform: rotate(360deg);
     }
 }
-@media(max-width: 900px) {
+@media(max-width: 800px) {
     .builderPageInnerDesktop {
         display: none;
     }
