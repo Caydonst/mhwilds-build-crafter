@@ -133,7 +133,7 @@ export default function ArmorPiece({ gearPiece, slotKey, build }: Props) {
                                             ) : (
                                                 <>
                                                     <span className={`${styles.statsIcon} ${styles[`${gearPiece.specials[0].element}`]}`}></span>
-                                                    <p>{gearPiece.specials[0].element}</p>
+                                                    <p>{gearPiece.specials[0].damage.raw}</p>
                                                 </>
                                             )}
                                         </div>
@@ -142,7 +142,7 @@ export default function ArmorPiece({ gearPiece, slotKey, build }: Props) {
                                 {gearPiece.sharpness && (
                                     <div className={styles.weaponSharpness}>
                                         {Object.entries(gearPiece.sharpness).map(([color, value]) => (
-                                            <div key={color} className={styles.sharpnessColor} style={{ width: `${(value / 400) * 100}px`, backgroundColor: color}}></div>
+                                            <div key={color} className={`${styles.sharpnessColor} ${styles[color]}`} style={{ width: `${(value / 400) * 150}px`}}></div>
                                         ))}
                                     </div>
                                 )}

@@ -10,6 +10,7 @@ import {addDecoSkillsToAggregate, addSkillLevel} from "@/app/components/builder/
 import Skill from "@/app/components/builder/build/buildComponents/skill";
 import GearPiece from "@/app/builder/components/gearPiece";
 import DecoSelector from "./components/decoSelector"
+import StatsComponent from "./components/statsComponent";
 
 type ArmorSlotKey = "weapon" | "head" | "chest" | "arms" | "waist" | "legs" | "charm";
 
@@ -221,7 +222,7 @@ export default function Builder() {
                             ))}
                         </div>
                         <div className={styles.statsContainer}>
-                            <div className={styles.placeholder}>Coming Soon</div>
+                            <StatsComponent build={build} />
                         </div>
                     </div>
                     <div className={styles.builderPageInnerMobile}>
@@ -247,7 +248,7 @@ export default function Builder() {
                         )}
                         {selectedPage === "stats" && (
                             <div className={styles.statsContainer}>
-                                <div className={styles.placeholder}>Coming Soon</div>
+                                <StatsComponent build={build} />
                             </div>
                         )}
                     </div>

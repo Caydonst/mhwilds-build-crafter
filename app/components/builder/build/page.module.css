@@ -50,7 +50,7 @@
     justify-content: center;
     align-items: start;
     flex-direction: column;
-    gap: 5px;
+    gap: 10px;
 }
 .gearPieceSkillsContainer {
     color: gray;
@@ -181,7 +181,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 5px;
 }
 .rawValContainer,
 .affinityValContainer,
@@ -189,6 +189,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 .rawValContainer p,
 .affinityValContainer p,
@@ -197,14 +201,34 @@
     color: rgba(255, 255, 255, 0.6);
 }
 .weaponSharpness {
-    width: 100px;
-    height: 10px;
+    width: 150px;
+    height: 6px;
     display: flex;
-    border: 1px solid #fff;
-    background: #000;
+    justify-content: start;
+    align-items: center;
+    background: transparent;
+    gap: 2px;
 }
 .sharpnessColor {
     height: 100%;
+}
+.red {
+    background: #ff6b6b;
+}
+.orange {
+    background: #ff906b
+}
+.yellow {
+    background: #ffeb6b;
+}
+.green {
+    background: #6bff6e;
+}
+.blue {
+    background: #6ba4ff;
+}
+.white {
+    background: white;
 }
 .equipSkillsText,
 .setBonusSkillsText {
