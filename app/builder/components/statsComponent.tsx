@@ -59,12 +59,14 @@ export default function StatsComponent({ build }: Props) {
                         </div>
                         <p>{buildStats.affinity}</p>
                     </div>
-                </div>
-                <div className={styles.elementContainer}>
-                    <h4>Element</h4>
-                    <div className={styles.elementContainerInner}>
-                        <p>{buildStats.element}</p>
-                        <p>{buildStats.elementDamage}</p>
+                    <div className={styles.elementContainer}>
+                        <div className={styles.elementContainerLeft}>
+                            <span className={`${styles.statsIcon} ${styles.elementIcon}`}></span>
+                            <p>Element</p>
+                        </div>
+                        <div className={styles.elementContainerRight}>
+                            <p>{buildStats.elementDamage}</p>
+                        </div>
                     </div>
                 </div>
                 <div className={styles.sharpnessContainer}>
