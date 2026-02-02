@@ -11,6 +11,7 @@ import Skill from "@/app/components/builder/build/buildComponents/skill";
 import GearPiece from "@/app/builder/components/gearPiece";
 import DecoSelector from "./components/decoSelector"
 import StatsComponent from "./components/statsComponent";
+import {weapons} from "@/app/api/apiCalls/apiCalls";
 
 type ArmorSlotKey = "weapon" | "head" | "chest" | "arms" | "waist" | "legs" | "charm";
 
@@ -43,8 +44,12 @@ export default function Builder() {
     const [selectedPage, setSelectedPage] = useState<string>("gear");
 
     useEffect(() => {
-        console.log(build);
-    }, [build]);
+        if (weaponSelectorOpen || gearSelectorOpen || decoSelectorOpen) {
+            document.body.classList.add("no-scroll");
+        } else {
+            document.body.classList.remove("no-scroll");
+        }
+    }, [weaponSelectorOpen, gearSelectorOpen, decoSelectorOpen]);
 
     const ARMOR_SLOTS: ArmorSlotKey[] = ["weapon", "head", "chest", "arms", "waist", "legs", "charm"]
 
@@ -52,32 +57,6 @@ export default function Builder() {
         skill: SkillType;
         totalLevel: [current: number, max: number];
     };
-
-    const aggregatedSkillsMap: Record<number, AggregatedSkill> = {};
-
-    const findSkillIcon = (skill: SkillType): number => {
-        const foundSkill = skills?.find((thisSkill) => thisSkill.id === skill.id);
-        return foundSkill?.icon.id ?? 0;
-    };
-
-    // --- 1) ArmorPiece/charm skills ---
-    const pieces = [
-        build.weapon,
-        build.head,
-        build.chest,
-        build.arms,
-        build.waist,
-        build.legs,
-        build.charm,
-    ]
-// --- 2) ArmorPiece decorations skills ---
-    //for (const slot of ARMOR_SLOTS) {
-    //    addDecoSkillsToAggregate(skills, aggregatedSkillsMap, build.decorations?.[slot]);
-    //}
-
-// --- 3) Weapon decorations skills (NEW) ---
-    //addDecoSkillsToAggregate(skills, aggregatedSkillsMap, build.decorations?.weapon);
-
 
     const aggregatedSkills = useMemo(() => {
         const map: Record<number, AggregatedSkill> = {};

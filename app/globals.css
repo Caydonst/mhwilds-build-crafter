@@ -7,3 +7,6 @@
 body {
   background: #080808;
 }
+.no-scroll {
+  overflow: hidden;
+}
