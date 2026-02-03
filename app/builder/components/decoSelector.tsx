@@ -91,7 +91,7 @@ export default function DecoSelector({ decoSlotIndex, slotLevel, kind, decoSelec
                 <div className={styles.main}>
                     <div className={styles.mainInner}>
                         {searchedDecos && searchedDecos.map((deco: DecoType, i) => (
-                            <div key={i} className={styles.gearContainer}>
+                            <div key={i} className={styles.decoContainer}>
                                 <Decoration deco={deco} addDecoration={addDecoration} />
                             </div>
                         ))}
