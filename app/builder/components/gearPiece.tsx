@@ -110,10 +110,6 @@ export default function GearPiece({ gearPiece, slotKey, build, deleteBuildItem, 
         }
     }
 
-    if (!isArmorPiece(gearPiece) && !isCharmRank(gearPiece)) {
-        console.log(gearPiece?.kind)
-    }
-
     return (
         <div className={styles.buildPieceContainer}>
             {gearPiece !== null ? (

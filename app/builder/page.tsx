@@ -5,18 +5,18 @@ import React, {useState, useEffect, useMemo} from "react";
 import ArmorPiece from "@/app/components/builder/build/buildComponents/armorPiece";
 import GearSelector from "./components/gearSelector"
 import WeaponSelector from "./components/weaponSelector"
-import type {BuilderBuild, DecoPlacement, Skill as SkillType} from "@/app/api/types/types"
-import {addDecoSkillsToAggregate, addSkillLevel} from "@/app/components/builder/build/buildComponents/helperFunctions";
+import type {BuilderBuild, DecoPlacement, Skill as SkillType, ArmorSet} from "@/app/api/types/types"
 import Skill from "@/app/components/builder/build/buildComponents/skill";
 import GearPiece from "@/app/builder/components/gearPiece";
 import DecoSelector from "./components/decoSelector"
 import StatsComponent from "./components/statsComponent";
-import {weapons} from "@/app/api/apiCalls/apiCalls";
+import {armorSets, weapons} from "@/app/api/apiCalls/apiCalls";
+import SkillsComponent from "@/app/builder/components/skillsComponent";
 
 type ArmorSlotKey = "weapon" | "head" | "chest" | "arms" | "waist" | "legs" | "charm";
 
 export default function Builder() {
-    const { skills, isLoading, error } = useGameData();
+    const { skills, armorBySlot, isLoading, error } = useGameData();
     const [weaponSelectorOpen, setWeaponSelectorOpen] = useState<boolean>(false);
     const [gearSelectorOpen, setGearSelectorOpen] = useState<boolean>(false);
     const [decoSelectorOpen, setDecoSelectorOpen] = useState<boolean>(false);
@@ -43,6 +43,10 @@ export default function Builder() {
     });
     const [selectedPage, setSelectedPage] = useState<string>("gear");
 
+    if (armorSets) {
+
+    }
+
     useEffect(() => {
         if (weaponSelectorOpen || gearSelectorOpen || decoSelectorOpen) {
             document.body.classList.add("no-scroll");
@@ -52,33 +56,6 @@ export default function Builder() {
     }, [weaponSelectorOpen, gearSelectorOpen, decoSelectorOpen]);
 
     const ARMOR_SLOTS: ArmorSlotKey[] = ["weapon", "head", "chest", "arms", "waist", "legs", "charm"]
-
-    type AggregatedSkill = {
-        skill: SkillType;
-        totalLevel: [current: number, max: number];
-    };
-
-    const aggregatedSkills = useMemo(() => {
-        const map: Record<number, AggregatedSkill> = {};
-        const pieces = [build.weapon, build.head, build.chest, build.arms, build.waist, build.legs, build.charm];
-
-        for (const piece of pieces) {
-            if (!piece) continue;
-            for (const s of piece.skills) {
-                const id = s.skill?.id;
-                if (!id) continue;
-                addSkillLevel(skills, id, s.level ?? 0, map);
-            }
-        }
-
-        if (build.decorations) {
-            (Object.keys(build.decorations) as (keyof typeof build.decorations)[]).forEach((slot) => {
-                addDecoSkillsToAggregate(skills, map, build.decorations[slot]);
-            });
-        }
-
-        return Object.values(map).sort((a, b) => b.totalLevel[0] - a.totalLevel[0]);
-    }, [build, skills]);
 
     function openGearSelector(slot: ArmorSlotKey) {
         setType(slot)
@@ -94,7 +71,6 @@ export default function Builder() {
         setDecoKind(decoKind);
         setDecoSlotIndex(slotIndex);
         setDecoSelectorOpen(true);
-        console.log(decoKind);
     }
     function deleteBuildItem(slotKey: ArmorSlotKey) {
         setBuild((prev) => {
@@ -185,14 +161,8 @@ export default function Builder() {
 
                     <div className={styles.builderPageInnerDesktop}>
                         <div className={styles.skillsContainer}>
-                            {aggregatedSkills.length > 0 ? (
-                                aggregatedSkills.map(({ skill, totalLevel }) => {
-                                    return (
-                                        <Skill key={skill.id} skill={skill} skillData={skills} totalLevel={totalLevel} />
-                                    );
-                                })
-                            ) : (
-                                <p className={styles.noSkills}>No skills</p>
+                            {armorBySlot && (
+                                <SkillsComponent build={build} skills={skills} armorSets={armorBySlot.armorSets} />
                             )}
                         </div>
                         <div className={styles.gearContainer}>
@@ -214,14 +184,8 @@ export default function Builder() {
                         )}
                         {selectedPage === "skills" && (
                             <div className={styles.skillsContainer}>
-                                {aggregatedSkills.length > 0 ? (
-                                    aggregatedSkills.map(({ skill, totalLevel }) => {
-                                            return (
-                                                <Skill key={skill.id} skill={skill} skillData={skills} totalLevel={totalLevel} />
-                                            );
-                                        })
-                                ) : (
-                                    <p className={styles.noSkills}>No skills</p>
+                                {armorBySlot && (
+                                    <SkillsComponent build={build} skills={skills} armorSets={armorBySlot.armorSets} />
                                 )}
                             </div>
                         )}

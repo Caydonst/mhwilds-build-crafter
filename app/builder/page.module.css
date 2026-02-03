@@ -88,7 +88,7 @@
     padding: 0 10px 10px 10px;
 }
 .skillsContainer {
-    width: 50%;
+    width: 25%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -110,7 +110,7 @@
     border-radius: 8px;
 }
 .gearContainer {
-    width: 100%;
+    width: 50%;
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -124,11 +124,11 @@
     border-radius: 8px;
 }
 .statsContainer {
-    width: 50%;
+    width: 25%;
     background: rgba(255, 255, 255, 0.05);
-    padding: 10px;
+    padding: 20px;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
+    border-radius: 16px;
 }
 
 .builderPage {
@@ -167,7 +167,7 @@
         transform: rotate(360deg);
     }
 }
-@media(max-width: 800px) {
+@media(max-width: 970px) {
     .builderPageInnerDesktop {
         display: none;
     }
@@ -179,6 +179,9 @@
     }
     .mobileHeader {
         display: flex;
+    }
+    .gearContainer {
+        width: 100%;
     }
     .skillsContainer {
         order: 1;

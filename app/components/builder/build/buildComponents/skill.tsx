@@ -27,7 +27,7 @@ export default function Skill({skill, skillData, totalLevel}: props) {
                             {Array.from({ length: totalLevel[1] }).map((_, i) => {
                                 const key = `${skill.id}-lvl-${i}`;
                                 return (
-                                    <div className={styles.skillLvlWrapper} key={key}>
+                                    <div className={i < totalLevel[0] ? `${styles.skillLvlWrapper} ${styles.fill}` : styles.skillLvlWrapper} key={key}>
                                         <div
                                             key={key}
                                             className={i < totalLevel[0] ? styles.filled : styles.empty}
