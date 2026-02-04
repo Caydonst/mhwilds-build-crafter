@@ -27,7 +27,7 @@ export default function Skill({skill, skillData, totalLevel}: props) {
                             {Array.from({ length: totalLevel[1] }).map((_, i) => {
                                 const key = `${skill.id}-lvl-${i}`;
                                 return (
-                                    <div className={i < totalLevel[0] ? `${styles.skillLvlWrapper} ${styles.fill}` : styles.skillLvlWrapper} key={key}>
+                                    <div className={styles.skillLvlWrapper} key={key}>
                                         <div
                                             key={key}
                                             className={i < totalLevel[0] ? styles.filled : styles.empty}
@@ -37,6 +37,7 @@ export default function Skill({skill, skillData, totalLevel}: props) {
                                 );
                             })}
                         </div>
+                        <span className={styles.divider}></span>
                         <p className={totalLevel[0] === totalLevel[1] ? styles.maxLvl : styles.notMaxLvl}>Lv {totalLevel[0]}</p>
                     </div>
                 )}

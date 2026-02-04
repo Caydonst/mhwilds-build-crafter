@@ -264,7 +264,6 @@
 .equipmentSkillsContainer {
     width: 100%;
     overflow: hidden;
-    background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
 }
@@ -277,9 +276,10 @@
     color: #fff;
     cursor: pointer;
     padding: 0 20px;
+    background: rgba(255, 255, 255, 0.05);
 }
 .equipSkillsHeader:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.07);
 }
 .equipSkillsHeader p {
     line-height: 1;
@@ -299,8 +299,9 @@
     padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 10px;
     color: #808080;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 .buildPieceContainer {
     display: flex;
@@ -441,6 +442,7 @@
     min-height: 30px;
     cursor: pointer;
     background: rgba(255, 255, 255, 0.05);
+    padding: 0 0 0 2px;
 }
 .slot:hover:not(:has(button:hover)) {
     background: rgba(255, 255, 255, 0.1);

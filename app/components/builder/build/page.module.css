@@ -115,10 +115,6 @@
     gap: 5px;
     width: 100%;
     color: #fff;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 5px 8px 5px 5px;
-    border-radius: 12px;
 }
 .skillInfo {
     display: flex;
@@ -143,6 +139,7 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    gap: 5px;
 }
 .skillLvlContainer {
     display: flex;
@@ -156,10 +153,10 @@
     background: #ffdd00;
 }
 .skillLvlWrapper {
-    width: 15px;
-    height: 15px;
+    width: 16px;
+    height: 16px;
     padding: 2px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -171,6 +168,11 @@
     height: 100%;
     width: 100%;
     background: transparent;
+}
+.divider {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    height: 1px;
 }
 .pieceTitle {
     font-weight: 500;
