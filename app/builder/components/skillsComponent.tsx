@@ -4,24 +4,21 @@ import {BuilderBuild, type Skill as SkillType, ArmorSet} from "@/app/api/types/t
 import {addDecoSkillsToAggregate, addSkillLevel} from "@/app/components/builder/build/buildComponents/helperFunctions";
 import Skill from "@/app/components/builder/build/buildComponents/skill";
 import {ChevronDownIcon} from "@heroicons/react/24/outline"
+import {findBonuses} from "./helperFunctions"
 
 interface Props {
     build: BuilderBuild;
     skills: SkillType[];
     armorSets: ArmorSet[];
 }
-type BonusType = {
-    id: number;
-    count: number;
-}
 
 export default function SkillsComponent({ build, skills, armorSets }: Props) {
     const [equipSkillsOpen, setEquipSkillsOpen] = useState(true);
     const [bonusSkillsOpen, setBonusSkillsOpen] = useState(true);
     const [groupSkillsOpen, setGroupSkillsOpen] = useState(true);
-    const [equipSkillsHeight, setEquipSkillsHeight] = useState<number>(70);
-    const [bonusSkillsHeight, setBonusSkillsHeight] = useState<number>(70);
-    const [groupSkillsHeight, setGroupSkillsHeight] = useState<number>(70);
+    //const [equipSkillsHeight, setEquipSkillsHeight] = useState<number>(70);
+    //const [bonusSkillsHeight, setBonusSkillsHeight] = useState<number>(70);
+    //const [groupSkillsHeight, setGroupSkillsHeight] = useState<number>(70);
     const equipSkillsRef = useRef<HTMLDivElement>(null);
     const bonusSkillsRef = useRef<HTMLDivElement>(null);
     const groupSkillsRef = useRef<HTMLDivElement>(null);
@@ -52,127 +49,59 @@ export default function SkillsComponent({ build, skills, armorSets }: Props) {
 
         return Object.values(map).sort((a, b) => b.totalLevel[0] - a.totalLevel[0]);
     }, [build, skills]);
-    /*
 
-    const setBonuses = useMemo(() => {
-        const bonusesArray: BonusType[] = [];
-        const activeBonuses = [];
-        const pieces = [build.head, build.chest, build.arms, build.waist, build.legs];
 
-        for (const piece of pieces) {
-            const setId = piece?.armorSet?.id;
-            if (setId) {
-                let found;
-                bonusesArray.forEach((bonus: BonusType) => {
-                    if (bonus.id === setId) {
-                        found = true;
-                        bonus.count++;
-                    }
-                })
-                if (!found) {
-                    bonusesArray.push({ id: setId, count: 1 })
-                }
-            }
-        }
-
-        for (const bonus of bonusesArray) {
-            Object.values(armorSets).forEach((set) => {
-                if (set.id === bonus.id) {
-                    if (set.bonus) {
-                        if (!activeBonuses.some(bonus => bonus.id === set.id)) {
-                            activeBonuses.push({ bonus: set.bonus, ranks: [] });
-                        }
-                        set.groupBonus.ranks.forEach((rank) => {
-                            if (bonus.count >= rank.pieces) {
-                                activeBonuses.forEach((bonus) => {
-                                    if (bonus.bonus.id === set.bonus.id) {
-                                        bonus.ranks.push(rank);
-                                    }
-                                })
-                            }
-                        })
-                    }
-                }
-            })
-        }
-
-        return {activeBonuses, bonusesArray};
+    const getBonuses = useMemo(() => {
+        const bonuses = findBonuses(build, armorSets);
+        return bonuses;
     }, [build, armorSets]);
 
-    const groupBonuses = useMemo(() => {
-        const bonusesArray: BonusType[] = [];
-        const activeBonuses = [];
-        const pieces = [build.head, build.chest, build.arms, build.waist, build.legs];
+    console.log("Bonuses")
+    console.log(getBonuses.bonusesArray);
+    console.log(getBonuses.groupBonuses);
+    console.log(getBonuses.setBonuses);
 
-        for (const piece of pieces) {
-            const setId = piece?.armorSet?.id;
-            if (setId) {
-                let found;
-                bonusesArray.forEach((bonus: BonusType) => {
-                    if (bonus.id === setId) {
-                        found = true;
-                        bonus.count++;
-                    }
-                })
-                if (!found) {
-                    bonusesArray.push({ id: setId, count: 1 })
-                }
-            }
-        }
+    function useCollapsibleHeight(
+        ref: React.RefObject<HTMLElement | null>,
+        isOpen: boolean,
+        headerHeight = 70
+    ) {
+        const [height, setHeight] = React.useState(headerHeight);
 
-        for (const bonus of bonusesArray) {
-            Object.values(armorSets).forEach((set) => {
-                if (set.id === bonus.id) {
-                    if (set.groupBonus) {
-                        if (!activeBonuses.some(bonus => bonus.id === set.id)) {
-                            activeBonuses.push({ bonus: set.groupBonus, ranks: [] });
-                        }
-                        set.groupBonus.ranks.forEach((rank) => {
-                            if (bonus.count >= rank.pieces) {
-                                activeBonuses.forEach((bonus) => {
-                                    if (bonus.bonus.id === set.groupBonus.id) {
-                                        bonus.ranks.push(rank);
-                                    }
-                                })
-                            }
-                        })
-                    }
-                }
-            })
-        }
+        React.useLayoutEffect(() => {
+            const el = ref.current;
+            if (!el) return;
 
-        return {activeBonuses, bonusesArray};
-    }, [build, armorSets]);
+            const updateHeight = () => {
+                setHeight(isOpen ? headerHeight + el.scrollHeight : headerHeight);
+            };
 
-    console.log("Set Bonuses")
-    console.log(setBonuses.activeBonuses);
-    console.log(setBonuses.bonusesArray);
+            // Initial measurement
+            updateHeight();
 
-    console.log("Group Bonuses")
-    console.log(groupBonuses.activeBonuses);
-    console.log(groupBonuses.bonusesArray);
+            const observer = new ResizeObserver(updateHeight);
+            observer.observe(el);
 
-     */
+            return () => observer.disconnect();
+        }, [ref, isOpen, headerHeight]);
 
-    useLayoutEffect(() => {
-        const equipSkillsContent = equipSkillsRef.current;
-        if (!equipSkillsContent) return;
+        return height;
+    }
 
-        const openHeight1 = 70 + equipSkillsContent.scrollHeight; // header(50) + content
-        setEquipSkillsHeight(equipSkillsOpen ? openHeight1 : 70);
+    const equipSkillsHeight = useCollapsibleHeight(
+        equipSkillsRef,
+        equipSkillsOpen
+    );
 
-        const bonusSkillsContent = bonusSkillsRef.current;
-        if (!bonusSkillsContent) return;
+    const bonusSkillsHeight = useCollapsibleHeight(
+        bonusSkillsRef,
+        bonusSkillsOpen
+    );
 
-        const openHeight2 = 70 + bonusSkillsContent.scrollHeight; // header(50) + content
-        setBonusSkillsHeight(bonusSkillsOpen ? openHeight2 : 70);
-
-        const groupSkillsContent = groupSkillsRef.current;
-        if (!groupSkillsContent) return;
-
-        const openHeight3 = 70 + groupSkillsContent.scrollHeight; // header(50) + content
-        setGroupSkillsHeight(groupSkillsOpen ? openHeight3 : 70);
-    }, [equipSkillsOpen, bonusSkillsOpen, groupSkillsOpen, aggregatedSkills.length]);
+    const groupSkillsHeight = useCollapsibleHeight(
+        groupSkillsRef,
+        groupSkillsOpen
+    );
 
     return (
         <div className={styles.skillsComponentContainer}>
@@ -196,19 +125,49 @@ export default function SkillsComponent({ build, skills, armorSets }: Props) {
             <div className={styles.equipmentSkillsContainer} style={{ height: bonusSkillsHeight }}>
                 <div className={styles.equipSkillsHeader} onClick={() => setBonusSkillsOpen(!bonusSkillsOpen)}>
                     <p>Set Bonus Skills</p>
-                    <span className={equipSkillsOpen ? styles.rotated : ""}><ChevronDownIcon className={styles.chevronIcon} /></span>
+                    <span className={bonusSkillsOpen ? styles.rotated : ""}><ChevronDownIcon className={styles.chevronIcon} /></span>
                 </div>
                 <div ref={bonusSkillsRef} className={styles.equipSkillsContent}>
-                    <p className={styles.noSkills}>Coming soon</p>
+                    {getBonuses.setBonuses.map((bonus) => (
+                        <div key={bonus.bonus.id} className={styles.bonusSkillsContainer}>
+                            <span className={`${styles.skillIcon} ${styles.setBonusSkill}`}></span>
+                            <div className={styles.bonusSkill}>
+                                <p className={styles.bonusSkillTitle}>{bonus.bonus.skill.name}</p>
+                                <div className={styles.bonusSkillRanksContainer}>
+                                    {bonus.bonus.ranks.map((rank, i) => {
+                                        const isActive = i in bonus.ranks;
+                                        return (
+                                            <p key={rank.id} className={isActive ? `${styles.rank} ${styles.active}` : `${styles.rank} ${styles.notActive}`}>{rank.skill.name}</p>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
             <div className={styles.equipmentSkillsContainer} style={{ height: groupSkillsHeight }}>
                 <div className={styles.equipSkillsHeader} onClick={() => setGroupSkillsOpen(!groupSkillsOpen)}>
                     <p>Group Skills</p>
-                    <span className={equipSkillsOpen ? styles.rotated : ""}><ChevronDownIcon className={styles.chevronIcon} /></span>
+                    <span className={groupSkillsOpen ? styles.rotated : ""}><ChevronDownIcon className={styles.chevronIcon} /></span>
                 </div>
                 <div ref={groupSkillsRef} className={styles.equipSkillsContent}>
-                    <p className={styles.noSkills}>Coming soon</p>
+                    {getBonuses.groupBonuses.map((bonus) => (
+                        <div key={bonus.bonus.id} className={styles.bonusSkillsContainer}>
+                            <span className={`${styles.skillIcon} ${styles.groupSkill}`}></span>
+                            <div className={styles.bonusSkill}>
+                                <p className={styles.bonusSkillTitle}>{bonus.bonus.skill.name}</p>
+                                <div className={styles.bonusSkillRanksContainer}>
+                                    {bonus.bonus.ranks.map((rank, i) => {
+                                        const isActive = i in bonus.ranks;
+                                        return (
+                                            <p key={rank.id} className={isActive ? `${styles.rank} ${styles.active}` : `${styles.rank} ${styles.notActive}`}>{rank.skill.name}</p>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>

@@ -115,6 +115,40 @@
     flex-direction: column;
     gap: 5px;
 }
+.skillBonusRefContainer {
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 5px;
+}
+.setBonusRef {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+}
+.setBonusRef span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ffeb6b;
+}
+.groupBonusRef {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+}
+.groupBonusRef span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #6ba4ff;
+}
 .armorPieceContainer {
     width: 100%;
     cursor: pointer;

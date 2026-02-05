@@ -1,7 +1,8 @@
 import styles from "./page.module.css"
-import type {BuilderBuild, SlotLevel, Armor, CharmRank, Weapon} from "@/app/api/types/types";
-import React from "react";
+import type {BuilderBuild, SlotLevel, Armor, CharmRank, Weapon, ArmorSet} from "@/app/api/types/types";
+import React, {useMemo} from "react";
 import {XMarkIcon} from "@heroicons/react/24/outline";
+import {findGearPieceBonuses} from "./helperFunctions"
 
 type ArmorSlotKey = "weapon" | "head" | "chest" | "arms" | "waist" | "legs" | "charm";
 type GearSlotKey = "head" | "chest" | "arms" | "waist" | "legs" | "charm";
@@ -13,6 +14,7 @@ interface Props {
     gearPiece: WeaponArmorCharm | null
     slotKey: ArmorSlotKey;
     build: BuilderBuild | null;
+    armorSets: ArmorSet[];
     deleteBuildItem: (slotKey: ArmorSlotKey) => void;
     openGearSelector: (slot: ArmorSlotKey) => void;
     openWeaponSelector: (slot: ArmorSlotKey) => void;
@@ -20,7 +22,7 @@ interface Props {
     deleteDecoration: (slot: ArmorSlotKey, slotIndex: number) => void;
 }
 
-export default function GearPiece({ gearPiece, slotKey, build, deleteBuildItem, openGearSelector, openWeaponSelector, openDecoSelector, deleteDecoration }: Props) {
+export default function GearPiece({ gearPiece, slotKey, build, armorSets, deleteBuildItem, openGearSelector, openWeaponSelector, openDecoSelector, deleteDecoration }: Props) {
 
     const weapons = [
         "bow",
@@ -110,6 +112,12 @@ export default function GearPiece({ gearPiece, slotKey, build, deleteBuildItem, 
         }
     }
 
+    const findBonuses = useMemo(() => {
+        if (isArmorPiece(gearPiece) && armorSets) {
+            return findGearPieceBonuses(gearPiece, armorSets);
+        }
+    }, [gearPiece, armorSets])
+
     return (
         <div className={styles.buildPieceContainer}>
             {gearPiece !== null ? (
@@ -152,7 +160,6 @@ export default function GearPiece({ gearPiece, slotKey, build, deleteBuildItem, 
                                     </div>
                                 )}
                                 <div className={styles.gearPieceSkillsContainer}>
-
                                     {gearPiece.skills.map((skill, i) => (
                                         <p key={i}>{skill.skill.name} {skill.level}</p>
                                     ))}
@@ -173,6 +180,8 @@ export default function GearPiece({ gearPiece, slotKey, build, deleteBuildItem, 
                                     {gearPiece.skills.map((skill, i) => (
                                         <p key={i}>{skill.skill.name} {skill.level}</p>
                                     ))}
+                                    <p className={styles.setBonusSkillName}>{findBonuses?.setBonus}</p>
+                                    <p className={styles.groupSkillName}>{findBonuses?.groupBonus}</p>
                                 </div>
                             </div>
                             <button className={styles.deleteBtn} onClick={(e) => {e.stopPropagation(); deleteBuildItem(slotKey);}}><XMarkIcon /></button>

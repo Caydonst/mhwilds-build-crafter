@@ -143,13 +143,13 @@ export interface Armor {
     crafting: ArmorCrafting;
 }
 
-interface ArmorSetBonusRank {
+export interface ArmorSetBonusRank {
     id: number;
     pieces: number;
     skill: Skill;
 }
 
-interface ArmorSetBonus {
+export interface ArmorSetBonus {
     id: number;
     skill: SkillRank
     ranks: ArmorSetBonusRank[];

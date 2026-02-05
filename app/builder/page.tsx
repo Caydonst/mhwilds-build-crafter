@@ -10,7 +10,6 @@ import Skill from "@/app/components/builder/build/buildComponents/skill";
 import GearPiece from "@/app/builder/components/gearPiece";
 import DecoSelector from "./components/decoSelector"
 import StatsComponent from "./components/statsComponent";
-import {armorSets, weapons} from "@/app/api/apiCalls/apiCalls";
 import SkillsComponent from "@/app/builder/components/skillsComponent";
 
 type ArmorSlotKey = "weapon" | "head" | "chest" | "arms" | "waist" | "legs" | "charm";
@@ -42,10 +41,6 @@ export default function Builder() {
         },
     });
     const [selectedPage, setSelectedPage] = useState<string>("gear");
-
-    if (armorSets) {
-
-    }
 
     useEffect(() => {
         if (weaponSelectorOpen || gearSelectorOpen || decoSelectorOpen) {
@@ -166,9 +161,21 @@ export default function Builder() {
                             )}
                         </div>
                         <div className={styles.gearContainer}>
-                            {ARMOR_SLOTS.map((slot) => (
-                                <GearPiece key={slot} slotKey={slot} gearPiece={build[slot]} build={build} deleteBuildItem={deleteBuildItem} openGearSelector={openGearSelector} openWeaponSelector={openWeaponSelector} openDecoSelector={openDecoSelector} deleteDecoration={deleteDecoration} />
-                            ))}
+                            <div className={styles.skillBonusRefContainer}>
+                                <div className={styles.setBonusRef}>
+                                    <span></span>
+                                    <p>Set bonus skill</p>
+                                </div>
+                                <div className={styles.groupBonusRef}>
+                                    <span></span>
+                                    <p>Group skill</p>
+                                </div>
+                            </div>
+                            {armorBySlot && (
+                                ARMOR_SLOTS.map((slot) => (
+                                    <GearPiece key={slot} slotKey={slot} gearPiece={build[slot]} build={build} armorSets={armorBySlot.armorSets} deleteBuildItem={deleteBuildItem} openGearSelector={openGearSelector} openWeaponSelector={openWeaponSelector} openDecoSelector={openDecoSelector} deleteDecoration={deleteDecoration} />
+                                ))
+                            )}
                         </div>
                         <div className={styles.statsContainer}>
                             <StatsComponent build={build} />
@@ -177,9 +184,21 @@ export default function Builder() {
                     <div className={styles.builderPageInnerMobile}>
                         {selectedPage === "gear" && (
                             <div className={styles.gearContainer}>
-                                {ARMOR_SLOTS.map((slot) => (
-                                    <GearPiece key={slot} slotKey={slot} gearPiece={build[slot]} build={build} deleteBuildItem={deleteBuildItem} openGearSelector={openGearSelector} openWeaponSelector={openWeaponSelector} openDecoSelector={openDecoSelector} deleteDecoration={deleteDecoration} />
-                                ))}
+                                <div className={styles.skillBonusRefContainer}>
+                                    <div className={styles.setBonusRef}>
+                                        <span></span>
+                                        <p>Set bonus skill</p>
+                                    </div>
+                                    <div className={styles.groupBonusRef}>
+                                        <span></span>
+                                        <p>Group skill</p>
+                                    </div>
+                                </div>
+                                {armorBySlot && (
+                                    ARMOR_SLOTS.map((slot) => (
+                                        <GearPiece key={slot} slotKey={slot} gearPiece={build[slot]} build={build} armorSets={armorBySlot.armorSets} deleteBuildItem={deleteBuildItem} openGearSelector={openGearSelector} openWeaponSelector={openWeaponSelector} openDecoSelector={openDecoSelector} deleteDecoration={deleteDecoration} />
+                                    ))
+                                )}
                             </div>
                         )}
                         {selectedPage === "skills" && (

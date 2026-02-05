@@ -303,6 +303,40 @@
     color: #808080;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
+.bonusSkillsContainer {
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    font-size: 14px;
+    gap: 5px;
+}
+.bonusSkill {
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    gap: 5px;
+}
+.bonusSkillRanksContainer {
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+}
+.bonusSkillTitle {
+    color: #fff;
+}
+.rank {
+    color: rgba(255, 255, 255, 0.3);
+
+}
+.rank.active {
+    color: #fff;
+}
+.rank.notActive {
+    text-decoration: line-through;
+}
 .buildPieceContainer {
     display: flex;
     justify-content: center;
@@ -327,8 +361,14 @@
     font-weight: 500;
 }
 .gearPieceSkillsContainer {
-    color: gray;
+    color: rgba(255, 255, 255, 0.6);
     font-size: 14px;
+}
+.setBonusSkillName {
+    color: #ffeb6b;
+}
+.groupSkillName {
+    color: #6ba4ff;
 }
 .pieceContainerHeader {
     display: flex;
@@ -763,6 +803,21 @@
 }
 .blast {
     background-position: calc((-64px * 5) * var(--stats-icon-size)) calc((-64px * 1) * var(--stats-icon-size));
+}
+.skillIcon {
+    display: inline-block;
+    flex-shrink: 0;
+    width: calc(100px * var(--size-factor));
+    height: calc(100px * var(--size-factor));
+    background-image: url("@/app/assets/skills.png");
+    background-size: calc(1400px * var(--size-factor)) calc(100px * var(--size-factor)); /* or set to sheet width/height if scaling */
+    background-repeat: no-repeat;
+}
+.setBonusSkill {
+    background-position: calc((-100px * var(--size-factor)) * 13) 0;
+}
+.groupSkill {
+    background-position: calc((-100px * var(--size-factor)) * 12) 0;
 }
 @media (min-width: 800px) and (max-width: 1100px) {
     .buildPieceContainer {
