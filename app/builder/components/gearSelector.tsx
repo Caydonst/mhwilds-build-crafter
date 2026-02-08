@@ -85,11 +85,25 @@ export default function GearSelector({ gearSelectorOpen, setGearSelectorOpen, ty
                         <input type={"text"} placeholder={"Search"} value={searchQuery} onChange={(e) => updateSearchQuery(e)} />
                     </div>
                 </div>
+                {type !== "charm" && (
+                    <div className={styles.skillBonusRefContainer}>
+                        <div className={styles.setBonusRef}>
+                            <span></span>
+                            <p>Set bonus skill</p>
+                        </div>
+                        <div className={styles.groupBonusRef}>
+                            <span></span>
+                            <p>Group skill</p>
+                        </div>
+                    </div>
+                )}
                 <div className={styles.main}>
                     <div className={styles.mainInner}>
                         {filteredGear && filteredGear.map((piece) => (
                             <div key={piece.id} className={styles.gearContainer} onClick={() => addArmor(piece)}>
-                                <ArmorPiece gearPiece={piece} slotKey={type} build={null} />
+                                {armorBySlot?.armorSets && (
+                                    <ArmorPiece gearPiece={piece} armorSets={armorBySlot.armorSets} slotKey={type} build={null} />
+                                )}
                             </div>
                         ))}
                     </div>

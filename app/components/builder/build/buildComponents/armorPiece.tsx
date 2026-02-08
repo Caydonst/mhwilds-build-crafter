@@ -1,6 +1,7 @@
 import styles from "../page.module.css"
-import type {Build, SlotLevel, Armor, CharmRank, Weapon} from "@/app/api/types/types";
-import React from "react";
+import type {Build, SlotLevel, Armor, CharmRank, Weapon, ArmorSet} from "@/app/api/types/types";
+import React, {useMemo} from "react";
+import {findGearPieceBonuses} from "@/app/builder/components/helperFunctions";
 
 type ArmorSlotKey = "head" | "chest" | "arms" | "waist" | "legs";
 type GearSlotKey = ArmorSlotKey | "charm";
@@ -9,12 +10,13 @@ const ARMOR_KINDS = ["head", "chest", "arms", "waist", "legs"] as const;
 type ArmorKind = typeof ARMOR_KINDS[number];
 
 interface Props {
-    gearPiece: WeaponArmorCharm | null
+    gearPiece: WeaponArmorCharm | null;
+    armorSets: ArmorSet[];
     slotKey: string;
     build: Build | null;
 }
 
-export default function ArmorPiece({ gearPiece, slotKey, build }: Props) {
+export default function ArmorPiece({ gearPiece, armorSets, slotKey, build }: Props) {
 
     const weapons = [
         "bow",
@@ -52,11 +54,11 @@ export default function ArmorPiece({ gearPiece, slotKey, build }: Props) {
     type WeaponKind = typeof weapons[number];
 
     function isWeaponPiece(piece: WeaponArmorCharm | null | undefined): piece is Weapon {
-        return !!piece && weapons.includes((piece as any).kind);
+        return !!piece && "kind" in piece;
     }
 
     function isArmorPiece(piece: WeaponArmorCharm | null | undefined): piece is Armor {
-        return !!piece && ARMOR_KINDS.includes((piece as any).kind);
+        return !!piece && "kind" in piece;
     }
 
     function isCharmRank(piece: WeaponArmorCharm | null | undefined): piece is CharmRank {
@@ -104,6 +106,12 @@ export default function ArmorPiece({ gearPiece, slotKey, build }: Props) {
     if (!isArmorPiece(gearPiece) && !isCharmRank(gearPiece)) {
         console.log(gearPiece?.kind)
     }
+
+    const findBonuses = useMemo(() => {
+        if (isArmorPiece(gearPiece) && armorSets) {
+            return findGearPieceBonuses(gearPiece, armorSets);
+        }
+    }, [gearPiece, armorSets])
 
     return (
         <div className={styles.buildPieceContainer}>
@@ -166,6 +174,8 @@ export default function ArmorPiece({ gearPiece, slotKey, build }: Props) {
                                     {gearPiece.skills.map((skill, i) => (
                                         <p key={i}>{skill.skill.name} {skill.level}</p>
                                     ))}
+                                    <p className={styles.setBonusSkillName}>{findBonuses?.setBonus}</p>
+                                    <p className={styles.groupSkillName}>{findBonuses?.groupBonus}</p>
                                 </div>
                             </div>
                         </div>

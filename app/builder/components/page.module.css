@@ -323,6 +323,24 @@
     justify-content: center;
     align-items: start;
     flex-direction: column;
+    gap: 5px;
+}
+.bonusSkillRanksContainer div {
+    padding: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    font-size: 12px;
+}
+.bonusSkillContainer {
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    gap: 5px;
+}
+.bonusSkillContainer > div {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
 }
 .bonusSkillTitle {
     color: #fff;
@@ -333,9 +351,6 @@
 }
 .rank.active {
     color: #fff;
-}
-.rank.notActive {
-    text-decoration: line-through;
 }
 .buildPieceContainer {
     display: flex;
@@ -365,10 +380,44 @@
     font-size: 14px;
 }
 .setBonusSkillName {
-    color: #ffeb6b;
+    color: #F2BBAA;
 }
 .groupSkillName {
-    color: #6ba4ff;
+    color: #AAF1F2;
+}
+.skillBonusRefContainer {
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 20px;
+    font-size: 14px;
+}
+.setBonusRef {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    color: #fff;
+}
+.setBonusRef span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #F2BBAA;
+}
+.groupBonusRef {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    color: #fff;
+}
+.groupBonusRef span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #AAF1F2;
 }
 .pieceContainerHeader {
     display: flex;
