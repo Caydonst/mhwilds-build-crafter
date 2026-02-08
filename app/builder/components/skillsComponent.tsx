@@ -128,22 +128,26 @@ export default function SkillsComponent({ build, skills, armorSets }: Props) {
                     <span className={bonusSkillsOpen ? styles.rotated : ""}><ChevronDownIcon className={styles.chevronIcon} /></span>
                 </div>
                 <div ref={bonusSkillsRef} className={styles.equipSkillsContent}>
-                    {getBonuses.setBonuses.map((bonus) => (
-                        <div key={bonus.bonus.id} className={styles.bonusSkillsContainer}>
-                            <span className={`${styles.skillIcon} ${styles.setBonusSkill}`}></span>
-                            <div className={styles.bonusSkill}>
-                                <p className={styles.bonusSkillTitle}>{bonus.bonus.skill.name}</p>
-                                <div className={styles.bonusSkillRanksContainer}>
-                                    {bonus.bonus.ranks.map((rank, i) => {
-                                        const isActive = i in bonus.ranks;
-                                        return (
-                                            <p key={rank.id} className={isActive ? `${styles.rank} ${styles.active}` : `${styles.rank} ${styles.notActive}`}>{rank.skill.name}</p>
-                                        )
-                                    })}
+                    {getBonuses.setBonuses.length > 0 ? (
+                        getBonuses.setBonuses.map((bonus) => (
+                                <div key={bonus.bonus.id} className={styles.bonusSkillsContainer}>
+                                    <span className={`${styles.skillIcon} ${styles.setBonusSkill}`}></span>
+                                    <div className={styles.bonusSkill}>
+                                        <p className={styles.bonusSkillTitle}>{bonus.bonus.skill.name}</p>
+                                        <div className={styles.bonusSkillRanksContainer}>
+                                            {bonus.bonus.ranks.map((rank, i) => {
+                                                const isActive = i in bonus.ranks;
+                                                return (
+                                                    <p key={rank.id} className={isActive ? `${styles.rank} ${styles.active}` : `${styles.rank} ${styles.notActive}`}>{rank.skill.name}</p>
+                                                )
+                                            })}
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    ))}
+                            ))
+                    ) : (
+                        <p className={styles.noSkills}>None</p>
+                    )}
                 </div>
             </div>
             <div className={styles.equipmentSkillsContainer} style={{ height: groupSkillsHeight }}>
@@ -152,22 +156,26 @@ export default function SkillsComponent({ build, skills, armorSets }: Props) {
                     <span className={groupSkillsOpen ? styles.rotated : ""}><ChevronDownIcon className={styles.chevronIcon} /></span>
                 </div>
                 <div ref={groupSkillsRef} className={styles.equipSkillsContent}>
-                    {getBonuses.groupBonuses.map((bonus) => (
-                        <div key={bonus.bonus.id} className={styles.bonusSkillsContainer}>
-                            <span className={`${styles.skillIcon} ${styles.groupSkill}`}></span>
-                            <div className={styles.bonusSkill}>
-                                <p className={styles.bonusSkillTitle}>{bonus.bonus.skill.name}</p>
-                                <div className={styles.bonusSkillRanksContainer}>
-                                    {bonus.bonus.ranks.map((rank, i) => {
-                                        const isActive = i in bonus.ranks;
-                                        return (
-                                            <p key={rank.id} className={isActive ? `${styles.rank} ${styles.active}` : `${styles.rank} ${styles.notActive}`}>{rank.skill.name}</p>
-                                        )
-                                    })}
+                    {getBonuses.groupBonuses.length > 0 ? (
+                        getBonuses.groupBonuses.map((bonus) => (
+                            <div key={bonus.bonus.id} className={styles.bonusSkillsContainer}>
+                                <span className={`${styles.skillIcon} ${styles.setBonusSkill}`}></span>
+                                <div className={styles.bonusSkill}>
+                                    <p className={styles.bonusSkillTitle}>{bonus.bonus.skill.name}</p>
+                                    <div className={styles.bonusSkillRanksContainer}>
+                                        {bonus.bonus.ranks.map((rank, i) => {
+                                            const isActive = i in bonus.ranks;
+                                            return (
+                                                <p key={rank.id} className={isActive ? `${styles.rank} ${styles.active}` : `${styles.rank} ${styles.notActive}`}>{rank.skill.name}</p>
+                                            )
+                                        })}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        ))
+                    ) : (
+                        <p className={styles.noSkills}>None</p>
+                    )}
                 </div>
             </div>
         </div>

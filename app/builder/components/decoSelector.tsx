@@ -44,6 +44,8 @@ export default function DecoSelector({ decoSlotIndex, slotLevel, kind, decoSelec
     }, [decorations, kind, slotLevel]);
 
     function addDecoration(decoration: DecoType) {
+        if (!decoration) return;
+
         setBuild((prev) => {
             const decos = prev.decorations ?? DEFAULT_DECOS;
 

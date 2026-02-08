@@ -128,12 +128,12 @@ export default function ArmorPiece({ gearPiece, slotKey, build }: Props) {
                                             {gearPiece.specials[0].hasOwnProperty("status") ? (
                                                 <>
                                                     <span className={`${styles.statsIcon} ${styles[`${gearPiece.specials[0].status}`]}`}></span>
-                                                    <p>{gearPiece.specials[0].damage.raw}</p>
+                                                    <p>{gearPiece.specials[0].damage.display}</p>
                                                 </>
                                             ) : (
                                                 <>
                                                     <span className={`${styles.statsIcon} ${styles[`${gearPiece.specials[0].element}`]}`}></span>
-                                                    <p>{gearPiece.specials[0].damage.raw}</p>
+                                                    <p>{gearPiece.specials[0].damage.display}</p>
                                                 </>
                                             )}
                                         </div>

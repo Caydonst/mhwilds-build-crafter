@@ -87,3 +87,69 @@ export function findGearPieceBonuses(piece: Armor, armorSets: ArmorSet[]) {
 
     return { setBonus, groupBonus };
 }
+
+type BuildStats = {
+    raw: number,
+    affinity: number,
+    element: string,
+    elementDamage: number,
+    defense: number,
+    fire: number,
+    water: number,
+    thunder: number,
+    ice: number,
+    dragon: number,
+}
+
+export function updateStats(build: BuilderBuild) {
+    const buildArmor = [build.head, build.arms, build.waist, build.legs];
+    const buildWeapon = build.weapon;
+
+    const resistKeys = ["fire", "water", "thunder", "ice", "dragon"] as const;
+    const RES_KEY_MAP = {
+        fire: "fire",
+        water: "water",
+        thunder: "thunder",
+        ice: "ice",
+        dragon: "dragon",
+    } as const;
+
+
+    const buildStats: BuildStats = {
+        raw: 0,
+        affinity: 0,
+        element: "None",
+        elementDamage: 0,
+        defense: 0,
+        fire: 0,
+        water: 0,
+        thunder: 0,
+        ice: 0,
+        dragon: 0,
+    };
+
+    if (buildWeapon) {
+        buildStats.raw += buildWeapon.damage.raw;
+        buildStats.affinity += buildWeapon.affinity
+        if (buildWeapon.specials.length > 0) {
+            if (buildWeapon.specials[0].status) {
+                buildStats.element = buildWeapon.specials[0].status
+            } else if (buildWeapon.specials[0].element) {
+                buildStats.element = buildWeapon.specials[0].element
+            }
+            buildStats.elementDamage = buildWeapon.specials[0].damage.display;
+        }
+    }
+
+    for (const item of buildArmor) {
+        if (!item) continue;
+
+        buildStats.defense += item.defense.base;
+
+        for (const k of resistKeys) {
+            buildStats[RES_KEY_MAP[k]] += item.resistances[k];
+        }
+    }
+
+    return buildStats;
+}

@@ -48,6 +48,8 @@ export const addDecoSkillsToAggregate = (skillData: SkillType[] | null, aggregat
     if (!placements?.length) return;
 
     for (const placement of placements) {
+        if (!placement) continue;
+
         const deco = placement.decoration;
         if (!deco) continue;
 

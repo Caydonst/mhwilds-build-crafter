@@ -3,6 +3,7 @@
   margin: 0;
   box-sizing: border-box;
   font-family: 'Rubik', sans-serif;
+  -webkit-tap-highlight-color: transparent;
 }
 body {
   background: #0A0A0A;

@@ -12,12 +12,12 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 40px;
+    height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    background: #080808;
+    background: #0A0A0A;
     z-index: 2;
 }
 .headerInner {
@@ -51,24 +51,23 @@
     justify-content: center;
     align-items: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    background: #080808;
-    backdrop-filter: blur(20px);
+    background: #0A0A0A;
     z-index: 2;
-    padding: 5px;
 }
 .skillsHeaderMobile,
 .gearHeaderMobile,
 .statsHeaderMobile {
     width: 100%;
     background: transparent;
-    border: none;
-    color: #fff;
+    color: rgba(255, 255, 255, 0.6);
     height: 100%;
     font-size: 14px;
-    border-radius: 8px;
+    border: none;
+    border-bottom: 2px solid transparent;
 }
 .selected {
-    background: rgba(255, 255, 255, 0.1);
+    border-color: #fff;
+    color: #fff;
 }
 .builderPageInnerDesktop {
     width: 100%;
@@ -159,10 +158,6 @@
 }
 .statsContainer {
     width: 25%;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
 }
 
 .builderPage {

@@ -549,12 +549,11 @@
 }
 .statsInner {
     width: 100%;
-
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    gap: 20px;
+    gap: 5px;
 }
 .stamHealth {
     width: 100%;
@@ -618,6 +617,12 @@
     align-items: center;
     gap: 2px;
 }
+.elementContainerRight {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+}
 .sharpnessContainer {
     width: 100%;
     display: flex;
@@ -665,6 +670,12 @@
 .attackContainer h3 {
     width: 100%;
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+.defenseChild {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 .attackLeft,
 .resLeft {
@@ -819,15 +830,17 @@
 .groupSkill {
     background-position: calc((-100px * var(--size-factor)) * 12) 0;
 }
-@media (min-width: 800px) and (max-width: 1100px) {
+@media (min-width: 970px) and (max-width: 1100px) {
+    .buildPieceContainer {
+        flex-direction: column;
+    }
+}
+@media (max-width: 600px) {
     .buildPieceContainer {
         flex-direction: column;
     }
 }
 @media (max-width: 500px) {
-    .buildPieceContainer {
-        flex-direction: column;
-    }
     .gearSelectorContainer {
         padding: 0;
     }

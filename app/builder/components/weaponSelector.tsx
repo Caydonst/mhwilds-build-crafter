@@ -3,7 +3,7 @@ import {ChevronDownIcon, XMarkIcon} from "@heroicons/react/24/outline"
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import {useGameData} from "@/app/hooks/useGameData";
 import ArmorPiece from "@/app/components/builder/build/buildComponents/armorPiece"
-import type {Armor, CharmRank, WeaponKind, BuilderBuild, Weapon} from "@/app/api/types/types";
+import type {Armor, CharmRank, WeaponKind, BuilderBuild, Weapon, DecoPlacement} from "@/app/api/types/types";
 
 type ArmorSlotKey = "weapon" | "head" | "chest" | "arms" | "waist" | "legs" | "charm";
 
@@ -76,9 +76,31 @@ export default function WeaponSelector({ weaponSelectorOpen, setWeaponSelectorOp
     }
 
     function addWeapon(weapon: Weapon) {
-        setBuild(prev => ({ ...prev, weapon: weapon }));
-        setWeaponSelectorOpen(false);
+        setBuild((prev) => {
+            if (!("slots" in weapon)) {
+                return {
+                    ...prev,
+                    weapon: weapon,
+                };
+            }
 
+            const emptySlots: DecoPlacement[] = weapon.slots.map(() => ({
+                slotLevel: 1,
+                decoration: null,
+            }));
+
+            return {
+                ...prev,
+                weapon: weapon,
+
+                decorations: {
+                    ...prev.decorations,
+                    weapon: emptySlots,
+                },
+            };
+        });
+
+        setWeaponSelectorOpen(false);
     }
 
     useEffect(() => {
