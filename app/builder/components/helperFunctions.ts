@@ -23,6 +23,7 @@ export function findBonuses(build: BuilderBuild, armorSets: ArmorSet[]) {
     const pieces = [build.head, build.chest, build.arms, build.waist, build.legs];
 
     for (const piece of pieces) {
+        if (!piece) continue;
         const setId = piece?.armorSet?.id;
         if (setId) {
             let found;
@@ -34,6 +35,36 @@ export function findBonuses(build: BuilderBuild, armorSets: ArmorSet[]) {
             })
             if (!found) {
                 bonusesArray.push({ id: setId, count: 1 })
+            }
+        }
+    }
+
+    for (const piece of pieces) {
+        if (!piece) continue;
+        for (const skill of piece.skills) {
+            if (skill.skill.kind === "set") {
+                let found = false;
+                let set;
+                bonusesArray.forEach((bonus: BonusType) => {
+                    set = armorSets.find(set => set.id === bonus.id)
+                    console.log("set:")
+                    console.log(set);
+                    if (set && set.bonus) {
+                        console.log("set.bonus.skill.id")
+                        console.log(set.bonus.skill.id)
+                        console.log("skill.skill.id")
+                        console.log(skill.skill.id)
+                        if (set.bonus.skill.id === skill.skill.id) {
+                            found = true;
+                            bonus.count++;
+                        }
+                    }
+                })
+                if (!found) {
+                    if (set) {
+                        bonusesArray.push({ id: set.id, count: 1 })
+                    }
+                }
             }
         }
     }

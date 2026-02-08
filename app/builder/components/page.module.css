@@ -300,7 +300,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    color: #808080;
+    color: #fff;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 .bonusSkillsContainer {
@@ -325,32 +325,26 @@
     flex-direction: column;
     gap: 5px;
 }
-.bonusSkillRanksContainer div {
-    padding: 3px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 4px;
-    font-size: 12px;
-}
 .bonusSkillContainer {
     display: flex;
     justify-content: center;
     align-items: start;
     gap: 5px;
 }
-.bonusSkillContainer > div {
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.5);
-}
 .bonusSkillTitle {
     color: #fff;
 }
 .rank {
     color: rgba(255, 255, 255, 0.3);
-
+    padding: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    font-size: 12px;
 }
 .rank.active {
     color: #fff;
+    background: rgba(255, 255, 255, 0.1);
 }
 .buildPieceContainer {
     display: flex;

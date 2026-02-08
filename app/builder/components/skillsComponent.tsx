@@ -3,7 +3,7 @@ import React, {useLayoutEffect, useMemo, useRef, useState} from "react";
 import {BuilderBuild, type Skill as SkillType, ArmorSet} from "@/app/api/types/types";
 import {addDecoSkillsToAggregate, addSkillLevel} from "@/app/components/builder/build/buildComponents/helperFunctions";
 import Skill from "@/app/components/builder/build/buildComponents/skill";
-import {ChevronDownIcon} from "@heroicons/react/24/outline"
+import {ChevronDownIcon, XMarkIcon, CheckIcon} from "@heroicons/react/24/outline"
 import {findBonuses} from "./helperFunctions"
 
 interface Props {
