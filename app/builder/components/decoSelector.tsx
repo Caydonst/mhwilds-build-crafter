@@ -79,24 +79,26 @@ export default function DecoSelector({ decoSlotIndex, slotLevel, kind, decoSelec
 
     return (
         <div className={decoSelectorOpen ? `${styles.gearSelectorContainer} ${styles.open}` : styles.gearSelectorContainer}>
-            <div className={styles.gearSelectorInner}>
-                <div className={styles.info}>
-                    <div className={styles.header}>
-                        <p>Select Decoration</p>
-                        <button onClick={() => setDecoSelectorOpen(false)}><XMarkIcon /></button>
+            <div className={styles.gearSelectorInnerWrapper}>
+                <div className={styles.gearSelectorInner}>
+                    <div className={styles.info}>
+                        <div className={styles.header}>
+                            <p>Select Decoration</p>
+                            <button onClick={() => setDecoSelectorOpen(false)}><XMarkIcon /></button>
+                        </div>
+                        <div className={styles.searchContainer}>
+                            <p>{thisKind.charAt(0).toUpperCase() + thisKind.slice(1)} Decoration</p>
+                            <input type={"text"} placeholder={"Search"} value={searchQuery} onChange={(e) => updateSearchQuery(e)} />
+                        </div>
                     </div>
-                    <div className={styles.searchContainer}>
-                        <p>{thisKind.charAt(0).toUpperCase() + thisKind.slice(1)} Decoration</p>
-                        <input type={"text"} placeholder={"Search"} value={searchQuery} onChange={(e) => updateSearchQuery(e)} />
-                    </div>
-                </div>
-                <div className={styles.main}>
-                    <div className={styles.mainInner}>
-                        {searchedDecos && searchedDecos.map((deco: DecoType, i) => (
-                            <div key={i} className={styles.decoContainer}>
-                                <Decoration deco={deco} addDecoration={addDecoration} />
-                            </div>
-                        ))}
+                    <div className={styles.main}>
+                        <div className={styles.mainInner}>
+                            {searchedDecos && searchedDecos.map((deco: DecoType, i) => (
+                                <div key={i} className={styles.decoContainer}>
+                                    <Decoration deco={deco} addDecoration={addDecoration} />
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>
