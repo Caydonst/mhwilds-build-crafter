@@ -3,7 +3,7 @@ import {
     ArmorSet,
     ArmorSetBonus,
     ArmorSetBonusRank,
-    type Armor,
+    type Armor, Skill, SkillRank,
 } from "@/app/api/types/types";
 
 type BonusType = {
@@ -12,11 +12,21 @@ type BonusType = {
 }
 
 type Bonus = {
-    bonus: ArmorSetBonus,
-    ranks: ArmorSetBonusRank[]
+    bonus: Skill,
+    ranks: SkillRank[]
 }
 
-export function findBonuses(build: BuilderBuild, armorSets: ArmorSet[]) {
+/*
+    Instead of storing the set ID's
+    Store the skill ID's that are "set" skills
+
+    Completely get rid of bonusesArray and just store bonuses directly into setBonuses/groupBonuses arrays
+    bonus skills object:
+    setBonuses = [...{ id: number, count: number}]
+    groupBonuses = [...{ id: number, count: number}]
+ */
+
+export function findBonuses(build: BuilderBuild, armorSets: ArmorSet[], skills: Skill[]) {
     const bonusesArray: BonusType[] = [];
     const setBonuses: Bonus[] = [];
     const groupBonuses: Bonus[] = [];
@@ -25,44 +35,34 @@ export function findBonuses(build: BuilderBuild, armorSets: ArmorSet[]) {
     for (const piece of pieces) {
         if (!piece) continue;
         const setId = piece?.armorSet?.id;
-        if (setId) {
-            let found;
-            bonusesArray.forEach((bonus: BonusType) => {
-                if (bonus.id === setId) {
-                    found = true;
-                    bonus.count++;
+        const set = armorSets.find((set) => set.id === setId);
+        if (set) {
+            // Check for set bonus
+            if (set.bonus) {
+                const setBonus = bonusesArray.find(bonus => bonus.id === set?.bonus?.skill.id);
+                if (setBonus) {
+                    setBonus.count++
+                } else {
+                    bonusesArray.push({ id: set.bonus.skill.id, count: 1 })
                 }
-            })
-            if (!found) {
-                bonusesArray.push({ id: setId, count: 1 })
             }
-        }
-    }
+            // Check for group bonus
+            if (set.groupBonus) {
+                const groupBonuses = bonusesArray.find(bonus => bonus.id === set?.groupBonus?.skill.id);
+                if (groupBonuses) {
+                    groupBonuses.count++
+                } else {
+                    bonusesArray.push({ id: set.groupBonus.skill.id, count: 1 })
+                }
+            }
 
-    for (const piece of pieces) {
-        if (!piece) continue;
-        for (const skill of piece.skills) {
-            if (skill.skill.kind === "set") {
-                let found = false;
-                let set;
-                bonusesArray.forEach((bonus: BonusType) => {
-                    set = armorSets.find(set => set.id === bonus.id)
-                    console.log("set:")
-                    console.log(set);
-                    if (set && set.bonus) {
-                        console.log("set.bonus.skill.id")
-                        console.log(set.bonus.skill.id)
-                        console.log("skill.skill.id")
-                        console.log(skill.skill.id)
-                        if (set.bonus.skill.id === skill.skill.id) {
-                            found = true;
-                            bonus.count++;
-                        }
-                    }
-                })
-                if (!found) {
-                    if (set) {
-                        bonusesArray.push({ id: set.id, count: 1 })
+            for (const skill of piece.skills) {
+                if (skill.skill.kind === "set") {
+                    const setBonus = bonusesArray.find(bonus => bonus.id === skill.skill.id);
+                    if (setBonus) {
+                        setBonus.count++
+                    } else {
+                        bonusesArray.push({ id: skill.skill.id, count: 1 })
                     }
                 }
             }
@@ -70,42 +70,26 @@ export function findBonuses(build: BuilderBuild, armorSets: ArmorSet[]) {
     }
 
     for (const bonus of bonusesArray) {
-        Object.values(armorSets).forEach((set) => {
-            if (set.id === bonus.id) {
-                if (set.bonus) {
-                    if (!setBonuses.some(bonus => bonus.bonus.id === set.id)) {
-                        setBonuses.push({ bonus: set.bonus, ranks: [] });
-                    }
-                    set.bonus.ranks.forEach((rank) => {
-                        if (bonus.count >= rank.pieces) {
-                            setBonuses.forEach((bonus) => {
-                                if (bonus.bonus.id === set.bonus.id) {
-                                    bonus.ranks.push(rank);
-                                }
-                            })
-                        }
-                    })
-                }
+        const skill = skills.find(skill => skill.id === bonus.id);
+        if (skill && skill.kind === "set") {
+            const bonusObj: Bonus = { bonus: skill, ranks: [] };
+            if (bonus.count >= 2) {
+                bonusObj.ranks.push(skill.ranks[0]);
             }
-        })
-    }
-    for (const bonus of bonusesArray) {
-        const set = armorSets.find(set => set.id === bonus.id);
-        if (set && set.groupBonus) {
-            if (!groupBonuses.some(bonus => bonus.bonus.id === set.id)) {
-                groupBonuses.push({ bonus: set.groupBonus, ranks: [] });
+            if (bonus.count >= 4) {
+                bonusObj.ranks.push(skill.ranks[1]);
             }
-            set.groupBonus.ranks.forEach((rank) => {
-                if (bonus.count >= rank.pieces) {
-                    groupBonuses.forEach((bonus) => {
-                        if (bonus.bonus.id === set.groupBonus.id) {
-                            bonus.ranks.push(rank);
-                        }
-                    })
-                }
-            })
+            setBonuses.push(bonusObj);
+        }
+        if (skill && skill.kind === "group") {
+            const bonusObj: Bonus = { bonus: skill, ranks: [] };
+            if (bonus.count >= 3) {
+                bonusObj.ranks.push(skill.ranks[0]);
+            }
+            groupBonuses.push(bonusObj);
         }
     }
+
     return {bonusesArray, setBonuses, groupBonuses};
 }
 

@@ -1,5 +1,5 @@
 import styles from "./page.module.css"
-import {ChevronDownIcon, XMarkIcon} from "@heroicons/react/24/outline"
+import {ChevronDownIcon, XMarkIcon, ArrowLeftIcon} from "@heroicons/react/24/outline"
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import {useGameData} from "@/app/hooks/useGameData";
 import ArmorPiece from "@/app/components/builder/build/buildComponents/armorPiece"
@@ -20,6 +20,7 @@ export default function WeaponSelector({ weaponSelectorOpen, setWeaponSelectorOp
     const [weaponKind, setWeaponKind] = useState<WeaponKind>(null);
     const [openWeaponSelectorDropdown, setOpenWeaponSelectorDropdown] = useState(false);
     const [searchQuery, setSearchQuery] = useState<string>("");
+    const [showArtian, setShowArtian] = useState<boolean>(false);
     const { weapons } = useGameData();
 
     const weaponDropdownRef = useRef<HTMLDivElement | null>(null);
@@ -118,59 +119,69 @@ export default function WeaponSelector({ weaponSelectorOpen, setWeaponSelectorOp
 
     return (
         <div className={weaponSelectorOpen ? `${styles.gearSelectorContainer} ${styles.open}` : styles.gearSelectorContainer}>
-            <div className={styles.gearSelectorInner}>
-                <div className={styles.info}>
-                    <div className={styles.header}>
-                        <p>Gear Search</p>
-                        <button onClick={() => setWeaponSelectorOpen(false)}><XMarkIcon /></button>
-                    </div>
-                    <div className={styles.searchContainer}>
-                        <p>Weapon</p>
-                        <div className={styles.inputFilterContainer}>
-                            <input type={"text"} placeholder={"Search"} onChange={(e) => updateSearchQuery(e)} />
-                            <div className={styles.weaponSelectorWrapper} ref={weaponDropdownRef}>
-                                <div
-                                    className={styles.weaponSelector}
-                                    onClick={() => setOpenWeaponSelectorDropdown((prev) => !prev)}
-                                    role="button"
-                                    tabIndex={0}
-                                    onKeyDown={(e) => {
-                                        if (e.key === "Enter" || e.key === " ") {
-                                            setOpenWeaponSelectorDropdown((prev) => !prev);
-                                        }
-                                    }}
-                                >
-                                    {weaponFilter && (
-                                        <>
-                                            <div className={styles.weaponSelectorLeft}>
-                                                <span className={`${styles.weaponIcon} ${styles[weaponFilter]}`} />
-                                            </div>
-                                            <ChevronDownIcon className={styles.dropDownIcon} />
-                                        </>
+            <div className={styles.gearSelectorInnerWrapper}>
+                <div className={`${styles.gearSelectorInner} ${
+                    showArtian ? styles.slideLeft : styles.slideRight
+                }`}>
+                    <div className={styles.info}>
+                        <div className={styles.header}>
+                            <p>Gear Search</p>
+                            <button onClick={() => setWeaponSelectorOpen(false)}><XMarkIcon /></button>
+                        </div>
+                        <div className={styles.searchContainer}>
+                            <p>Weapon</p>
+                            <div className={styles.inputFilterContainer}>
+                                <input type={"text"} placeholder={"Search"} onChange={(e) => updateSearchQuery(e)} />
+                                <div className={styles.weaponSelectorWrapper} ref={weaponDropdownRef}>
+                                    <div
+                                        className={styles.weaponSelector}
+                                        onClick={() => setOpenWeaponSelectorDropdown((prev) => !prev)}
+                                        role="button"
+                                        tabIndex={0}
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Enter" || e.key === " ") {
+                                                setOpenWeaponSelectorDropdown((prev) => !prev);
+                                            }
+                                        }}
+                                    >
+                                        {weaponFilter && (
+                                            <>
+                                                <div className={styles.weaponSelectorLeft}>
+                                                    <span className={`${styles.weaponIcon} ${styles[weaponFilter]}`} />
+                                                </div>
+                                                <ChevronDownIcon className={styles.dropDownIcon} />
+                                            </>
+                                        )}
+                                    </div>
+
+                                    {openWeaponSelectorDropdown && (
+                                        <div className={`${styles.weaponDropdown} ${styles.open}`}>
+                                            {weaponData.map((weapon) => (
+                                                <button key={weapon} type="button" onClick={() => updateWeapon(weapon)}>
+                                                    <span className={`${styles.weaponIcon} ${styles[weapon]}`} />
+                                                </button>
+                                            ))}
+                                        </div>
                                     )}
                                 </div>
-
-                                {openWeaponSelectorDropdown && (
-                                    <div className={`${styles.weaponDropdown} ${styles.open}`}>
-                                        {weaponData.map((weapon) => (
-                                            <button key={weapon} type="button" onClick={() => updateWeapon(weapon)}>
-                                                <span className={`${styles.weaponIcon} ${styles[weapon]}`} />
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
                             </div>
+                            <button className={styles.artianWeaponBtn} onClick={() => setShowArtian(true)}>+ Artian Weapon</button>
+                        </div>
+                    </div>
+                    <div className={styles.main}>
+                        <div className={styles.mainInner}>
+                            {searchedWeapons && searchedWeapons.map((piece, i) => (
+                                <div key={i} className={styles.gearContainer} onClick={() => addWeapon(piece)}>
+                                    <ArmorPiece gearPiece={piece} slotKey={type} build={null} />
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>
-                <div className={styles.main}>
-                    <div className={styles.mainInner}>
-                        {searchedWeapons && searchedWeapons.map((piece, i) => (
-                            <div key={i} className={styles.gearContainer} onClick={() => addWeapon(piece)}>
-                                <ArmorPiece gearPiece={piece} slotKey={type} build={null} />
-                            </div>
-                        ))}
-                    </div>
+                <div className={`${styles.placeholder} ${
+                    showArtian ? styles.slideLeft : styles.slideRight
+                }`}>
+                    <button className={styles.backBtn} onClick={() => setShowArtian(false)}><ArrowLeftIcon className={styles.arrowLeftIcon} /></button>
                 </div>
             </div>
         </div>

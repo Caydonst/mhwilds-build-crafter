@@ -40,7 +40,7 @@
     visibility: visible;
     opacity: 1;
 }
-.gearSelectorInner {
+.gearSelectorInnerWrapper {
     width: 100%;
     max-width: 800px;
     height: 100%;
@@ -51,16 +51,23 @@
     border-radius: 20px;
     overflow: hidden;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
+    flex-direction: row;
+    gap: 20px;
     transform: scale(0.9);
     transition: 0.15s;
     animation: scaleIn 0.15s;
 }
-
-.gearSelectorContainer.open .gearSelectorInner {
+.gearSelectorInner {
+    width: 100%;
+    min-width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+.gearSelectorContainer.open .gearSelectorInnerWrapper {
     transform: scale(1);
 }
 .gearSelectorInner .info {
@@ -120,6 +127,57 @@
 }
 .info .searchContainer input:focus {
     border-color: #fff;
+}
+.artianWeaponBtn {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.artianWeaponBtn:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+.placeholder {
+    position: relative;
+    width: 100%;
+    min-width: 100%;
+    height: 100%;
+}
+.backBtn {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.backBtn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+.arrowLeftIcon {
+    width: 20px;
+    height: 20px;
+    color: #fff;
+}
+.slideLeft {
+    transform: translateX(calc(-100% - 20px));
+    transition: 0.25s ease;
+}
+.slideRight {
+    transform: translateX(0);
+    transition: 0.25s ease;
 }
 .main {
     width: 100%;
@@ -302,6 +360,7 @@
     gap: 10px;
     color: #fff;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.02);
 }
 .bonusSkillsContainer {
     width: 100%;
@@ -335,15 +394,31 @@
     color: #fff;
 }
 .rank {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.3);
+}
+.rank.active {
+    color: #fff;
+}
+.rank .lvlContainer {
     color: rgba(255, 255, 255, 0.3);
     padding: 3px;
     border: 1px solid rgba(255, 255, 255, 0.05);
     background: rgba(255, 255, 255, 0.05);
     border-radius: 4px;
     font-size: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20px;
+    width: 20px;
 }
-.rank.active {
-    color: #fff;
+.rank.active .lvlContainer {
+    color: #ffdd00;
     background: rgba(255, 255, 255, 0.1);
 }
 .buildPieceContainer {
@@ -887,7 +962,7 @@
     .gearSelectorContainer {
         padding: 0;
     }
-    .gearSelectorInner {
+    .gearSelectorInnerWrapper {
         max-width: unset;
         max-height: unset;
         border-radius: 0;

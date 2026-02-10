@@ -41,6 +41,12 @@ export default function Builder() {
         },
     });
     const [selectedPage, setSelectedPage] = useState<string>("gear");
+    const [sliderAmount, setSliderAmount] = useState<number>(0);
+
+    function updateSlider(page: string, amt: number) {
+        setSelectedPage(page);
+        setSliderAmount(amt);
+    }
 
     useEffect(() => {
         if (weaponSelectorOpen || gearSelectorOpen || decoSelectorOpen) {
@@ -133,25 +139,26 @@ export default function Builder() {
                         <div className={styles.headerInner}>
                             <button
                                 className={`${styles.gearHeaderMobile} ${selectedPage === "gear" ? styles.selected : ""}`}
-                                onClick={() => setSelectedPage("gear")}
+                                onClick={() => updateSlider("gear", 0)}
                             >
                                 Gear
                             </button>
 
                             <button
                                 className={`${styles.skillsHeaderMobile} ${selectedPage === "skills" ? styles.selected : ""}`}
-                                onClick={() => setSelectedPage("skills")}
+                                onClick={() => updateSlider("skills", 100)}
                             >
                                 Skills
                             </button>
 
                             <button
                                 className={`${styles.statsHeaderMobile} ${selectedPage === "stats" ? styles.selected : ""}`}
-                                onClick={() => setSelectedPage("stats")}
+                                onClick={() => updateSlider("stats", 200)}
                             >
                                 Stats
                             </button>
                         </div>
+                        <div className={styles.slider} style={{ transform: `translateX(${sliderAmount}%)` }}></div>
                     </div>
 
                     <div className={styles.builderPageInnerDesktop}>

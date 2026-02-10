@@ -52,9 +52,9 @@ export default function SkillsComponent({ build, skills, armorSets }: Props) {
 
 
     const getBonuses = useMemo(() => {
-        const bonuses = findBonuses(build, armorSets);
+        const bonuses = findBonuses(build, armorSets, skills);
         return bonuses;
-    }, [build, armorSets]);
+    }, [build, armorSets, skills]);
 
     console.log("Bonuses")
     console.log(getBonuses.bonusesArray);
@@ -139,12 +139,15 @@ export default function SkillsComponent({ build, skills, armorSets }: Props) {
                                 <div key={bonus.bonus.id} className={styles.bonusSkillsContainer}>
                                     <span className={`${styles.skillIcon} ${styles.setBonusSkill}`}></span>
                                     <div className={styles.bonusSkill}>
-                                        <p className={styles.bonusSkillTitle}>{bonus.bonus.skill.name}</p>
+                                        <p className={styles.bonusSkillTitle}>{bonus.bonus.name}</p>
                                         <div className={styles.bonusSkillRanksContainer}>
                                             {bonus.bonus.ranks.map((rank, i) => {
                                                 const isActive = i in bonus.ranks;
                                                 return (
-                                                    <div key={rank.id} className={isActive ? `${styles.rank} ${styles.active}` : `${styles.rank} ${styles.notActive}`}>{rank.pieces} Piece</div>
+                                                    <div key={rank.id} className={isActive ? `${styles.rank} ${styles.active}` : `${styles.rank} ${styles.notActive}`}>
+                                                        <div className={styles.lvlContainer}>{rank.level * 2}</div>
+                                                        <p>{rank.name}</p>
+                                                    </div>
                                                 )
                                             })}
                                         </div>
@@ -167,12 +170,15 @@ export default function SkillsComponent({ build, skills, armorSets }: Props) {
                             <div key={bonus.bonus.id} className={styles.bonusSkillsContainer}>
                                 <span className={`${styles.skillIcon} ${styles.groupSkill}`}></span>
                                 <div className={styles.bonusSkill}>
-                                    <p className={styles.bonusSkillTitle}>{bonus.bonus.skill.name}</p>
+                                    <p className={styles.bonusSkillTitle}>{bonus.bonus.name}</p>
                                     <div className={styles.bonusSkillRanksContainer}>
                                         {bonus.bonus.ranks.map((rank, i) => {
                                             const isActive = i in bonus.ranks;
                                             return (
-                                                <div key={rank.id} className={isActive ? `${styles.rank} ${styles.active}` : `${styles.rank} ${styles.notActive}`}>{rank.pieces} Piece</div>
+                                                <div key={rank.id} className={isActive ? `${styles.rank} ${styles.active}` : `${styles.rank} ${styles.notActive}`}>
+                                                    <div className={styles.lvlContainer}>{rank.level * 3}</div>
+                                                    <p>{rank.name}</p>
+                                                </div>
                                             )
                                         })}
                                     </div>
