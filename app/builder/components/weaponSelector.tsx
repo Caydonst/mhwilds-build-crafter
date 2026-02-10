@@ -4,6 +4,7 @@ import React, {useEffect, useMemo, useRef, useState} from "react";
 import {useGameData} from "@/app/hooks/useGameData";
 import ArmorPiece from "@/app/components/builder/build/buildComponents/armorPiece"
 import type {Armor, CharmRank, WeaponKind, BuilderBuild, Weapon, DecoPlacement} from "@/app/api/types/types";
+import {armorBySlot} from "@/app/api/apiCalls/apiCalls";
 
 type ArmorSlotKey = "weapon" | "head" | "chest" | "arms" | "waist" | "legs" | "charm";
 
@@ -172,7 +173,7 @@ export default function WeaponSelector({ weaponSelectorOpen, setWeaponSelectorOp
                         <div className={styles.mainInner}>
                             {searchedWeapons && searchedWeapons.map((piece, i) => (
                                 <div key={i} className={styles.gearContainer} onClick={() => addWeapon(piece)}>
-                                    <ArmorPiece gearPiece={piece} slotKey={type} build={null} />
+                                    <ArmorPiece gearPiece={piece} armorSets={armorBySlot.armorSets} slotKey={type} build={null} />
                                 </div>
                             ))}
                         </div>
