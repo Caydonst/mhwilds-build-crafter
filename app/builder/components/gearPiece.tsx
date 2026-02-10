@@ -84,7 +84,6 @@ export default function GearPiece({ gearPiece, slotKey, build, armorSets, delete
 
     let rarity;
     let bgPos
-    let armorSlots
 
     if (gearPiece) {
         rarity = gearPiece?.rarity ?? 0;
@@ -99,12 +98,6 @@ export default function GearPiece({ gearPiece, slotKey, build, armorSets, delete
 
         bgPos = `calc((-64px * ${spriteX}) * var(--build-icon-size)) calc((-64px * ${rarity}) * var(--build-icon-size))`;
 
-        const ZEROS = [0, 0, 0] as const;
-        // Normalize armor slots to SlotLevel[]
-        armorSlots =
-            isArmorPiece(gearPiece)
-                ? ([...gearPiece.slots.filter(isSlotLevel), ...ZEROS].slice(0, 3))
-                : [...ZEROS];
     } else {
         rarity = 0
         if (slotKey !== "weapon") {

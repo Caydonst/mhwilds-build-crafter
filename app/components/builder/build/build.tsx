@@ -14,6 +14,7 @@ import Skill from "./buildComponents/skill"
 import ArmorPiece from "./buildComponents/armorPiece"
 import Weapon from "./buildComponents/weapon"
 import {addSkillLevel, addDecoSkillsToAggregate} from "./buildComponents/helperFunctions";
+import {useGameData} from "@/app/hooks/useGameData";
 
 type Props = {
     index: number;
@@ -31,6 +32,7 @@ const ARMOR_SLOTS: readonly ArmorSlotKey[] = ["head", "chest", "arms", "waist", 
 
 export default function Build({ index, build, skillData, setBuildBreakdownOpen, setSelectedBuild }: Props) {
     // If you still want sprite index maps, keep as consts (no need for useState)
+    const { armorBySlot } = useGameData();
 
     type AggregatedSkill = {
         skill: SkillType;
@@ -108,10 +110,10 @@ export default function Build({ index, build, skillData, setBuildBreakdownOpen, 
                 )}
 
                 {/* ========================= ARMOR + CHARM CARDS ========================= */}
-                {(Object.entries(build.armor)).map(
+                {armorBySlot && (Object.entries(build.armor)).map(
                     ([slotKey, gearPiece]) => {
                         return (
-                            <ArmorPiece key={slotKey} slotKey={slotKey} gearPiece={gearPiece} build={build} />
+                            <ArmorPiece key={slotKey} armorSets={armorBySlot.armorSets} slotKey={slotKey} gearPiece={gearPiece} build={build} />
                         );
                     }
                 )}
