@@ -29,24 +29,8 @@ export type SkillFilter = {
 }
 /** ---------- Shared / Utility Types ---------- **/
 
-export type Rank = 'low' | 'high' | 'master'; // :contentReference[oaicite:0]{index=0}
+export type Rank = 'low' | 'high' | 'master';
 
-export interface WeaponDamage {
-    raw: number;
-    display: number;
-}
-
-export interface Sharpness {
-    red: number;
-    orange: number;
-    yellow: number;
-    green: number;
-    blue: number;
-    white: number;
-    purple: number;
-}
-
-/** Decoration slots are just numbers in the API */
 export type DecorationSlot = number;
 export type SlotLevel = 1 | 2 | 3;
 
@@ -189,19 +173,33 @@ export type WeaponKind =
     | 'long-sword'
     | 'switch-axe'
     | 'sword-shield'
-    | null;
+    | string
+    | null
 
-export type SpecialKind = 'element' | 'status'; // two subtypes listed for WeaponSpecial :contentReference[oaicite:9]{index=9}
+export interface WeaponDamage {
+    raw: number;
+    display: number;
+}
+
+export interface Sharpness {
+    red: number;
+    orange: number;
+    yellow: number;
+    green: number;
+    blue: number;
+    white: number;
+    purple: number;
+}
+export type SpecialKind = 'element' | 'status';
 
 export interface WeaponSpecial {
     id: number;
     damage: WeaponDamage;
     hidden: boolean;
     kind: SpecialKind;
-    // Depending on kind, one of these will be present:
-    element?: string; // Element enum in docs
-    status?: string;  // Status enum in docs
-} // :contentReference[oaicite:10]{index=10}
+    element?: string;
+    status?: string;
+}
 
 export interface WeaponSeries {
     id: number;
@@ -222,49 +220,35 @@ export interface WeaponCrafting {
     column: number;
 } // :contentReference[oaicite:11]{index=11}
 
-/**
- * Base weapon shape – fields present on all weapons, per docs.
- * Specific weapon types (Bow, Gunlance, etc.) add their own fields on top of this.
- */
 export interface Weapon {
     id: number;
-    gameId: number;             // unique per kind
+    gameId: number;
     kind: WeaponKind;
     name: string;
     rarity: number;
     damage: WeaponDamage;
     specials: WeaponSpecial[];
-    /**
-     * Not present on bows/bowguns.
-     */
     sharpness?: Sharpness;
-    /**
-     * Handicraft breakpoints. Not present on bows/bowguns.
-     */
     handicraft?: number[];
-    /**
-     * Skills granted by the weapon.
-     */
     skills: SkillRank[];
     defenseBonus: number;
-    /**
-     * Null if weapon does not apply elderseal.
-     */
-    elderseal: 'low' | 'average' | 'high' | null; // from Elderseal enum :contentReference[oaicite:12]{index=12}
-    /**
-     * Base affinity; can be negative.
-     */
+    elderseal: 'low' | 'average' | 'high' | null;
     affinity: number;
-    /**
-     * Decoration slots on the weapon.
-     */
     slots: DecorationSlot[];
-    crafting: WeaponCrafting;
-    /**
-     * Series this weapon belongs to; null for Artian etc. :contentReference[oaicite:13]{index=13}
-     */
+    crafting: WeaponCrafting | null;
     series: WeaponSeries | null;
-} // :contentReference[oaicite:14]{index=14}
+    reinforcements?: string[];
+}
+
+export interface ArtianWeapon {
+    name: string;
+    rarity: number;
+    damage: WeaponDamage;
+    specials: WeaponSpecial[];
+    sharpness?: Sharpness;
+    affinity: number;
+    slots: DecorationSlot[];
+}
 
 export type BuildWeapon = Pick<Weapon, "id" | "kind" | "name" | "rarity" | "slots" | "skills">;
 

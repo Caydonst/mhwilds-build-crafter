@@ -1,0 +1,348 @@
+.artianContainerWrapper {
+    position: relative;
+    width: 100%;
+    min-width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+    overflow: auto;
+    color: #fff;
+}
+.artianContainer {
+    position: relative;
+    width: 100%;
+    min-width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    overflow: auto;
+    color: #fff;
+}
+.artianContainer::-webkit-scrollbar {
+    display: none;
+}
+.artianContainer h3 {
+    margin-bottom: 30px;
+}
+.backBtn {
+    position: fixed;
+    left: 20px;
+    top: 20px;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.backBtn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+.arrowLeftIcon {
+    width: 20px;
+    height: 20px;
+    color: #fff;
+}
+.slideLeft1 {
+    transform: translateX(calc(-100% - 20px));
+    transition: 0.5s cubic-bezier(0.23, 1.00, 0.32, 1.00);
+    opacity: 1;
+}
+.slideRight1 {
+    transform: translateX(0);
+    transition: 0.5s cubic-bezier(0.23, 1.00, 0.32, 1.00);
+    opacity: 0;
+}
+.slider {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50%;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    transition: 0.2s;
+}
+.artian {
+    background: #80c8ff;
+}
+.artian::after {
+    position: absolute;
+    content: '';
+    bottom: 0;
+    transform: translateY(50%);
+    left: 0;
+    width: 100%;
+    height: 30px;
+    background: #80c8ff;
+    border-radius: 50%;
+    filter: blur(20px);
+}
+.gogmaArtian {
+    background: #ff5757;
+}
+.gogmaArtian::after {
+    position: absolute;
+    content: '';
+    bottom: 0;
+    transform: translateY(50%);
+    left: 0;
+    width: 100%;
+    height: 30px;
+    background: #ff5757;
+    border-radius: 50%;
+    filter: blur(20px);
+}
+.artianSelectorWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.artianSelectorContainer {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+    padding: 5px;
+    background: transparent;
+    border-radius: 8px;
+}
+.selectorBtn {
+    position: relative;
+    width: 50%;
+    height: 40px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    z-index: 2;
+    font-size: 14px;
+}
+.selectorBtn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+.weaponSelectorWrapper {
+    width: 100%;
+    background: #0A0A0A;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    z-index: 3;
+}
+.contentContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #0A0A0A;
+    z-index: 2;
+    padding: 30px;
+}
+.contentArtian {
+    width: 100%;
+    max-width: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+    animation: fadeLeft 0.2s;
+}
+.contentGogmaArtian {
+    width: 100%;
+    max-width: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+    animation: fadeRight 0.2s;
+}
+.partSelectionContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 5px;
+    color: #fff;
+    font-size: 14px;
+}
+@keyframes fadeRight {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0px);
+    }
+}
+@keyframes fadeLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0px);
+    }
+}
+.partContainer {
+    position: relative;
+    width: 100%;
+    background: transparent;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.part {
+    position: relative;
+    width: 50%;
+    height: 34px;
+    background: transparent;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    z-index: 2;
+}
+.selected {
+    outline: 1px solid gray;
+    background: rgba(255, 255, 255, 0.08);
+}
+.reinforcementsContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 5px;
+    color: #fff;
+    font-size: 14px;
+}
+.reinforcement {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+.reinforcementWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+.reinforcementInner {
+    width: 100%;
+    height: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+    padding: 0 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+.reinforcementInner:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+.reinforcementDropdown {
+    position: absolute;
+    top: 45px;
+    left: 0;
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    background: #0A0A0A;
+    z-index: 3;
+    padding: 5px;
+}
+.chevronIcon {
+    width: 16px;
+    height: 16px;
+    color: #fff;
+}
+.reinforcementDropdown button {
+    width: 100%;
+    height: 40px;
+    color: #fff;
+    border: none;
+    background: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding: 0 10px;
+    font-size: 14px;
+}
+.reinforcementDropdown button:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+.lvlWrapper {
+    position: relative;
+    width: 80px;
+    height: 40px;
+}
+.lvlContainer {
+    height: 100%;
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+    padding: 0 10px;
+    cursor: pointer;
+}
+.lvlContainer:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+.addBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 80px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #2d7a4d;
+    border: 1px solid #57ff9d;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+}
+.addBtn:hover {
+    background: #1d4f32;
+}
+.addBtn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+.addBtn:disabled:hover {
+    background: #2d7a4d;
+}
+@media (max-width: 500px) {
+    .selectorBtn:hover {
+        background: transparent;
+    }
+}

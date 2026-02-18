@@ -156,6 +156,9 @@ export default function GearPiece({ gearPiece, slotKey, build, armorSets, delete
                                     {gearPiece.skills.map((skill, i) => (
                                         <p key={i}>{skill.skill.name} {skill.level}</p>
                                     ))}
+                                    {gearPiece.reinforcements?.map((reinforcement, i) => (
+                                        <p key={i}>{reinforcement}</p>
+                                    ))}
                                 </div>
                             </div>
                             <button className={styles.deleteBtn} onClick={(e) => {e.stopPropagation(); deleteBuildItem(slotKey);}}><XMarkIcon /></button>
@@ -171,10 +174,17 @@ export default function GearPiece({ gearPiece, slotKey, build, armorSets, delete
                                 <div className={styles.gearPieceSkillsContainer}>
 
                                     {gearPiece.skills.map((skill, i) => (
-                                        <p key={i}>{skill.skill.name} {skill.level}</p>
+                                        "kind" in skill.skill && skill.skill.kind !== "set" && (
+                                            <p key={i}>{skill.skill.name} {skill.level}</p>
+                                        )
                                     ))}
-                                    <p className={styles.setBonusSkillName}>{findBonuses?.setBonus}</p>
-                                    <p className={styles.groupSkillName}>{findBonuses?.groupBonus}</p>
+
+                                    {findBonuses?.setBonuses.map((bonus, i) => (
+                                        <p key={i} className={styles.setBonusSkillName}>{bonus}</p>
+                                    ))}
+                                    {findBonuses?.groupBonuses.map((bonus, i) => (
+                                        <p key={i} className={styles.groupSkillName}>{bonus}</p>
+                                    ))}
                                 </div>
                             </div>
                             <button className={styles.deleteBtn} onClick={(e) => {e.stopPropagation(); deleteBuildItem(slotKey);}}><XMarkIcon /></button>

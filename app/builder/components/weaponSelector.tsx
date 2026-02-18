@@ -1,10 +1,11 @@
 import styles from "./page.module.css"
-import {ChevronDownIcon, XMarkIcon, ArrowLeftIcon} from "@heroicons/react/24/outline"
+import {ChevronDownIcon, XMarkIcon} from "@heroicons/react/24/outline"
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import {useGameData} from "@/app/hooks/useGameData";
 import ArmorPiece from "@/app/components/builder/build/buildComponents/armorPiece"
 import type {Armor, CharmRank, WeaponKind, BuilderBuild, Weapon, DecoPlacement} from "@/app/api/types/types";
 import {armorBySlot} from "@/app/api/apiCalls/apiCalls";
+import ArtianCreator from "@/app/components/artianCreator/artianCreator"
 
 type ArmorSlotKey = "weapon" | "head" | "chest" | "arms" | "waist" | "legs" | "charm";
 
@@ -25,23 +26,6 @@ export default function WeaponSelector({ weaponSelectorOpen, setWeaponSelectorOp
     const { weapons } = useGameData();
 
     const weaponDropdownRef = useRef<HTMLDivElement | null>(null);
-
-    const weaponLabelMap: Record<Exclude<WeaponKind, null>, string> = {
-        "bow": "Bow",
-        "charge-blade": "Charge Blade",
-        "dual-blades": "Dual Blades",
-        "great-sword": "Great Sword",
-        "gunlance": "Gunlance",
-        "hammer": "Hammer",
-        "heavy-bowgun": "Heavy Bowgun",
-        "hunting-horn": "Hunting Horn",
-        "insect-glaive": "Insect Glaive",
-        "lance": "Lance",
-        "light-bowgun": "Light Bowgun",
-        "long-sword": "Long Sword",
-        "switch-axe": "Switch Axe",
-        "sword-shield": "Sword & Shield",
-    };
 
     const weaponData = useMemo<Array<Exclude<WeaponKind, null>>>(() => {
         if (!weapons) return [];
@@ -127,7 +111,6 @@ export default function WeaponSelector({ weaponSelectorOpen, setWeaponSelectorOp
                     <div className={styles.info}>
                         <div className={styles.header}>
                             <p>Gear Search</p>
-                            <button onClick={() => setWeaponSelectorOpen(false)}><XMarkIcon /></button>
                         </div>
                         <div className={styles.searchContainer}>
                             <p>Weapon</p>
@@ -179,11 +162,8 @@ export default function WeaponSelector({ weaponSelectorOpen, setWeaponSelectorOp
                         </div>
                     </div>
                 </div>
-                <div className={`${styles.placeholder} ${
-                    showArtian ? styles.slideLeft : styles.slideRight
-                }`}>
-                    <button className={styles.backBtn} onClick={() => setShowArtian(false)}><ArrowLeftIcon className={styles.arrowLeftIcon} /></button>
-                </div>
+                <ArtianCreator showArtian={showArtian} setShowArtian={setShowArtian} addWeapon={addWeapon} />
+                <button className={styles.closeBtn} onClick={() => setWeaponSelectorOpen(false)}><XMarkIcon /></button>
             </div>
         </div>
     )

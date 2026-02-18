@@ -36,14 +36,53 @@ export function findBonuses(build: BuilderBuild, armorSets: ArmorSet[], skills: 
         if (!piece) continue;
         const setId = piece?.armorSet?.id;
         const set = armorSets.find((set) => set.id === setId);
+
+        // IF SET IS GOGMAZIOS BETA
+        if (setId === 182) {
+            const gogmapocalypse = bonusesArray.find(bonus => bonus.id === 178);
+            if (gogmapocalypse) {
+                gogmapocalypse.count++
+            } else {
+                bonusesArray.push({ id: 178, count: 1 })
+            }
+            if (piece.id === 675) {
+                const guardianArkveldsVitality = bonusesArray.find(bonus => bonus.id === 26);
+                if (guardianArkveldsVitality) {
+                    guardianArkveldsVitality.count++
+                } else {
+                    bonusesArray.push({ id: 26, count: 1 })
+                }
+            }
+        }
+
+        // IF SET IS GOGMAZIOS ALPHA
+        if (setId === 181 && piece.id === 670) {
+            const gogmapocalypse = bonusesArray.find(bonus => bonus.id === 178);
+            if (gogmapocalypse) {
+                gogmapocalypse.count++
+            } else {
+                bonusesArray.push({ id: 178, count: 1 })
+            }
+            if (piece.id === 670) {
+                const zohShiasPulse = bonusesArray.find(bonus => bonus.id === 51);
+                if (zohShiasPulse) {
+                    zohShiasPulse.count++
+                } else {
+                    bonusesArray.push({ id: 51, count: 1 })
+                }
+            }
+        }
+
         if (set) {
             // Check for set bonus
             if (set.bonus) {
-                const setBonus = bonusesArray.find(bonus => bonus.id === set?.bonus?.skill.id);
-                if (setBonus) {
-                    setBonus.count++
-                } else {
-                    bonusesArray.push({ id: set.bonus.skill.id, count: 1 })
+                if (!(setId === 182 && set.bonus.skill.id === 26)) {
+                    const setBonus = bonusesArray.find(bonus => bonus.id === set?.bonus?.skill.id);
+                    if (setBonus) {
+                        setBonus.count++
+                    } else {
+                        bonusesArray.push({ id: set.bonus.skill.id, count: 1 })
+                    }
                 }
             }
             // Check for group bonus
@@ -90,6 +129,8 @@ export function findBonuses(build: BuilderBuild, armorSets: ArmorSet[], skills: 
         }
     }
 
+    console.log(setBonuses);
+
     return {bonusesArray, setBonuses, groupBonuses};
 }
 
@@ -97,10 +138,42 @@ export function findGearPieceBonuses(piece: Armor, armorSets: ArmorSet[]) {
 
     const setId = piece?.armorSet?.id;
 
-    const setBonus = armorSets.find(set => set.id === setId)?.bonus?.skill.name;
-    const groupBonus = armorSets.find(set => set.id === setId)?.groupBonus?.skill.name;
+    const setBonuses = [];
+    const groupBonuses = [];
 
-    return { setBonus, groupBonus };
+    //const setBonus = armorSets.find(set => set.id === setId)?.bonus?.skill.name;
+    //const groupBonus = armorSets.find(set => set.id === setId)?.groupBonus?.skill.name;
+
+    const set = armorSets.find(set => set.id === setId);
+    //const groupBonus = armorSets.find(set => set.id === setId);
+
+    if (set) {
+        if (set.id === 182) {
+            setBonuses.push("Gogmapocalypse");
+        } else {
+            if (set.bonus) {
+                setBonuses.push(set.bonus.skill.name);
+            }
+        }
+        if (set.groupBonus) {
+            groupBonuses.push(set.groupBonus.skill.name);
+        }
+    }
+
+    if (piece.id === 670) {
+        setBonuses.push("Zoh Shia's Pulse")
+    }
+    if (piece.id === 675) {
+        setBonuses.push("Guardian Arkveld's Vitality")
+    }
+
+    piece.skills.forEach(skill => {
+        if (skill.skill.kind === "set") {
+            setBonuses.push(skill.skill.name);
+        }
+    })
+
+    return { setBonuses, groupBonuses };
 }
 
 type BuildStats = {

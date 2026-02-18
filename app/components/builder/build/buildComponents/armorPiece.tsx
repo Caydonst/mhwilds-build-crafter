@@ -172,10 +172,16 @@ export default function ArmorPiece({ gearPiece, armorSets, slotKey, build }: Pro
                                 <div className={styles.gearPieceSkillsContainer}>
 
                                     {gearPiece.skills.map((skill, i) => (
-                                        <p key={i}>{skill.skill.name} {skill.level}</p>
+                                        "kind" in skill.skill && skill.skill.kind !== "set" && (
+                                            <p key={i}>{skill.skill.name} {skill.level}</p>
+                                        )
                                     ))}
-                                    <p className={styles.setBonusSkillName}>{findBonuses?.setBonus}</p>
-                                    <p className={styles.groupSkillName}>{findBonuses?.groupBonus}</p>
+                                    {findBonuses?.setBonuses.map((bonus, i) => (
+                                        <p key={i} className={styles.setBonusSkillName}>{bonus}</p>
+                                    ))}
+                                    {findBonuses?.groupBonuses.map((bonus, i) => (
+                                        <p key={i} className={styles.groupSkillName}>{bonus}</p>
+                                    ))}
                                 </div>
                             </div>
                         </div>
