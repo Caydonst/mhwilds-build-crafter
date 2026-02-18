@@ -78,7 +78,7 @@ export default function ArtianCreator({ showArtian, setShowArtian, addWeapon }: 
     const artianWeaponStats: Artian = {
         element: element,
         elementDamage: getElementDamage(),
-        kind: "charge-blade",
+        kind: weaponKind,
         type: artian,
         raw: 190,
         affinity: 5,
