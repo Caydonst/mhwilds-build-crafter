@@ -55,6 +55,13 @@ export default function ArtianCreator({ showArtian, setShowArtian, addWeapon }: 
         4: {reinforcement: "Select", lvl: "Lvl"},
     });
     const [weaponKind, setWeaponKind] = useState("charge-blade");
+    const [lvlListMap, setLvlListMap] = useState<Record<string, string[]>>({
+        "Attack Boost": ["I", "II", "III", "EX"],
+        "Affinity Boost": ["I", "II", "III", "EX"],
+        "Sharpness Boost": ["I", "EX"],
+        "Element Boost": ["I", "II", "EX"],
+        "Ammo Boost": ["I", "EX"],
+    });
 
     const dropdownRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
@@ -88,11 +95,11 @@ export default function ArtianCreator({ showArtian, setShowArtian, addWeapon }: 
             2: part3,
         },
         reinforcements: {
-            0: {reinforcement: reinforcements[0].reinforcement, lvl: reinforcements[0].reinforcement},
-            1: {reinforcement: reinforcements[1].reinforcement, lvl: reinforcements[1].reinforcement},
-            2: {reinforcement: reinforcements[2].reinforcement, lvl: reinforcements[2].reinforcement},
-            3: {reinforcement: reinforcements[3].reinforcement, lvl: reinforcements[3].reinforcement},
-            4: {reinforcement: reinforcements[4].reinforcement, lvl: reinforcements[4].reinforcement},
+            0: {reinforcement: reinforcements[0].reinforcement, lvl: reinforcements[0].lvl},
+            1: {reinforcement: reinforcements[1].reinforcement, lvl: reinforcements[1].lvl},
+            2: {reinforcement: reinforcements[2].reinforcement, lvl: reinforcements[2].lvl},
+            3: {reinforcement: reinforcements[3].reinforcement, lvl: reinforcements[3].lvl},
+            4: {reinforcement: reinforcements[4].reinforcement, lvl: reinforcements[4].lvl},
         }
     }
 
@@ -119,7 +126,7 @@ export default function ArtianCreator({ showArtian, setShowArtian, addWeapon }: 
         setElement(element);
     }
 
-    const reinforcementList = ["Attack Boost", "Affinity Boost", "Sharpness Boost", "Element Boost", "Capacity Boost"];
+    const reinforcementList = ["Attack Boost", "Affinity Boost", "Sharpness Boost", "Element Boost", "Ammo Boost"];
     const lvlList = ["I", "II", "III", "EX"]
 
     function handleReinforcementClick(index: number, reinforcement: string) {
@@ -128,10 +135,16 @@ export default function ArtianCreator({ showArtian, setShowArtian, addWeapon }: 
         }));
     }
 
-    function handleLvlClick(index: number, lvl: string) {
-        setReinforcements(prev => ({
-            ...prev, [index]: {...prev[index], lvl},
-        }));
+    function handleLvlClick(index: number, lvl: string, reinforcement: string) {
+        setReinforcements(prev => {
+            const next = {
+                ...prev,
+                [index]: { ...prev[index], lvl },
+            };
+
+            checkReinforcementLevels(reinforcement, next); // uses updated state
+            return next;
+        });
     }
 
     function changeArtian(val: number, type: string) {
@@ -159,6 +172,10 @@ export default function ArtianCreator({ showArtian, setShowArtian, addWeapon }: 
         addWeapon(weapon);
     }
 
+    useEffect(() => {
+        console.log(lvlListMap)
+    }, [lvlListMap]);
+
     function checkReinforcements() {
         if (artian === "Artian") {
             for (const [key, value] of Object.entries(reinforcements)) {
@@ -174,6 +191,35 @@ export default function ArtianCreator({ showArtian, setShowArtian, addWeapon }: 
             }
         }
         return true;
+    }
+
+    function checkReinforcementLevels(reinforcement: string, nextReinforcements: typeof reinforcements) {
+        let count = 0;
+
+        Object.values(nextReinforcements).forEach((item) => {
+            if (item.reinforcement === reinforcement && item.lvl === "EX") {
+                count++;
+            }
+        })
+
+        if (count === 2) {
+            setLvlListMap(prev => ({
+                ...prev,
+                [reinforcement]: prev[reinforcement].filter(l => l !== "EX"),
+            }));
+        } else {
+            setLvlListMap(prev => {
+                const existing = prev[reinforcement] ?? [];
+
+                // prevent duplicates
+                if (existing.includes("EX")) return prev;
+
+                return {
+                    ...prev,
+                    [reinforcement]: [...existing, "EX"],
+                };
+            });
+        }
     }
 
     return (
@@ -392,24 +438,26 @@ export default function ArtianCreator({ showArtian, setShowArtian, addWeapon }: 
                                                     </div>
                                                 )}
                                             </div>
-                                            <div className={styles.lvlWrapper} ref={(el) => {dropdownRefs.current[lvlKey] = el}}>
-                                                <div className={styles.lvlContainer} onClick={() => setOpenDropdown((prev) => (prev === lvlKey ? null : lvlKey))}>
-                                                    <p>{reinforcements[dropdownIndex].lvl}</p>
-                                                    <ChevronDownIcon className={styles.chevronIcon} />
-                                                </div>
-                                                {isLvlOpen && (
-                                                    <div className={styles.reinforcementDropdown}>
-                                                        {lvlList.map((lvl, lvlIndex) => (
-                                                            <button key={lvlIndex} onClick={() => {
-                                                                handleLvlClick(dropdownIndex, lvl);
-                                                                setOpenDropdown(null); // close after pick
-                                                            }}>
-                                                                {lvl}
-                                                            </button>
-                                                        ))}
+                                            {reinforcements[dropdownIndex].reinforcement !== "Select" && (
+                                                <div className={styles.lvlWrapper} ref={(el) => {dropdownRefs.current[lvlKey] = el}}>
+                                                    <div className={styles.lvlContainer} onClick={() => setOpenDropdown((prev) => (prev === lvlKey ? null : lvlKey))}>
+                                                        <p>{reinforcements[dropdownIndex].lvl}</p>
+                                                        <ChevronDownIcon className={styles.chevronIcon} />
                                                     </div>
-                                                )}
-                                            </div>
+                                                    {isLvlOpen && (
+                                                        <div className={styles.reinforcementDropdown}>
+                                                            {lvlListMap[reinforcements[dropdownIndex].reinforcement].map((lvl: string, lvlIndex: number) => (
+                                                                <button key={lvlIndex} onClick={() => {
+                                                                    handleLvlClick(dropdownIndex, lvl, reinforcements[dropdownIndex].reinforcement);
+                                                                    setOpenDropdown(null); // close after pick
+                                                                }}>
+                                                                    {lvl}
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
                                         </div>
                                     )
                                 })}

@@ -157,7 +157,7 @@ export default function GearPiece({ gearPiece, slotKey, build, armorSets, delete
                                         <p key={i}>{skill.skill.name} {skill.level}</p>
                                     ))}
                                     {gearPiece.reinforcements?.map((reinforcement, i) => (
-                                        <p key={i}>{reinforcement}</p>
+                                        <p key={i}>{reinforcement.reinforcement} {reinforcement.lvl}</p>
                                     ))}
                                 </div>
                             </div>

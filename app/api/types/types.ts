@@ -220,6 +220,11 @@ export interface WeaponCrafting {
     column: number;
 } // :contentReference[oaicite:11]{index=11}
 
+type ReinforcementType = {
+    reinforcement: string;
+    lvl: string;
+}
+
 export interface Weapon {
     id: number;
     gameId: number;
@@ -237,7 +242,7 @@ export interface Weapon {
     slots: DecorationSlot[];
     crafting: WeaponCrafting | null;
     series: WeaponSeries | null;
-    reinforcements?: string[];
+    reinforcements?: ReinforcementType[];
 }
 
 export interface ArtianWeapon {
