@@ -130,9 +130,16 @@ export default function ArtianCreator({ showArtian, setShowArtian, addWeapon }: 
     const lvlList = ["I", "II", "III", "EX"]
 
     function handleReinforcementClick(index: number, reinforcement: string) {
-        setReinforcements(prev => ({
-            ...prev, [index]: {...prev[index], reinforcement},
-        }));
+
+        setReinforcements(prev => {
+            const next = {
+                ...prev,
+                [index]: { ...prev[index], reinforcement, lvl: "Lvl" },
+            };
+
+            checkReinforcementLevels(next); // uses updated state
+            return next;
+        });
     }
 
     function handleLvlClick(index: number, lvl: string, reinforcement: string) {
@@ -142,7 +149,7 @@ export default function ArtianCreator({ showArtian, setShowArtian, addWeapon }: 
                 [index]: { ...prev[index], lvl },
             };
 
-            checkReinforcementLevels(reinforcement, next); // uses updated state
+            checkReinforcementLevels(next); // uses updated state
             return next;
         });
     }
@@ -193,33 +200,42 @@ export default function ArtianCreator({ showArtian, setShowArtian, addWeapon }: 
         return true;
     }
 
-    function checkReinforcementLevels(reinforcement: string, nextReinforcements: typeof reinforcements) {
-        let count = 0;
+    function checkReinforcementLevels(nextReinforcements: typeof reinforcements) {
+
+        const reinforcementsMap: Record<string, number> = {
+            "Attack Boost": 0,
+            "Affinity Boost": 0,
+            "Sharpness Boost": 0,
+            "Element Boost": 0,
+            "Ammo Boost": 0,
+        }
 
         Object.values(nextReinforcements).forEach((item) => {
-            if (item.reinforcement === reinforcement && item.lvl === "EX") {
-                count++;
+            if (item.lvl === "EX") {
+                reinforcementsMap[item.reinforcement] += 1;
             }
         })
 
-        if (count === 2) {
-            setLvlListMap(prev => ({
-                ...prev,
-                [reinforcement]: prev[reinforcement].filter(l => l !== "EX"),
-            }));
-        } else {
-            setLvlListMap(prev => {
-                const existing = prev[reinforcement] ?? [];
-
-                // prevent duplicates
-                if (existing.includes("EX")) return prev;
-
-                return {
+        Object.entries(reinforcementsMap).forEach(([key, value]) => {
+            if (value >= 2) {
+                setLvlListMap(prev => ({
                     ...prev,
-                    [reinforcement]: [...existing, "EX"],
-                };
-            });
-        }
+                    [key]: prev[key].filter(l => l !== "EX"),
+                }));
+            } else if (value < 2) {
+                setLvlListMap(prev => {
+                    const existing = prev[key] ?? [];
+
+                    // prevent duplicates
+                    if (existing.includes("EX")) return prev;
+
+                    return {
+                        ...prev,
+                        [key]: [...existing, "EX"],
+                    };
+                });
+            }
+        })
     }
 
     return (

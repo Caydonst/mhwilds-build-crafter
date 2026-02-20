@@ -154,10 +154,10 @@ export default function GearPiece({ gearPiece, slotKey, build, armorSets, delete
                                 )}
                                 <div className={styles.gearPieceSkillsContainer}>
                                     {gearPiece.skills.map((skill, i) => (
-                                        <p key={i}>{skill.skill.name} {skill.level}</p>
+                                        <p key={i} className={styles.notEX}>{skill.skill.name} {skill.level}</p>
                                     ))}
                                     {gearPiece.reinforcements?.map((reinforcement, i) => (
-                                        <p key={i}>{reinforcement.reinforcement} {reinforcement.lvl}</p>
+                                        <p key={i} className={`${reinforcement.lvl === "EX" ? styles.EX : styles.notEX}`}>{reinforcement.reinforcement} {reinforcement.lvl}</p>
                                     ))}
                                 </div>
                             </div>

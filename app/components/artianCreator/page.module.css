@@ -42,7 +42,7 @@
     border: none;
     border-radius: 50%;
     cursor: pointer;
-    z-index: 3;
+    z-index: 368;
 }
 .backBtn:hover {
     background: rgba(255, 255, 255, 0.1);
