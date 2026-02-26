@@ -1,5 +1,5 @@
 // --- Aggregate skills: { [skillId]: { skill, totalLevel: [current, max] } }
-import type {Skill as SkillType, DecorationSkill, DecoPlacement} from "@/app/api/types/types";
+import type {Skill as SkillType, DecorationSkill, DecoPlacement, Weapon} from "@/app/api/types/types";
 
 type AggregatedSkill = {
     skill: SkillType;
@@ -61,4 +61,59 @@ export const addDecoSkillsToAggregate = (skillData: SkillType[] | null, aggregat
         }
     }
 };
+
+export function calculateElement(weapon: Weapon, weaponDecoSlots: DecoPlacement[]) {
+    console.log("HELLOOOO")
+    for (const slot of weaponDecoSlots) {
+        if (slot.decoration) {
+            console.log("Includes decoration")
+            if (weapon.specials[0].element) {
+                console.log("Includes special element")
+                console.log(slot.decoration.name);
+                console.log(weapon.specials[0].element);
+                if (slot.decoration.name.toLowerCase().includes(weapon.specials[0].element)) {
+                    console.log("Includes name")
+                    for (const skill of slot.decoration.skills) {
+                        if (skill.skill.name.toLowerCase().includes(weapon.specials[0].element)) {
+                            console.log("Includes skill")
+                            switch (skill.level) {
+                                case 1:
+                                    weapon.specials[0].damage.display *= 1.20 + 60;
+                                    break;
+                                case 2:
+                                    weapon.specials[0].damage.display *= 1.10 + 50;
+                                    break;
+                                case 3:
+                                    weapon.specials[0].damage.display += 40;
+                                    break;
+                            }
+                        }
+                    }
+                }
+            } else if (weapon.specials[0].status) {
+                if (slot.decoration.name.includes(weapon.specials[0].status)) {
+                    for (const skill of slot.decoration.skills) {
+                        if (skill.skill.name.includes(weapon.specials[0].status)) {
+                            switch (skill.level) {
+                                case 1:
+                                    weapon.specials[0].damage.display *= 1.20 + 50;
+                                    break;
+                                case 2:
+                                    weapon.specials[0].damage.display *= 1.10 + 20;
+                                    break;
+                                case 3:
+                                    weapon.specials[0].damage.display *= 1.05 + 10;
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    console.log(weapon);
+
+    return weapon;
+}
 

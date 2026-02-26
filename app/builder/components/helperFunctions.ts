@@ -3,7 +3,7 @@ import {
     ArmorSet,
     ArmorSetBonus,
     ArmorSetBonusRank,
-    type Armor, Skill, SkillRank,
+    type Armor, Skill, SkillRank, Weapon,
 } from "@/app/api/types/types";
 
 type BonusType = {
@@ -31,6 +31,32 @@ export function findBonuses(build: BuilderBuild, armorSets: ArmorSet[], skills: 
     const setBonuses: Bonus[] = [];
     const groupBonuses: Bonus[] = [];
     const pieces = [build.head, build.chest, build.arms, build.waist, build.legs];
+
+    if (build.weapon !== null) {
+        const setBonusName = build.weapon?.bonuses?.setBonus;
+        const groupBonusName = build.weapon?.bonuses?.groupBonus;
+
+        const setBonusId = skills.find(skill => skill.name === setBonusName)?.id;
+        const groupBonusId = skills.find(skill => skill.name === groupBonusName)?.id;
+
+        const foundSetBonus = bonusesArray.find(bonus => bonus.id === setBonusId);
+        if (foundSetBonus) {
+            foundSetBonus.count++
+        } else {
+            if (setBonusId) {
+                bonusesArray.push({ id: setBonusId, count: 1 })
+            }
+        }
+
+        const foundGroupBonus = bonusesArray.find(bonus => bonus.id === groupBonusId);
+        if (foundGroupBonus) {
+            foundGroupBonus.count++
+        } else {
+            if (groupBonusId) {
+                bonusesArray.push({ id: groupBonusId, count: 1 })
+            }
+        }
+    }
 
     for (const piece of pieces) {
         if (!piece) continue;

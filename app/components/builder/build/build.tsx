@@ -13,7 +13,7 @@ import type {
 import Skill from "./buildComponents/skill"
 import ArmorPiece from "./buildComponents/armorPiece"
 import Weapon from "./buildComponents/weapon"
-import {addSkillLevel, addDecoSkillsToAggregate} from "./buildComponents/helperFunctions";
+import {addSkillLevel, addDecoSkillsToAggregate, calculateElement} from "./buildComponents/helperFunctions";
 import {useGameData} from "@/app/hooks/useGameData";
 
 type Props = {

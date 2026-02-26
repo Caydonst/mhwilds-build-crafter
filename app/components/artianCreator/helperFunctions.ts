@@ -16,6 +16,10 @@ type ReinforcementsType = {
     3: ReinforcementType;
     4: ReinforcementType;
 }
+type BonusesType = {
+    setBonus?: string;
+    groupBonus?: string;
+}
 type Artian = {
     element: string;
     elementDamage: number;
@@ -25,13 +29,8 @@ type Artian = {
     affinity: number;
     parts: PartType;
     reinforcements: ReinforcementsType;
-}
-
-const statBoostMap = {
-    "Attack Boost": 5,
-    "Affinity Boost": 5,
-    "Sharpness Boost": 30,
-    "Element Boost": 50
+    tarredDevice?: string;
+    bonuses?: BonusesType;
 }
 
 const gogmaReinforcementBoostMap: Record<string, Record<string, number | null>> = {
@@ -154,15 +153,6 @@ export function CreateArtian(data: Artian) {
                 "element": data.element,
             }
         ],
-        "sharpness": {
-            "red": 140,
-            "orange": 40,
-            "yellow": 40,
-            "green": 80,
-            "blue": 30,
-            "white": 20,
-            "purple": 0
-        },
         "skills": [],
         "defenseBonus": 0,
         "elderseal": null,
@@ -171,6 +161,8 @@ export function CreateArtian(data: Artian) {
         "crafting": null,
         "series": null,
         "reinforcements": [],
+        "bonuses": null,
+        "tarredDevice": data.tarredDevice,
     }
 
     const newWeapon = calculateArtianStats(weapon, data, data.type);
@@ -179,6 +171,18 @@ export function CreateArtian(data: Artian) {
 }
 
 function calculateArtianStats(weapon: Weapon, data: Artian, type: string) {
+
+    if (weapon.kind !== "bow" && weapon.kind !== "light-bowgun" && weapon.kind !== "heavy-bowgun") {
+        weapon.sharpness = {
+            "red": 140,
+            "orange": 40,
+            "yellow": 40,
+            "green": 80,
+            "blue": 30,
+            "white": 20,
+            "purple": 0
+        }
+    }
 
     (Object.entries(data.parts) as [string, string][]).forEach(([key, value]) => {
         switch (value) {
@@ -243,7 +247,15 @@ function calculateArtianStats(weapon: Weapon, data: Artian, type: string) {
     }
 
     else if (type === "Gogma Artian") {
-        console.log("GOGMMAAAAA");
+
+        if (data.bonuses?.setBonus && data.bonuses?.groupBonus) {
+            console.log(data.bonuses.setBonus, data.bonuses.groupBonus)
+            weapon.bonuses = {
+                setBonus: data.bonuses.setBonus,
+                groupBonus: data.bonuses.groupBonus,
+            };
+        }
+
         for (const slot of Object.values(data.reinforcements)) {
             const { reinforcement, lvl } = slot;
             let boost;
@@ -289,9 +301,77 @@ function calculateArtianStats(weapon: Weapon, data: Artian, type: string) {
             }
             weapon.reinforcements?.push({reinforcement: reinforcement, lvl: lvl});
         }
+        getTarredDeviceStats(weapon);
     }
 
 
     console.log(weapon);
     return weapon
+}
+
+function getTarredDeviceStats(weapon: Weapon) {
+    switch (weapon.tarredDevice) {
+        case "Attack Focus":
+            weapon.damage.raw += 10;
+            weapon.affinity -= 10;
+            if (weapon.sharpness) {
+                weapon.sharpness.blue -= 10;
+            }
+            break;
+        case "Affinity Focus":
+            weapon.damage.raw -= 10;
+            weapon.affinity += 10;
+            if (weapon.sharpness) {
+                weapon.sharpness.white -= 10;
+            }
+            if (weapon.kind) {
+                weapon.specials[0].damage.display += tarredDeviceElementMap["Affinity"][weapon.kind];
+            }
+            break;
+        case "Element Focus":
+            weapon.affinity -= 5;
+            if (weapon.sharpness) {
+                weapon.sharpness.blue -= 10;
+            }
+            if (weapon.kind) {
+                weapon.specials[0].damage.display += tarredDeviceElementMap["Element"][weapon.kind];
+            }
+            break;
+    }
+}
+
+const tarredDeviceElementMap: Record<string, Record<string, number>> = {
+    "Affinity": {
+        "gunlance": 30,
+        "hunting-horn": 20,
+
+        "great-sword": -10,
+        "hammer": -10,
+
+        "long-sword": -20,
+        "sword-and-shield": -20,
+        "dual-blades": -20,
+        "lance": -20,
+        "switch-axe": -20,
+        "charge-blade": -20,
+        "insect-glaive": -20,
+        "bow": -20,
+    },
+    "Element": {
+        "hunting-horn": 80,
+        "gunlance": 80,
+
+        "great-sword": 50,
+        "long-sword": 50,
+        "lance": 50,
+        "charge-blade": 50,
+
+        "sword-and-shield": 40,
+        "hammer": 40,
+        "switch-axe": 40,
+        "insect-glaive": 40,
+
+        "dual-blades": 30,
+        "bow": 30,
+    }
 }

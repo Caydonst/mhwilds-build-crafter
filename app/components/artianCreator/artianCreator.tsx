@@ -3,6 +3,7 @@ import {ArrowLeftIcon, ChevronDownIcon} from "@heroicons/react/24/outline";
 import React, {useEffect, useRef, useState} from "react";
 import {Weapon, type WeaponKind} from "@/app/api/types/types";
 import {CreateArtian} from "@/app/components/artianCreator/helperFunctions";
+import {useGameData} from "@/app/hooks/useGameData";
 
 type Props = {
     showArtian: boolean;
@@ -25,6 +26,10 @@ type ReinforcementsType = {
     3: ReinforcementType;
     4: ReinforcementType;
 }
+type BonusesType = {
+    setBonus: string;
+    groupBonus: string;
+}
 type Artian = {
     element: string;
     elementDamage: number;
@@ -34,17 +39,19 @@ type Artian = {
     affinity: number;
     parts: PartType;
     reinforcements: ReinforcementsType;
+    tarredDevice?: string;
+    bonuses?: BonusesType;
 }
 
 
 export default function ArtianCreator({ showArtian, setShowArtian, addWeapon }: Props) {
+    const { skills } = useGameData();
     const [sliderAmount, setSliderAmount] = useState(0);
     const [part1, setPart1] = useState<"attack" | "affinity">("attack");
     const [part2, setPart2] = useState<"attack" | "affinity">("attack");
     const [part3, setPart3] = useState<"attack" | "affinity">("attack");
     const [artian, setArtian] = useState("Artian");
     const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-
     const [elementDropdown, setElementDropdown] = useState(false);
     const [element, setElement] = useState("fire");
     const [reinforcements, setReinforcements] = useState<Record<number, ReinforcementType>>({
@@ -62,6 +69,11 @@ export default function ArtianCreator({ showArtian, setShowArtian, addWeapon }: 
         "Element Boost": ["I", "II", "EX"],
         "Ammo Boost": ["I", "EX"],
     });
+    const [tarredDevice, setTarredDevice] = useState("Attack Focus")
+    const [setBonusSkills, setSetBonusSkills] = useState(skills.filter(skill => skill.kind === "set"));
+    const [groupBonusSkills, setGroupBonusSkills] = useState(skills.filter(skill => skill.kind === "group"));
+    const [setBonus, setSetBonus] = useState(setBonusSkills[0].name);
+    const [groupBonus, setGroupBonus] = useState(groupBonusSkills[0].name)
 
     const dropdownRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
@@ -100,7 +112,12 @@ export default function ArtianCreator({ showArtian, setShowArtian, addWeapon }: 
             2: {reinforcement: reinforcements[2].reinforcement, lvl: reinforcements[2].lvl},
             3: {reinforcement: reinforcements[3].reinforcement, lvl: reinforcements[3].lvl},
             4: {reinforcement: reinforcements[4].reinforcement, lvl: reinforcements[4].lvl},
-        }
+        },
+        bonuses: {
+            setBonus: setBonus,
+            groupBonus: groupBonus,
+        },
+        tarredDevice: tarredDevice,
     }
 
     function getElementDamage() {
@@ -118,6 +135,8 @@ export default function ArtianCreator({ showArtian, setShowArtian, addWeapon }: 
         }
     }
 
+    const tarredDevices = ["Attack Focus", "Affinity Focus", "Element Focus"]
+
     const elements = ["fire", "water", "thunder", "ice", "dragon", "poison", "paralysis", "sleep", "blast"]
 
     function handleElementClick(element: string) {
@@ -127,7 +146,6 @@ export default function ArtianCreator({ showArtian, setShowArtian, addWeapon }: 
     }
 
     const reinforcementList = ["Attack Boost", "Affinity Boost", "Sharpness Boost", "Element Boost", "Ammo Boost"];
-    const lvlList = ["I", "II", "III", "EX"]
 
     function handleReinforcementClick(index: number, reinforcement: string) {
 
@@ -159,6 +177,11 @@ export default function ArtianCreator({ showArtian, setShowArtian, addWeapon }: 
         setArtian(type);
     }
 
+    function addArtian() {
+        const weapon: Weapon = CreateArtian(artianWeaponStats);
+        addWeapon(weapon);
+    }
+
     useEffect(() => {
         function handleClickOutside(e: MouseEvent) {
             if (!openDropdown) return;
@@ -173,15 +196,6 @@ export default function ArtianCreator({ showArtian, setShowArtian, addWeapon }: 
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [openDropdown]);
-
-    function addArtian() {
-        const weapon: Weapon = CreateArtian(artianWeaponStats);
-        addWeapon(weapon);
-    }
-
-    useEffect(() => {
-        console.log(lvlListMap)
-    }, [lvlListMap]);
 
     function checkReinforcements() {
         if (artian === "Artian") {
@@ -243,30 +257,35 @@ export default function ArtianCreator({ showArtian, setShowArtian, addWeapon }: 
                 showArtian ? styles.slideLeft1 : styles.slideRight1
             }`}>
             <div className={styles.artianContainer}>
-                <h3>Artian Creator</h3>
-                <div className={styles.weaponSelectorWrapper}>
-                    <div className={styles.reinforcement} ref={(el) => {dropdownRefs.current["weaponSelectorDropdown"] = el;}}>
-                        <div className={styles.reinforcementInner} onClick={() => setOpenDropdown((prev) => (prev === "weaponSelectorDropdown" ? null : "weaponSelectorDropdown"))}>
-                            <p>{weaponLabelMap[weaponKind]}</p>
-                            <ChevronDownIcon className={styles.chevronIcon} />
-                        </div>
-                        {openDropdown === "weaponSelectorDropdown" && (
-                            <div className={styles.reinforcementDropdown}>
-                                {Object.entries(weaponLabelMap).map(([key, value]) => (
-                                    <button key={key} onClick={() => {
-                                        setWeaponKind(key);
-                                        setOpenDropdown(null);
-                                    }}>{value}</button>
-                                ))}
+                <div className={styles.artianHeader}>
+                    <h3>Artian Creator</h3>
+                    <div className={styles.weaponSelectorWrapper}>
+                        <div className={styles.reinforcement} ref={(el) => {dropdownRefs.current["weaponSelectorDropdown"] = el;}}>
+                            <div className={styles.reinforcementInner} onClick={() => setOpenDropdown((prev) => (prev === "weaponSelectorDropdown" ? null : "weaponSelectorDropdown"))}>
+                                <div className={styles.reinforcementInnerLeft}>
+                                    <span className={`${styles.weaponIcon} ${styles[weaponKind]}`}></span>
+                                    <p>{weaponLabelMap[weaponKind]}</p>
+                                </div>
+                                <ChevronDownIcon className={styles.chevronIcon} />
                             </div>
-                        )}
+                            {openDropdown === "weaponSelectorDropdown" && (
+                                <div className={styles.reinforcementDropdown}>
+                                    {Object.entries(weaponLabelMap).map(([key, value]) => (
+                                        <button key={key} onClick={() => {
+                                            setWeaponKind(key);
+                                            setOpenDropdown(null);
+                                        }}><span className={`${styles.weaponIcon} ${styles[key]}`}></span> {value}</button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     </div>
-                </div>
-                <div className={styles.artianSelectorWrapper}>
-                    <div className={styles.artianSelectorContainer}>
-                        <div className={`${styles.slider} ${artian === "Artian" ? styles.artian : styles.gogmaArtian}`} style={{ transform: `translateX(${sliderAmount}%)` }}></div>
-                        <button className={styles.selectorBtn} onClick={() => changeArtian(0, "Artian")}>Artian</button>
-                        <button className={styles.selectorBtn} onClick={() => changeArtian(100, "Gogma Artian")}>Gogma Artian</button>
+                    <div className={styles.artianSelectorWrapper}>
+                        <div className={styles.artianSelectorContainer}>
+                            <div className={`${styles.slider} ${artian === "Artian" ? styles.artian : styles.gogmaArtian}`} style={{ transform: `translateX(${sliderAmount}%)` }}></div>
+                            <button className={styles.selectorBtn} onClick={() => changeArtian(0, "Artian")}>Artian</button>
+                            <button className={styles.selectorBtn} onClick={() => changeArtian(100, "Gogma Artian")}>Gogma Artian</button>
+                        </div>
                     </div>
                 </div>
                 <div className={styles.contentContainer}>
@@ -426,6 +445,64 @@ export default function ArtianCreator({ showArtian, setShowArtian, addWeapon }: 
                                     </button>
                                 </div>
                             </div>
+                            <div className={styles.tarredDeviceContainer}>
+                                <p>Tarred Device</p>
+                                <div className={styles.reinforcement} ref={(el) => {dropdownRefs.current["tarredDeviceDropdown"] = el;}}>
+                                    <div className={styles.reinforcementInner} onClick={() => setOpenDropdown((prev) => (prev === "tarredDeviceDropdown" ? null : "tarredDeviceDropdown"))}>
+                                        <p>{tarredDevice}</p>
+                                        <ChevronDownIcon className={styles.chevronIcon} />
+                                    </div>
+                                    {openDropdown === "tarredDeviceDropdown" && (
+                                        <div className={styles.reinforcementDropdown}>
+                                            {tarredDevices.map((device, i) => (
+                                                <button key={i} onClick={() => {
+                                                    setTarredDevice(device)
+                                                    setOpenDropdown(null);
+                                                }}>{device}</button>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                            <div className={styles.bonusesContainer}>
+                                <p>Bonuses</p>
+                                <div className={styles.setBonusSelector}>
+                                    <div className={styles.reinforcement} ref={(el) => {dropdownRefs.current["setBonusDropdown"] = el;}}>
+                                        <div className={styles.reinforcementInner} onClick={() => setOpenDropdown((prev) => (prev === "setBonusDropdown" ? null : "setBonusDropdown"))}>
+                                            <p><span className={`${styles.skillIcon} ${styles.setBonusSkill}`}></span> {setBonus}</p>
+                                            <ChevronDownIcon className={styles.chevronIcon} />
+                                        </div>
+                                        {openDropdown === "setBonusDropdown" && (
+                                            <div className={styles.reinforcementDropdown}>
+                                                {setBonusSkills.map((skill, i) => (
+                                                    <button key={i} onClick={() => {
+                                                        setSetBonus(skill.name);
+                                                        setOpenDropdown(null);
+                                                    }}><span className={`${styles.skillIcon} ${styles.setBonusSkill}`}></span> {skill.name}</button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className={styles.setBonusSelector}>
+                                    <div className={styles.reinforcement} ref={(el) => {dropdownRefs.current["setGroupDropdown"] = el;}}>
+                                        <div className={styles.reinforcementInner} onClick={() => setOpenDropdown((prev) => (prev === "setGroupDropdown" ? null : "setGroupDropdown"))}>
+                                            <p><span className={`${styles.skillIcon} ${styles.groupSkill}`}></span> {groupBonus}</p>
+                                            <ChevronDownIcon className={styles.chevronIcon} />
+                                        </div>
+                                        {openDropdown === "setGroupDropdown" && (
+                                            <div className={styles.reinforcementDropdown}>
+                                                {groupBonusSkills.map((skill, i) => (
+                                                    <button key={i} onClick={() => {
+                                                        setGroupBonus(skill.name);
+                                                        setOpenDropdown(null);
+                                                    }}><span className={`${styles.skillIcon} ${styles.groupSkill}`}></span> {skill.name}</button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
                             <div className={styles.reinforcementsContainer}>
                                 <p>Reinforcements</p>
                                 {Array.from({length: 5}).map((item, dropdownIndex) => {
@@ -481,9 +558,12 @@ export default function ArtianCreator({ showArtian, setShowArtian, addWeapon }: 
                         </div>
                     )}
                 </div>
+                <div className={styles.addBtnContainer}>
+                    <button className={styles.addBtn} onClick={() => addArtian()} disabled={!checkReinforcements()}>Add</button>
+                </div>
             </div>
+            <div className={styles.bottomShadow}></div>
             <button className={styles.backBtn} onClick={() => setShowArtian(false)}><ArrowLeftIcon className={styles.arrowLeftIcon} /></button>
-            <button className={styles.addBtn} onClick={() => addArtian()} disabled={!checkReinforcements()}>Add</button>
         </div>
     )
 }

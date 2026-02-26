@@ -224,7 +224,10 @@ type ReinforcementType = {
     reinforcement: string;
     lvl: string;
 }
-
+type BonusesType = {
+    setBonus: string;
+    groupBonus: string;
+}
 export interface Weapon {
     id: number;
     gameId: number;
@@ -243,6 +246,8 @@ export interface Weapon {
     crafting: WeaponCrafting | null;
     series: WeaponSeries | null;
     reinforcements?: ReinforcementType[];
+    bonuses?: BonusesType | null;
+    tarredDevice?: string;
 }
 
 export interface ArtianWeapon {

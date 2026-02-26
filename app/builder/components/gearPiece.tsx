@@ -3,6 +3,7 @@ import type {BuilderBuild, SlotLevel, Armor, CharmRank, Weapon, ArmorSet} from "
 import React, {useMemo} from "react";
 import {XMarkIcon} from "@heroicons/react/24/outline";
 import {findGearPieceBonuses} from "./helperFunctions"
+import {useGameData} from "@/app/hooks/useGameData";
 
 type ArmorSlotKey = "weapon" | "head" | "chest" | "arms" | "waist" | "legs" | "charm";
 type GearSlotKey = "head" | "chest" | "arms" | "waist" | "legs" | "charm";
@@ -23,6 +24,7 @@ interface Props {
 }
 
 export default function GearPiece({ gearPiece, slotKey, build, armorSets, deleteBuildItem, openGearSelector, openWeaponSelector, openDecoSelector, deleteDecoration }: Props) {
+    const { skills } = useGameData();
 
     const weapons = [
         "bow",
@@ -111,6 +113,8 @@ export default function GearPiece({ gearPiece, slotKey, build, armorSets, delete
         }
     }, [gearPiece, armorSets])
 
+
+
     return (
         <div className={styles.buildPieceContainer}>
             {gearPiece !== null ? (
@@ -153,8 +157,16 @@ export default function GearPiece({ gearPiece, slotKey, build, armorSets, delete
                                     </div>
                                 )}
                                 <div className={styles.gearPieceSkillsContainer}>
+                                    {gearPiece.bonuses && (
+                                        <>
+                                            <p className={styles.setBonusSkillName}>{gearPiece.bonuses.setBonus}</p>
+                                            <p className={styles.groupSkillName}>{gearPiece.bonuses.groupBonus}</p>
+                                        </>
+                                    )}
+                                </div>
+                                <div className={styles.gearPieceSkillsContainer}>
                                     {gearPiece.skills.map((skill, i) => (
-                                        <p key={i} className={styles.notEX}>{skill.skill.name} {skill.level}</p>
+                                        <p key={i}>{skill.skill.name} {skill.level}</p>
                                     ))}
                                     {gearPiece.reinforcements?.map((reinforcement, i) => (
                                         <p key={i} className={`${reinforcement.lvl === "EX" ? styles.EX : styles.notEX}`}>{reinforcement.reinforcement} {reinforcement.lvl}</p>

@@ -17,11 +17,25 @@
     min-width: 100%;
     height: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     flex-direction: column;
     overflow: auto;
     color: #fff;
+    padding-bottom: 50px;
+}
+.artianHeader {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 3;
+    padding-top: 50px;
+    background: #0A0A0A;
+    box-shadow: 0 0 20px 20px #0A0A0A;
 }
 .artianContainer::-webkit-scrollbar {
     display: none;
@@ -82,7 +96,7 @@
     transform: translateY(50%);
     left: 0;
     width: 100%;
-    height: 30px;
+    height: 20px;
     background: #80c8ff;
     border-radius: 50%;
     filter: blur(20px);
@@ -97,7 +111,7 @@
     transform: translateY(50%);
     left: 0;
     width: 100%;
-    height: 30px;
+    height: 20px;
     background: #ff5757;
     border-radius: 50%;
     filter: blur(20px);
@@ -108,12 +122,15 @@
     justify-content: center;
     align-items: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    z-index: 2;
+    padding-top: 10px;
 }
 .artianSelectorContainer {
     position: relative;
     width: 100%;
-    max-width: 300px;
-    padding: 5px;
+    max-width: 400px;
+    padding: 5px 0;
     background: transparent;
     border-radius: 8px;
 }
@@ -134,12 +151,14 @@
 }
 .weaponSelectorWrapper {
     width: 100%;
+    max-width: 300px;
     background: #0A0A0A;
     display: flex;
     justify-content: center;
     align-items: center;
     margin-bottom: 10px;
     z-index: 3;
+    padding: 0 10px;
 }
 .contentContainer {
     width: 100%;
@@ -148,11 +167,11 @@
     align-items: center;
     background: #0A0A0A;
     z-index: 2;
-    padding: 30px;
+    padding: 30px 10px;
 }
 .contentArtian {
     width: 100%;
-    max-width: 300px;
+    max-width: 400px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -162,7 +181,7 @@
 }
 .contentGogmaArtian {
     width: 100%;
-    max-width: 300px;
+    max-width: 400px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -226,6 +245,27 @@
     background: transparent;
     color: #fff;
 }
+.tarredDeviceContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 14px;
+}
+.bonusesContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: 14px;
+    gap: 5px;
+}
+.setBonusSelector {
+    width: 100%;
+}
 .reinforcementsContainer {
     width: 100%;
     display: flex;
@@ -239,7 +279,7 @@
 .reinforcement {
     position: relative;
     width: 100%;
-    max-width: 300px;
+    max-width: 400px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -254,7 +294,7 @@
 }
 .reinforcementInner {
     width: 100%;
-    height: 40px;
+    height: 44px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     display: flex;
@@ -265,12 +305,24 @@
     font-size: 14px;
     cursor: pointer;
 }
+.reinforcementInnerLeft {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+.reinforcementInner p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
 .reinforcementInner:hover {
     border-color: rgba(255, 255, 255, 0.2);
 }
 .reinforcementDropdown {
     position: absolute;
-    top: 45px;
+    top: 49px;
     left: 0;
     width: 100%;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -278,6 +330,20 @@
     background: #0A0A0A;
     z-index: 3;
     padding: 5px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+.reinforcementDropdown::-webkit-scrollbar {
+    width: 10px;
+}
+.reinforcementDropdown::-webkit-scrollbar-track {
+    background: transparent;
+}
+.reinforcementDropdown::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.3);
+    border-radius: 10px;
+    background-clip: padding-box;
+    border: 2px solid transparent;
 }
 .chevronIcon {
     width: 16px;
@@ -295,6 +361,7 @@
     display: flex;
     justify-content: start;
     align-items: center;
+    gap: 5px;
     padding: 0 10px;
     font-size: 14px;
 }
@@ -304,13 +371,13 @@
 .lvlWrapper {
     position: relative;
     width: 80px;
-    height: 40px;
+    height: 44px;
 }
 .lvlContainer {
     height: 100%;
     width: 100%;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 6px;
+    border-radius: 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -321,12 +388,17 @@
 .lvlContainer:hover {
     border-color: rgba(255, 255, 255, 0.2);
 }
+.addBtnContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 10px;
+}
 .addBtn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 80px;
-    height: 40px;
+    width: 100%;
+    max-width: 300px;
+    height: 44px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -341,13 +413,96 @@
 }
 .addBtn:disabled {
     cursor: not-allowed;
-    opacity: 0.7;
+    background: #102b1b;
+    border-color: #287548;
+    color: rgba(255, 255, 255, 0.6);
 }
 .addBtn:disabled:hover {
-    background: #2d7a4d;
+    background: #153823;
+}
+.bottomShadow {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 40px;
+    z-index: 4;
+    background: linear-gradient(to bottom, transparent, #0A0A0A);
+    pointer-events: none;
 }
 @media (max-width: 500px) {
     .selectorBtn:hover {
         background: transparent;
     }
+}
+
+:root {
+    --artian-icon-size: 0.32;
+}
+
+.skillIcon {
+    display: inline-block;
+    flex-shrink: 0;
+    width: calc(100px * var(--artian-icon-size));
+    height: calc(100px * var(--artian-icon-size));
+    background-image: url("@/app/assets/skills.png");
+    background-size: calc(1400px * var(--artian-icon-size)) calc(100px * var(--artian-icon-size)); /* or set to sheet width/height if scaling */
+    background-repeat: no-repeat;
+}
+.setBonusSkill {
+    background-position: calc((-100px * var(--artian-icon-size)) * 13) 0;
+}
+.groupSkill {
+    background-position: calc((-100px * var(--artian-icon-size)) * 12) 0;
+}
+
+.weaponIcon {
+    display: inline-block;
+    flex-shrink: 0;
+    width: calc(64px * var(--weapon-icon-size));
+    height: calc(64px * var(--weapon-icon-size));
+    background-image: url("../../assets/gear.png");
+    background-size: calc(1280px * var(--weapon-icon-size)) calc(832px * var(--weapon-icon-size)); /* or set to sheet width/height if scaling */
+    background-repeat: no-repeat;
+}
+.bow {
+    background-position: calc((-64px * 13) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.charge-blade {
+    background-position: calc((-64px * 9) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.dual-blades {
+    background-position: calc((-64px * 3) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.great-sword {
+    background-position: calc((-64px * 1) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.gunlance {
+    background-position: calc((-64px * 5) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.hammer {
+    background-position: calc((-64px * 6) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.heavy-bowgun {
+    background-position: calc((-64px * 12) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.hunting-horn {
+    background-position: calc((-64px * 7) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.insect-glaive {
+    background-position: calc((-64px * 10) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.lance {
+    background-position: calc((-64px * 4) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.light-bowgun {
+    background-position: calc((-64px * 11) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.long-sword {
+    background-position: calc((-64px * 2) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.switch-axe {
+    background-position: calc((-64px * 8) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+}
+.sword-shield {
+    background-position: 0 calc(-64px * var(--weapon-icon-size));
 }
