@@ -133,7 +133,7 @@ export default function StatsComponent({ build }: Props) {
             <div className={styles.equipmentSkillsContainer} style={{ height: defenseHeight }}>
                 <div className={styles.equipSkillsHeader} onClick={() => setDefenseOpen(!defenseOpen)}>
                     <p>Defense</p>
-                    <span className={equipSkillsOpen ? styles.rotated : ""}><ChevronDownIcon className={styles.chevronIcon} /></span>
+                    <span className={defenseOpen ? styles.rotated : ""}><ChevronDownIcon className={styles.chevronIcon} /></span>
                 </div>
                 <div ref={defenseRef} className={styles.equipSkillsContent}>
                     <div className={styles.defenseChild}>
