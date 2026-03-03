@@ -19,7 +19,11 @@ export default function Home() {
                 </div>
                 <div className={styles.tileContainer}>
                     <Link href="/builder" className={styles.buildGeneratorBtn}>
-                        <div className={styles.tileHeader}><WrenchScrewdriverIcon className={styles.sparklesIcon} />Builder</div>
+                        <div className={styles.tileIconContainer}>
+                            <WrenchScrewdriverIcon className={styles.sparklesIcon} />
+                        </div>
+                        <h3>Builder</h3>
+                        <p>An advanced build crafter that allows for optimized builds through real-time stat calculation.</p>
                         <ArrowRightIcon className={styles.arrowIcon}/>
                     </Link>
                     <div className={styles.buildGeneratorBtn}>

@@ -87,9 +87,6 @@
     font-size: 12px;
 }
 .arrowIcon {
-    position: absolute;
-    bottom: 20px;
-    transform: translateX(-50%);
     width: 20px;
     height: 20px;
     color: #fff;
@@ -111,7 +108,12 @@
     text-decoration: none;
     will-change: scale;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 10px;
     gap: 10px;
+}
+.buildGeneratorBtn p {
+    text-align: center;
+    color: gray;
 }
 .buildGeneratorBtn:disabled {
     cursor: not-allowed;
@@ -121,6 +123,16 @@
     width: 20px;
     height: 20px;
     color: #fff;
+}
+.tileIconContainer {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 5px;
 }
 .buildGeneratorBtn:hover {
     transform: scale(0.98);
@@ -205,6 +217,11 @@
         transform: rotate(360deg);
     }
 }
+@media (max-width: 640px) {
+    .tileContainer {
+        flex-direction: column;
+    }
+}
 @media (max-width: 500px) {
     .glowingCircle {
         top: 400px;
@@ -221,8 +238,5 @@
     }
     .worksContainer {
         gap: 35px;
-    }
-    .tileContainer {
-        flex-direction: column;
     }
 }
