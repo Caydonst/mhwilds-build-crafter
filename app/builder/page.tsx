@@ -118,14 +118,19 @@ export default function Builder() {
         });
     }
 
+    /*
     useEffect(() => {
-        if (build.weapon) {
-            setBuild(prev => ({
+        setBuild(prev => {
+            if (!prev.weapon) return prev;
+
+            return {
                 ...prev,
                 weapon: calculateElement(prev.weapon, prev.decorations.weapon),
-            }));
-        }
-    }, [build.weapon, build.decorations]);
+            };
+        });
+    }, [build.decorations.weapon]);
+
+     */
 
     return (
         <main className={styles.builderPageWrapper}>

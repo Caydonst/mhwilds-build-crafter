@@ -562,7 +562,6 @@ export default function ArtianCreator({ showArtian, setShowArtian, addWeapon }: 
                     <button className={styles.addBtn} onClick={() => addArtian()} disabled={!checkReinforcements()}>Add</button>
                 </div>
             </div>
-            <div className={styles.bottomShadow}></div>
             <button className={styles.backBtn} onClick={() => setShowArtian(false)}><ArrowLeftIcon className={styles.arrowLeftIcon} /></button>
         </div>
     )

@@ -12,7 +12,6 @@ export default function Home() {
 
     return (
         <main className={styles.homeContainer}>
-            <div className={styles.glowingCircle}></div>
             <div className={styles.mainContainer}>
                 <div className={styles.titleContainer}>
                     <h1>Monster Hunter Wilds</h1>

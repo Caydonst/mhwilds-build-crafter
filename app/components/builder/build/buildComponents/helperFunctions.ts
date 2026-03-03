@@ -71,19 +71,20 @@ export function calculateElement(weapon: Weapon, weaponDecoSlots: DecoPlacement[
                 console.log("Includes special element")
                 console.log(slot.decoration.name);
                 console.log(weapon.specials[0].element);
-                if (slot.decoration.name.toLowerCase().includes(weapon.specials[0].element)) {
+                if (slot.decoration.name.includes(decorationNameMap[weapon.specials[0].element])) {
                     console.log("Includes name")
                     for (const skill of slot.decoration.skills) {
                         if (skill.skill.name.toLowerCase().includes(weapon.specials[0].element)) {
                             console.log("Includes skill")
                             switch (skill.level) {
-                                case 1:
-                                    weapon.specials[0].damage.display *= 1.20 + 60;
+                                case 3:
+                                    weapon.specials[0].damage.display *= 1.20;
+                                    //weapon.specials[0].damage.display += 60;
                                     break;
                                 case 2:
                                     weapon.specials[0].damage.display *= 1.10 + 50;
                                     break;
-                                case 3:
+                                case 1:
                                     weapon.specials[0].damage.display += 40;
                                     break;
                             }
@@ -91,17 +92,17 @@ export function calculateElement(weapon: Weapon, weaponDecoSlots: DecoPlacement[
                     }
                 }
             } else if (weapon.specials[0].status) {
-                if (slot.decoration.name.includes(weapon.specials[0].status)) {
+                if (slot.decoration.name.includes(decorationNameMap[weapon.specials[0].status])) {
                     for (const skill of slot.decoration.skills) {
                         if (skill.skill.name.includes(weapon.specials[0].status)) {
                             switch (skill.level) {
-                                case 1:
+                                case 3:
                                     weapon.specials[0].damage.display *= 1.20 + 50;
                                     break;
                                 case 2:
                                     weapon.specials[0].damage.display *= 1.10 + 20;
                                     break;
-                                case 3:
+                                case 1:
                                     weapon.specials[0].damage.display *= 1.05 + 10;
                                     break;
                             }
@@ -115,5 +116,17 @@ export function calculateElement(weapon: Weapon, weaponDecoSlots: DecoPlacement[
     console.log(weapon);
 
     return weapon;
+}
+
+const decorationNameMap: Record<string, string> = {
+    "fire": "Blaze",
+    "water": "Stream",
+    "thunder": "Bolt",
+    "dragon": "Dragon",
+    "ice": "Frost",
+    "poison": "Venmon",
+    "paralysis": "Paralyzer",
+    "sleep": "Sleep",
+    "blast": "Blast",
 }
 

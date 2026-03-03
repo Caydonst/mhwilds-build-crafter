@@ -22,7 +22,7 @@
     flex-direction: column;
     overflow: auto;
     color: #fff;
-    padding-bottom: 50px;
+    padding-bottom: 30px;
 }
 .artianHeader {
     position: sticky;
@@ -35,7 +35,6 @@
     z-index: 3;
     padding-top: 50px;
     background: #0A0A0A;
-    box-shadow: 0 0 20px 20px #0A0A0A;
 }
 .artianContainer::-webkit-scrollbar {
     display: none;
@@ -223,16 +222,16 @@
     position: relative;
     width: 100%;
     background: transparent;
-    border-radius: 8px;
+    border-radius: 50px;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 .part {
     position: relative;
     width: 50%;
-    height: 34px;
+    height: 44px;
     background: transparent;
     border: none;
-    border-radius: 7px;
+    border-radius: 50px;
     color: rgba(255, 255, 255, 0.6);
     cursor: pointer;
     z-index: 2;
@@ -241,8 +240,7 @@
     color: #fff;
 }
 .selected {
-    outline: 1px solid #606060;
-    background: transparent;
+    background: rgba(255, 255, 255, 0.5);
     color: #fff;
 }
 .tarredDeviceContainer {
@@ -296,7 +294,7 @@
     width: 100%;
     height: 44px;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
+    border-radius: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -326,7 +324,7 @@
     left: 0;
     width: 100%;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
+    border-radius: 10px;
     background: #0A0A0A;
     z-index: 3;
     padding: 5px;
@@ -356,7 +354,7 @@
     color: #fff;
     border: none;
     background: transparent;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     display: flex;
     justify-content: start;
@@ -419,15 +417,6 @@
 }
 .addBtn:disabled:hover {
     background: #153823;
-}
-.bottomShadow {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    height: 40px;
-    z-index: 4;
-    background: linear-gradient(to bottom, transparent, #0A0A0A);
-    pointer-events: none;
 }
 @media (max-width: 500px) {
     .selectorBtn:hover {
