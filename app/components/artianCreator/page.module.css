@@ -1,5 +1,7 @@
 .artianContainerWrapper {
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     min-width: 100%;
     height: 100%;
@@ -10,6 +12,7 @@
     gap: 20px;
     overflow: auto;
     color: #fff;
+    background: #0A0A0A;
 }
 .artianContainer {
     position: relative;
@@ -43,7 +46,7 @@
     margin-bottom: 30px;
 }
 .backBtn {
-    position: fixed;
+    position: absolute;
     left: 20px;
     top: 20px;
     width: 34px;
@@ -55,7 +58,7 @@
     border: none;
     border-radius: 50%;
     cursor: pointer;
-    z-index: 368;
+    z-index: 3;
 }
 .backBtn:hover {
     background: rgba(255, 255, 255, 0.1);
@@ -66,14 +69,12 @@
     color: #fff;
 }
 .slideLeft1 {
-    transform: translateX(calc(-100% - 20px));
-    transition: 0.5s cubic-bezier(0.23, 1.00, 0.32, 1.00);
-    opacity: 1;
+    transform: translateY(0);
+    transition: 0.3s;
 }
 .slideRight1 {
-    transform: translateX(0);
-    transition: 0.5s cubic-bezier(0.23, 1.00, 0.32, 1.00);
-    opacity: 0;
+    transform: translateY(100%);
+    transition: 0.3s;
 }
 .slider {
     position: absolute;
@@ -128,8 +129,7 @@
 .artianSelectorContainer {
     position: relative;
     width: 100%;
-    max-width: 400px;
-    padding: 5px 0;
+    padding: 5px;
     background: transparent;
     border-radius: 8px;
 }
@@ -166,11 +166,10 @@
     align-items: center;
     background: #0A0A0A;
     z-index: 2;
-    padding: 30px 10px;
+    padding: 30px 0;
 }
 .contentArtian {
     width: 100%;
-    max-width: 400px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -180,7 +179,7 @@
 }
 .contentGogmaArtian {
     width: 100%;
-    max-width: 400px;
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -194,9 +193,11 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    gap: 5px;
+    gap: 10px;
     color: #fff;
     font-size: 14px;
+    padding: 0 30px 30px 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 @keyframes fadeRight {
     from {
@@ -221,6 +222,7 @@
 .partContainer {
     position: relative;
     width: 100%;
+
     background: transparent;
     border-radius: 50px;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -240,7 +242,7 @@
     color: #fff;
 }
 .selected {
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.3);
     color: #fff;
 }
 .tarredDeviceContainer {
@@ -251,6 +253,8 @@
     flex-direction: column;
     gap: 10px;
     font-size: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 0 30px 30px 30px;
 }
 .bonusesContainer {
     width: 100%;
@@ -259,10 +263,15 @@
     align-items: center;
     flex-direction: column;
     font-size: 14px;
-    gap: 5px;
+    gap: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 0 30px 30px 30px;
 }
 .setBonusSelector {
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .reinforcementsContainer {
     width: 100%;
@@ -270,14 +279,16 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    gap: 5px;
+    gap: 10px;
     color: #fff;
     font-size: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 0 30px 30px 30px;
 }
 .reinforcement {
     position: relative;
     width: 100%;
-    max-width: 400px;
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -391,11 +402,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0 10px;
+    padding: 0 30px;
 }
 .addBtn {
     width: 100%;
-    max-width: 300px;
+
     height: 44px;
     display: flex;
     justify-content: center;
@@ -421,6 +432,21 @@
 @media (max-width: 500px) {
     .selectorBtn:hover {
         background: transparent;
+    }
+    .partSelectionContainer {
+        padding: 0 10px 30px 10px;
+    }
+    .tarredDeviceContainer {
+        padding: 0 10px 30px 10px;
+    }
+    .bonusesContainer {
+        padding: 0 10px 30px 10px;
+    }
+    .reinforcementsContainer {
+        padding: 0 10px 30px 10px;
+    }
+    .addBtnContainer {
+        padding: 0 10px;
     }
 }
 
@@ -494,4 +520,44 @@
 }
 .sword-shield {
     background-position: 0 calc(-64px * var(--weapon-icon-size));
+}
+
+.statsIcon {
+    display: inline-block;
+    flex-shrink: 0;
+    width: calc(64px * var(--stats-icon-size));
+    height: calc(64px * var(--stats-icon-size));
+    background-image: url("../../assets/status.png");
+    background-size: calc(512px * var(--stats-icon-size)) calc(1024px * var(--stats-icon-size)); /* or set to sheet width/height if scaling */
+    background-repeat: no-repeat;
+}
+.fire {
+    background-position: calc((-64px * 3) * var(--stats-icon-size)) calc((-64px * 0) * var(--stats-icon-size));
+}
+.water {
+    background-position: calc((-64px * 4) * var(--stats-icon-size)) calc((-64px * 0) * var(--stats-icon-size));
+}
+.thunder {
+    background-position: calc((-64px * 5) * var(--stats-icon-size)) calc((-64px * 0) * var(--stats-icon-size));
+}
+.ice {
+    background-position: calc((-64px * 6) * var(--stats-icon-size)) calc((-64px * 0) * var(--stats-icon-size));
+}
+.dragon {
+    background-position: calc((-64px * 7) * var(--stats-icon-size)) calc((-64px * 0) * var(--stats-icon-size));
+}
+.poison {
+    background-position: calc((-64px * 0) * var(--stats-icon-size)) calc((-64px * 1) * var(--stats-icon-size));
+}
+.paralysis {
+    background-position: calc((-64px * 2) * var(--stats-icon-size)) calc((-64px * 1) * var(--stats-icon-size));
+}
+.stun {
+    background-position: calc((-64px * 3) * var(--stats-icon-size)) calc((-64px * 1) * var(--stats-icon-size));
+}
+.sleep {
+    background-position: calc((-64px * 4) * var(--stats-icon-size)) calc((-64px * 1) * var(--stats-icon-size));
+}
+.blast {
+    background-position: calc((-64px * 5) * var(--stats-icon-size)) calc((-64px * 1) * var(--stats-icon-size));
 }

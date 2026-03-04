@@ -295,13 +295,19 @@ export default function ArtianCreator({ showArtian, setShowArtian, addWeapon }: 
                                 <p>Part Selection</p>
                                 <div className={styles.reinforcement} ref={(el) => {dropdownRefs.current["elementDropdown"] = el;}}>
                                     <div className={styles.reinforcementInner} onClick={() => setOpenDropdown((prev) => (prev === "elementDropdown" ? null : "elementDropdown"))}>
-                                        <p>{element.charAt(0).toUpperCase() + element.slice(1)}</p>
+                                        <p>
+                                            <span className={`${styles.statsIcon} ${styles[element]}`}></span>
+                                            {element.charAt(0).toUpperCase() + element.slice(1)}
+                                        </p>
                                         <ChevronDownIcon className={styles.chevronIcon} />
                                     </div>
                                     {openDropdown === "elementDropdown" && (
                                         <div className={styles.reinforcementDropdown}>
                                             {elements.map((element, i) => (
-                                                <button key={i} onClick={() => handleElementClick(element)}>{element.charAt(0).toUpperCase() + element.slice(1)}</button>
+                                                <button key={i} onClick={() => handleElementClick(element)}>
+                                                    <span className={`${styles.statsIcon} ${styles[element]}`}></span>
+                                                    {element.charAt(0).toUpperCase() + element.slice(1)}
+                                                </button>
                                             ))}
                                         </div>
                                     )}
@@ -388,13 +394,19 @@ export default function ArtianCreator({ showArtian, setShowArtian, addWeapon }: 
                                 <p>Part Selection</p>
                                 <div className={styles.reinforcement} ref={(el) => {dropdownRefs.current["elementDropdown"] = el;}}>
                                     <div className={styles.reinforcementInner} onClick={() => setOpenDropdown((prev) => (prev === "elementDropdown" ? null : "elementDropdown"))}>
-                                        <p>{element.charAt(0).toUpperCase() + element.slice(1)}</p>
+                                        <p>
+                                            <span className={`${styles.statsIcon} ${styles[element]}`}></span>
+                                            {element.charAt(0).toUpperCase() + element.slice(1)}
+                                        </p>
                                         <ChevronDownIcon className={styles.chevronIcon} />
                                     </div>
                                     {openDropdown === "elementDropdown" && (
                                         <div className={styles.reinforcementDropdown}>
                                             {elements.map((element, i) => (
-                                                <button key={i} onClick={() => handleElementClick(element)}>{element.charAt(0).toUpperCase() + element.slice(1)}</button>
+                                                <button key={i} onClick={() => handleElementClick(element)}>
+                                                    <span className={`${styles.statsIcon} ${styles[element]}`}></span>
+                                                    {element.charAt(0).toUpperCase() + element.slice(1)}
+                                                </button>
                                             ))}
                                         </div>
                                     )}
@@ -562,7 +574,7 @@ export default function ArtianCreator({ showArtian, setShowArtian, addWeapon }: 
                     <button className={styles.addBtn} onClick={() => addArtian()} disabled={!checkReinforcements()}>Add</button>
                 </div>
             </div>
-            <button className={styles.backBtn} onClick={() => setShowArtian(false)}><ArrowLeftIcon className={styles.arrowLeftIcon} /></button>
+            <button className={styles.backBtn} onClick={() => setShowArtian(false)}><ChevronDownIcon className={styles.arrowLeftIcon} /></button>
         </div>
     )
 }

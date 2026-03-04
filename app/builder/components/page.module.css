@@ -1,6 +1,6 @@
 :root {
     --weapon-icon-size: 0.50;
-    --stats-icon-size: 0.40;
+    --stats-icon-size: 0.30;
 }
 
 .gearSelectorContainer {
@@ -50,7 +50,6 @@
     border-radius: 20px;
     overflow: hidden;
     display: flex;
-    flex-direction: row;
     gap: 20px;
     transform: scale(0.9);
     transition: 0.15s;

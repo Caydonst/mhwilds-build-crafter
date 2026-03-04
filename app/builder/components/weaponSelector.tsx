@@ -105,9 +105,7 @@ export default function WeaponSelector({ weaponSelectorOpen, setWeaponSelectorOp
     return (
         <div className={weaponSelectorOpen ? `${styles.gearSelectorContainer} ${styles.open}` : styles.gearSelectorContainer}>
             <div className={styles.gearSelectorInnerWrapper}>
-                <div className={`${styles.gearSelectorInner} ${
-                    showArtian ? styles.slideLeft : styles.slideRight
-                }`}>
+                <div className={styles.gearSelectorInner}>
                     <div className={styles.info}>
                         <div className={styles.header}>
                             <p>Gear Search</p>
