@@ -33,7 +33,7 @@ export function updateElement(aggregatedSkillsMap: Record<number, AggregatedSkil
 
     console.log(aggregatedSkillsMap)
 
-    if (weapon && weapon.specials) {
+    if (weapon && weapon.specials[0]) {
         Object.entries(aggregatedSkillsMap).forEach(([key, value]) => {
             if (weapon.specials[0].element && value.skill.name.toLowerCase().includes(weapon.specials[0].element)) {
                 foundSkill = true;

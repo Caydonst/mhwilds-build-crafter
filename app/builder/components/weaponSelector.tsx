@@ -87,7 +87,7 @@ export default function WeaponSelector({ weaponSelectorOpen, setWeaponSelectorOp
             };
         });
 
-        if (weapon.specials) {
+        if (weapon.specials[0]) {
             setBaseElement(weapon.specials[0].damage.display)
         }
 
