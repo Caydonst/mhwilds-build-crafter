@@ -11,7 +11,6 @@ import GearPiece from "@/app/builder/components/gearPiece";
 import DecoSelector from "./components/decoSelector"
 import StatsComponent from "./components/statsComponent";
 import SkillsComponent from "@/app/builder/components/skillsComponent";
-import {calculateElement} from "@/app/components/builder/build/buildComponents/helperFunctions";
 
 type ArmorSlotKey = "weapon" | "head" | "chest" | "arms" | "waist" | "legs" | "charm";
 
