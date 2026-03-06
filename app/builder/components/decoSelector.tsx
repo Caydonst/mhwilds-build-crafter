@@ -4,7 +4,6 @@ import Decoration from "./decoration";
 import type {Decoration as DecoType, BuilderBuild, BuildDecorations} from "@/app/api/types/types"
 import React, {useMemo, useState} from "react";
 import {useGameData} from "@/app/hooks/useGameData";
-import {calculateElement} from "@/app/components/builder/build/buildComponents/helperFunctions";
 
 type ArmorSlotKey = "weapon" | "head" | "chest" | "arms" | "waist" | "legs" | "charm";
 
