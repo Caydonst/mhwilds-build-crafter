@@ -1,7 +1,11 @@
 import styles from "./page.module.css"
 import React, {useLayoutEffect, useMemo, useRef, useState} from "react";
 import {BuilderBuild, type Skill as SkillType, ArmorSet} from "@/app/api/types/types";
-import {addDecoSkillsToAggregate, addSkillLevel} from "@/app/components/builder/build/buildComponents/helperFunctions";
+import {
+    addDecoSkillsToAggregate,
+    addSkillLevel,
+    updateElement
+} from "@/app/components/builder/build/buildComponents/helperFunctions";
 import Skill from "@/app/components/builder/build/buildComponents/skill";
 import {ChevronDownIcon, XMarkIcon, CheckIcon} from "@heroicons/react/24/outline"
 import {findBonuses} from "./helperFunctions"
@@ -37,15 +41,17 @@ export default function SkillsComponent({ build, skills, armorSets }: Props) {
             for (const s of piece.skills) {
                 const id = s.skill?.id;
                 if (!id) continue;
-                addSkillLevel(skills, id, s.level ?? 0, map);
+                addSkillLevel(skills, id, s.level ?? 0, map, build.weapon);
             }
         }
 
         if (build.decorations) {
             (Object.keys(build.decorations) as (keyof typeof build.decorations)[]).forEach((slot) => {
-                addDecoSkillsToAggregate(skills, map, build.decorations[slot]);
+                addDecoSkillsToAggregate(skills, map, build.weapon, build.decorations[slot]);
             });
         }
+
+        updateElement(map, build.weapon)
 
         return Object.values(map).sort((a, b) => b.totalLevel[0] - a.totalLevel[0]);
     }, [build, skills]);

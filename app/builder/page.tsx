@@ -5,7 +5,7 @@ import React, {useState, useEffect, useMemo} from "react";
 import ArmorPiece from "@/app/components/builder/build/buildComponents/armorPiece";
 import GearSelector from "./components/gearSelector"
 import WeaponSelector from "./components/weaponSelector"
-import type {BuilderBuild, DecoPlacement, Skill as SkillType, ArmorSet} from "@/app/api/types/types"
+import type {BuilderBuild, DecoPlacement, Skill as SkillType, ArmorSet, BuildDecorations} from "@/app/api/types/types"
 import Skill from "@/app/components/builder/build/buildComponents/skill";
 import GearPiece from "@/app/builder/components/gearPiece";
 import DecoSelector from "./components/decoSelector"
@@ -43,6 +43,15 @@ export default function Builder() {
     });
     const [selectedPage, setSelectedPage] = useState<string>("gear");
     const [sliderAmount, setSliderAmount] = useState<number>(0);
+
+    const DEFAULT_DECOS: BuildDecorations = {
+        weapon: [],
+        head: [],
+        chest: [],
+        arms: [],
+        waist: [],
+        legs: [],
+    };
 
     function updateSlider(page: string, amt: number) {
         setSelectedPage(page);
@@ -97,7 +106,8 @@ export default function Builder() {
     }
     function deleteDecoration(slotKey: ArmorSlotKey, slotIndex: number) {
         setBuild((prev) => {
-            if (!prev.decorations) return prev;
+            const decos = prev.decorations ?? DEFAULT_DECOS;
+
 
             // charms don't have deco slots
             if (slotKey === "charm") return prev;
@@ -108,29 +118,17 @@ export default function Builder() {
                 decoration: null,
             };
 
+            const nextDecorations = {
+                ...decos,
+                [slotKey]: nextSlot,
+            };
+
             return {
                 ...prev,
-                decorations: {
-                    ...prev.decorations,
-                    [slotKey]: nextSlot,
-                },
+                decorations: nextDecorations,
             };
         });
     }
-
-    /*
-    useEffect(() => {
-        setBuild(prev => {
-            if (!prev.weapon) return prev;
-
-            return {
-                ...prev,
-                weapon: calculateElement(prev.weapon, prev.decorations.weapon),
-            };
-        });
-    }, [build.decorations.weapon]);
-
-     */
 
     return (
         <main className={styles.builderPageWrapper}>

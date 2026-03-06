@@ -6,6 +6,8 @@ import {
     type Armor, Skill, SkillRank, Weapon,
 } from "@/app/api/types/types";
 
+import {getElementDamage} from "@/app/components/builder/build/buildComponents/helperFunctions"
+
 type BonusType = {
     id: number;
     count: number;
@@ -251,7 +253,7 @@ export function updateStats(build: BuilderBuild) {
             } else if (buildWeapon.specials[0].element) {
                 buildStats.element = buildWeapon.specials[0].element
             }
-            buildStats.elementDamage = buildWeapon.specials[0].damage.display;
+            buildStats.elementDamage = getElementDamage()
         }
     }
 

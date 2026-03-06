@@ -15,36 +15,107 @@ function getMaxSkillLevel(skillData: SkillType[] | null, skillId: number): numbe
     return fullSkill?.ranks?.[fullSkill.ranks.length - 1]?.level ?? 0;
 }
 
-export const addSkillLevel = (skillData: SkillType[] | null, skillId: number, add: number, aggregatedSkillsMap: Record<number, AggregatedSkill>) => {
+let baseElement = 0;
+let currentElement = 0;
+
+export function setBaseElement(elementNum: number) {
+    baseElement = elementNum;
+    currentElement = baseElement;
+}
+export function getElementDamage() {
+    return currentElement;
+}
+
+export function updateElement(aggregatedSkillsMap: Record<number, AggregatedSkill>, weapon: Weapon | null) {
+
+    let foundSkill;
+    let level;
+
+    console.log(aggregatedSkillsMap)
+
+    if (weapon && weapon.specials) {
+        Object.entries(aggregatedSkillsMap).forEach(([key, value]) => {
+            if (weapon.specials[0].element && value.skill.name.toLowerCase().includes(weapon.specials[0].element)) {
+                foundSkill = true;
+                level = aggregatedSkillsMap[Number(key)].totalLevel[0];
+                switch(level) {
+                    case 1:
+                        currentElement = Math.round(baseElement + 40);
+                        break;
+                    case 2:
+                        currentElement = Math.round(baseElement * 1.10 + 50);
+                        break;
+                    case 3:
+                        currentElement = Math.round(baseElement * 1.20 + 60);
+                        break;
+                    default:
+                        currentElement = baseElement;
+                        break;
+                }
+            } else if (weapon.specials[0].status && value.skill.name.toLowerCase().includes(weapon.specials[0].status)) {
+                foundSkill = true;
+                level = aggregatedSkillsMap[Number(key)].totalLevel[0];
+                switch(level) {
+                    case 1:
+                        currentElement = Math.round(baseElement * 1.05 + 10);
+                        break;
+                    case 2:
+                        currentElement = Math.round(baseElement * 1.10 + 20);
+                        break;
+                    case 3:
+                        currentElement = Math.round(baseElement * 1.20 + 50);
+                        break;
+                    default:
+                        currentElement = baseElement;
+                        break;
+                }
+            }
+        })
+        if (!foundSkill) {
+            currentElement = baseElement;
+        }
+    }
+}
+
+export const addSkillLevel = (skillData: SkillType[] | null, skillId: number, add: number, aggregatedSkillsMap: Record<number, AggregatedSkill>, weapon: Weapon | null) => {
     const fullSkill = findFullSkill(skillData, skillId);
     const max = getMaxSkillLevel(skillData, skillId);
+
+    console.log("Add: " + add);
+    console.log("SkillId: " + skillId);
 
     if (fullSkill?.kind === "set") {
         return;
     }
 
     if (!aggregatedSkillsMap[skillId]) {
-        // Prefer full skill object (has ranks/icons), else fallback
         const chosenSkill = fullSkill;
-        if (!chosenSkill) return;
+        if (!chosenSkill) return
 
         aggregatedSkillsMap[skillId] = {
             skill: chosenSkill,
             totalLevel: [0, max],
         };
+
     } else if (aggregatedSkillsMap[skillId].totalLevel[1] === 0 && max > 0) {
         aggregatedSkillsMap[skillId].totalLevel[1] = max;
     }
 
-    if (aggregatedSkillsMap[skillId].totalLevel[0] < max && aggregatedSkillsMap[skillId].totalLevel[0] + add > max) {
+    if (aggregatedSkillsMap[skillId].totalLevel[0] === max) {
+        return;
+    } else if (aggregatedSkillsMap[skillId].totalLevel[0] < max && aggregatedSkillsMap[skillId].totalLevel[0] + add > max) {
         aggregatedSkillsMap[skillId].totalLevel[0] = max;
-    } else {
+    }
+    else {
         aggregatedSkillsMap[skillId].totalLevel[0] += add;
     }
+
+    console.log(aggregatedSkillsMap[skillId].totalLevel[0], aggregatedSkillsMap[skillId].totalLevel[1]);
+
 };
 
 // helper to add deco skills into aggregate map
-export const addDecoSkillsToAggregate = (skillData: SkillType[] | null, aggregatedSkillsMap: Record<number, AggregatedSkill>, placements?: ReadonlyArray<DecoPlacement>) => {
+export const addDecoSkillsToAggregate = (skillData: SkillType[] | null, aggregatedSkillsMap: Record<number, AggregatedSkill>, weapon: Weapon | null, placements?: ReadonlyArray<DecoPlacement>) => {
     if (!placements?.length) return;
 
     for (const placement of placements) {
@@ -57,66 +128,10 @@ export const addDecoSkillsToAggregate = (skillData: SkillType[] | null, aggregat
             const id = ds.skill?.id;
             if (!id) continue;
 
-            addSkillLevel(skillData, id, ds.level ?? 0, aggregatedSkillsMap);
+            addSkillLevel(skillData, id, ds.level ?? 0, aggregatedSkillsMap, weapon);
         }
     }
 };
-
-export function calculateElement(weapon: Weapon, weaponDecoSlots: DecoPlacement[]) {
-    console.log("HELLOOOO")
-    for (const slot of weaponDecoSlots) {
-        if (slot.decoration) {
-            console.log("Includes decoration")
-            if (weapon.specials[0].element) {
-                console.log("Includes special element")
-                console.log(slot.decoration.name);
-                console.log(weapon.specials[0].element);
-                if (slot.decoration.name.includes(decorationNameMap[weapon.specials[0].element])) {
-                    console.log("Includes name")
-                    for (const skill of slot.decoration.skills) {
-                        if (skill.skill.name.toLowerCase().includes(weapon.specials[0].element)) {
-                            console.log("Includes skill")
-                            switch (skill.level) {
-                                case 3:
-                                    weapon.specials[0].damage.display *= 1.20;
-                                    //weapon.specials[0].damage.display += 60;
-                                    break;
-                                case 2:
-                                    weapon.specials[0].damage.display *= 1.10 + 50;
-                                    break;
-                                case 1:
-                                    weapon.specials[0].damage.display += 40;
-                                    break;
-                            }
-                        }
-                    }
-                }
-            } else if (weapon.specials[0].status) {
-                if (slot.decoration.name.includes(decorationNameMap[weapon.specials[0].status])) {
-                    for (const skill of slot.decoration.skills) {
-                        if (skill.skill.name.includes(weapon.specials[0].status)) {
-                            switch (skill.level) {
-                                case 3:
-                                    weapon.specials[0].damage.display *= 1.20 + 50;
-                                    break;
-                                case 2:
-                                    weapon.specials[0].damage.display *= 1.10 + 20;
-                                    break;
-                                case 1:
-                                    weapon.specials[0].damage.display *= 1.05 + 10;
-                                    break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    console.log(weapon);
-
-    return weapon;
-}
 
 const decorationNameMap: Record<string, string> = {
     "fire": "Blaze",
@@ -124,7 +139,7 @@ const decorationNameMap: Record<string, string> = {
     "thunder": "Bolt",
     "dragon": "Dragon",
     "ice": "Frost",
-    "poison": "Venmon",
+    "poison": "Venom",
     "paralysis": "Paralyzer",
     "sleep": "Sleep",
     "blast": "Blast",

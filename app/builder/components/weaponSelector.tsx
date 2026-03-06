@@ -6,6 +6,7 @@ import ArmorPiece from "@/app/components/builder/build/buildComponents/armorPiec
 import type {Armor, CharmRank, WeaponKind, BuilderBuild, Weapon, DecoPlacement} from "@/app/api/types/types";
 import {armorBySlot} from "@/app/api/apiCalls/apiCalls";
 import ArtianCreator from "@/app/components/artianCreator/artianCreator"
+import {setBaseElement} from "@/app/components/builder/build/buildComponents/helperFunctions"
 
 type ArmorSlotKey = "weapon" | "head" | "chest" | "arms" | "waist" | "legs" | "charm";
 
@@ -85,6 +86,10 @@ export default function WeaponSelector({ weaponSelectorOpen, setWeaponSelectorOp
                 },
             };
         });
+
+        if (weapon.specials) {
+            setBaseElement(weapon.specials[0].damage.display)
+        }
 
         setWeaponSelectorOpen(false);
     }

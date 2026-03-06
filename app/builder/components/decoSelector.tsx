@@ -4,6 +4,7 @@ import Decoration from "./decoration";
 import type {Decoration as DecoType, BuilderBuild, BuildDecorations} from "@/app/api/types/types"
 import React, {useMemo, useState} from "react";
 import {useGameData} from "@/app/hooks/useGameData";
+import {calculateElement} from "@/app/components/builder/build/buildComponents/helperFunctions";
 
 type ArmorSlotKey = "weapon" | "head" | "chest" | "arms" | "waist" | "legs" | "charm";
 
@@ -45,23 +46,25 @@ export default function DecoSelector({ decoSlotIndex, slotLevel, kind, decoSelec
 
     function addDecoration(decoration: DecoType) {
         if (!decoration) return;
+        if (type === "charm") return;
 
-        setBuild((prev) => {
+        setBuild(prev => {
             const decos = prev.decorations ?? DEFAULT_DECOS;
 
-            if (type === "charm") return prev;
+            const nextSlot = [...decos[type]];
+            nextSlot[decoSlotIndex] = { slotLevel: decoration.slot, decoration };
 
-            const nextSlot = [...decos[type]]; // copy array
-            nextSlot[decoSlotIndex] = { slotLevel: decoration.slot, decoration }; // set at index
+            const nextDecorations = {
+                ...decos,
+                [type]: nextSlot,
+            };
 
             return {
                 ...prev,
-                decorations: {
-                    ...decos,
-                    [type]: nextSlot,
-                },
+                decorations: nextDecorations,
             };
         });
+
         setDecoSelectorOpen(false);
     }
 
