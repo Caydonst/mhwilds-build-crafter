@@ -77,7 +77,7 @@ export function updateElement(aggregatedSkillsMap: Record<number, AggregatedSkil
     }
 }
 
-export const addSkillLevel = (skillData: SkillType[] | null, skillId: number, add: number, aggregatedSkillsMap: Record<number, AggregatedSkill>, weapon: Weapon | null) => {
+export const addSkillLevel = (skillData: SkillType[] | null, skillId: number, add: number, aggregatedSkillsMap: Record<number, AggregatedSkill>) => {
     const fullSkill = findFullSkill(skillData, skillId);
     const max = getMaxSkillLevel(skillData, skillId);
 
@@ -115,7 +115,7 @@ export const addSkillLevel = (skillData: SkillType[] | null, skillId: number, ad
 };
 
 // helper to add deco skills into aggregate map
-export const addDecoSkillsToAggregate = (skillData: SkillType[] | null, aggregatedSkillsMap: Record<number, AggregatedSkill>, weapon: Weapon | null, placements?: ReadonlyArray<DecoPlacement>) => {
+export const addDecoSkillsToAggregate = (skillData: SkillType[] | null, aggregatedSkillsMap: Record<number, AggregatedSkill>, placements?: ReadonlyArray<DecoPlacement>) => {
     if (!placements?.length) return;
 
     for (const placement of placements) {
@@ -128,7 +128,7 @@ export const addDecoSkillsToAggregate = (skillData: SkillType[] | null, aggregat
             const id = ds.skill?.id;
             if (!id) continue;
 
-            addSkillLevel(skillData, id, ds.level ?? 0, aggregatedSkillsMap, weapon);
+            addSkillLevel(skillData, id, ds.level ?? 0, aggregatedSkillsMap);
         }
     }
 };
