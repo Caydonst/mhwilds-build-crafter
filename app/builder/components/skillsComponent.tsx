@@ -41,13 +41,13 @@ export default function SkillsComponent({ build, skills, armorSets }: Props) {
             for (const s of piece.skills) {
                 const id = s.skill?.id;
                 if (!id) continue;
-                addSkillLevel(skills, id, s.level ?? 0, map, build.weapon);
+                addSkillLevel(skills, id, s.level ?? 0, map);
             }
         }
 
         if (build.decorations) {
             (Object.keys(build.decorations) as (keyof typeof build.decorations)[]).forEach((slot) => {
-                addDecoSkillsToAggregate(skills, map, build.weapon, build.decorations[slot]);
+                addDecoSkillsToAggregate(skills, map, build.decorations[slot]);
             });
         }
 
