@@ -1,0 +1,317 @@
+.charmCreatorWrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #0A0A0A;
+    transform: translateY(100%);
+    transition: 0.3s;
+}
+.open {
+    transform: translateY(0);
+}
+.charmCreatorInner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    padding-top: 60px;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+}
+.charmCreatorInner h3 {
+    color: #fff;
+}
+.backBtn {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 3;
+}
+.backBtn:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+.arrowLeftIcon {
+    width: 20px;
+    height: 20px;
+    color: #fff;
+}
+.skillsContainer, .decoContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    gap: 10px;
+    color: #fff;
+    padding: 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.decoSlotsContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.decoSlotsContainer input {
+    width: 100%;
+    height: 40px;
+    outline: none;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    color: #fff;
+    border-radius: 10px;
+}
+.decoSlotsContainer input:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+.decoSlotsContainer input:focus {
+    border-color: #fff;
+}
+.msgContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+.msg {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+}
+.msgContainer span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.msgContainer span > * {
+    width: 20px;
+    height: 20px;
+    color: rgba(255, 255, 255, 0.5);
+}
+.addSkillBtn {
+    width: 200px;
+    height: 34px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: transparent;
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+}
+.addSkillBtn:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+.addSkillBtn:disabled {
+    opacity: 0.7;
+    pointer-events: none;
+}
+.reinforcement {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+.reinforcementWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+.reinforcementInner {
+    width: 100%;
+    height: 44px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+    padding: 0 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+.reinforcementInnerLeft {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+.reinforcementInner p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+.reinforcementInner:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+.reinforcementDropdown {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    background: #0A0A0A;
+    z-index: 3;
+    max-height: 400px;
+    overflow-y: auto;
+}
+.reinforcementDropdown::-webkit-scrollbar {
+    width: 10px;
+}
+.reinforcementDropdown::-webkit-scrollbar-track {
+    background: transparent;
+}
+.reinforcementDropdown::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.3);
+    border-radius: 10px;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+}
+.chevronIcon {
+    width: 16px;
+    height: 16px;
+    color: #fff;
+}
+.reinforcementDropdown button {
+    width: 100%;
+    height: 40px;
+    color: #fff;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 5px;
+    padding: 0 10px;
+    font-size: 14px;
+}
+.reinforcementDropdown button:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+.dropdownSkillsContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 5px;
+}
+.searchContainer input:focus {
+    border-color: #fff;
+}
+.searchContainer {
+    position: sticky;
+    top: 0;
+    height: 50px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    padding: 5px;
+    background: #0A0A0A;
+}
+.searchContainer input {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    outline: none;
+    border-radius: 6px;
+    padding: 0 10px;
+    color: #fff;
+    font-size: 16px;
+}
+.skillLvlContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 5px;
+}
+.lvlWrapper {
+    position: relative;
+    width: 80px;
+    height: 44px;
+}
+.lvlContainer {
+    height: 100%;
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+    padding: 0 10px;
+    cursor: pointer;
+}
+.lvlContainer:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+.deleteBtn {
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+.deleteBtn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+.deleteBtn > * {
+    color: #fff;
+    width: 22px;
+    height: 22px;
+}
+.addBtnContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+}
+.addBtn {
+    width: 100%;
+    height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #2d7a4d;
+    border: 1px solid #57ff9d;
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+}
+.addBtn:hover {
+    background: #1d4f32;
+}
+.addBtn:disabled {
+    opacity: 0.3;
+    pointer-events: none;
+}
+.addBtn:disabled:hover {
+    background: #153823;
+}

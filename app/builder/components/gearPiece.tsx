@@ -9,7 +9,6 @@ type ArmorSlotKey = "weapon" | "head" | "chest" | "arms" | "waist" | "legs" | "c
 type GearSlotKey = "head" | "chest" | "arms" | "waist" | "legs" | "charm";
 type WeaponArmorCharm = Weapon | Armor | CharmRank;
 const ARMOR_KINDS = ["head", "chest", "arms", "waist", "legs"] as const;
-type ArmorKind = typeof ARMOR_KINDS[number];
 
 interface Props {
     gearPiece: WeaponArmorCharm | null
@@ -23,8 +22,17 @@ interface Props {
     deleteDecoration: (slot: ArmorSlotKey, slotIndex: number) => void;
 }
 
-export default function GearPiece({ gearPiece, slotKey, build, armorSets, deleteBuildItem, openGearSelector, openWeaponSelector, openDecoSelector, deleteDecoration }: Props) {
-    const { skills } = useGameData();
+export default function GearPiece({
+                                      gearPiece,
+                                      slotKey,
+                                      build,
+                                      armorSets,
+                                      deleteBuildItem,
+                                      openGearSelector,
+                                      openWeaponSelector,
+                                      openDecoSelector,
+                                      deleteDecoration
+                                  }: Props) {
 
     const weapons = [
         "bow",
@@ -60,7 +68,7 @@ export default function GearPiece({ gearPiece, slotKey, build, armorSets, delete
     }
 
     function isWeaponPiece(piece: WeaponArmorCharm | null | undefined): piece is Weapon {
-        return !!piece && "kind" in piece;
+        return !!piece && "specials" in piece;
     }
 
     function isArmorPiece(piece: WeaponArmorCharm | null | undefined): piece is Armor {
@@ -69,10 +77,6 @@ export default function GearPiece({ gearPiece, slotKey, build, armorSets, delete
 
     function isCharmRank(piece: WeaponArmorCharm | null | undefined): piece is CharmRank {
         return !!piece && "charm" in piece && !("kind" in piece);
-    }
-
-    function isSlotLevel(x: number): x is SlotLevel {
-        return x === 1 || x === 2 || x === 3;
     }
 
     const armorIndex: Record<GearSlotKey, number> = {
@@ -114,152 +118,171 @@ export default function GearPiece({ gearPiece, slotKey, build, armorSets, delete
     }, [gearPiece, armorSets])
 
 
-
     return (
         <div className={styles.buildPieceContainer}>
             {gearPiece !== null ? (
-                <>
-                    {(isWeaponPiece(gearPiece) && gearPiece.kind && weapons.includes(gearPiece.kind) ? (
-                        <div className={styles.pieceContainerHeader} onClick={() => openWeaponSelector(slotKey)}>
-                            <span className={`${styles.buildPieceIcon}`} style={{ backgroundPosition: `calc((-64px * ${weaponIndex[gearPiece.kind]}) * var(--build-icon-size)) calc((-64px * ${rarity}) * var(--build-icon-size))` }} />
-                            <div className={styles.buildPieceInfo}>
-                                <p className={styles.pieceTitle}>{gearPiece.name}</p>
-                                <div className={styles.weaponStatsContainer}>
-                                    <div className={styles.rawValContainer}>
-                                        <span className={`${styles.statsIcon} ${styles.damageIcon}`}></span>
-                                        <p>{gearPiece.damage.raw}</p>
-                                    </div>
-                                    <div className={styles.affinityValContainer}>
-                                        <span  className={`${styles.statsIcon} ${styles.affinityIcon}`}></span>
-                                        <p>{gearPiece.affinity}%</p>
-                                    </div>
-                                    {gearPiece.specials.length !== 0 && (
-                                        <div className={styles.elementValContainer}>
-                                            {gearPiece.specials[0].hasOwnProperty("status") ? (
-                                                <>
-                                                    <span className={`${styles.statsIcon} ${styles[`${gearPiece.specials[0].status}`]}`}></span>
-                                                    <p>{gearPiece.specials[0].damage.display}</p>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <span className={`${styles.statsIcon} ${styles[`${gearPiece.specials[0].element}`]}`}></span>
-                                                    <p>{gearPiece.specials[0].damage.display}</p>
-                                                </>
-                                            )}
-                                        </div>
-                                    )}
+                isWeaponPiece(gearPiece) && gearPiece.kind && weapons.includes(gearPiece.kind) ? (
+                    <div className={styles.pieceContainerHeader} onClick={() => openWeaponSelector(slotKey)}>
+                            <span className={`${styles.buildPieceIcon}`}
+                                  style={{backgroundPosition: `calc((-64px * ${weaponIndex[gearPiece.kind]}) * var(--build-icon-size)) calc((-64px * ${rarity}) * var(--build-icon-size))`}}/>
+                        <div className={styles.buildPieceInfo}>
+                            <p className={styles.pieceTitle}>{gearPiece.name}</p>
+                            <div className={styles.weaponStatsContainer}>
+                                <div className={styles.rawValContainer}>
+                                    <span className={`${styles.statsIcon} ${styles.damageIcon}`}></span>
+                                    <p>{gearPiece.damage.raw}</p>
                                 </div>
-                                {gearPiece.sharpness && (
-                                    <div className={styles.weaponSharpness}>
-                                        {Object.entries(gearPiece.sharpness).map(([color, value]) => (
-                                            <div key={color} className={`${styles.sharpnessColor} ${styles[color]}`} style={{ width: `${(value / 400) * 150}px`}}></div>
-                                        ))}
+                                <div className={styles.affinityValContainer}>
+                                    <span className={`${styles.statsIcon} ${styles.affinityIcon}`}></span>
+                                    <p>{gearPiece.affinity}%</p>
+                                </div>
+                                {gearPiece.specials.length !== 0 && (
+                                    <div className={styles.elementValContainer}>
+                                        {gearPiece.specials[0].hasOwnProperty("status") ? (
+                                            <>
+                                                    <span
+                                                        className={`${styles.statsIcon} ${styles[`${gearPiece.specials[0].status}`]}`}></span>
+                                                <p>{gearPiece.specials[0].damage.display}</p>
+                                            </>
+                                        ) : (
+                                            <>
+                                                    <span
+                                                        className={`${styles.statsIcon} ${styles[`${gearPiece.specials[0].element}`]}`}></span>
+                                                <p>{gearPiece.specials[0].damage.display}</p>
+                                            </>
+                                        )}
                                     </div>
                                 )}
-                                <div className={styles.gearPieceSkillsContainer}>
-                                    {gearPiece.bonuses && (
-                                        <>
-                                            <p className={styles.setBonusSkillName}>{gearPiece.bonuses.setBonus}</p>
-                                            <p className={styles.groupSkillName}>{gearPiece.bonuses.groupBonus}</p>
-                                        </>
-                                    )}
-                                </div>
-                                <div className={styles.gearPieceSkillsContainer}>
-                                    {gearPiece.skills.map((skill, i) => (
-                                        <p key={i}>{skill.skill.name} {skill.level}</p>
-                                    ))}
-                                    {gearPiece.reinforcements?.map((reinforcement, i) => (
-                                        <p key={i} className={`${reinforcement.lvl === "EX" ? styles.EX : styles.notEX}`}>{reinforcement.reinforcement} {reinforcement.lvl}</p>
-                                    ))}
-                                </div>
                             </div>
-                            <button className={styles.deleteBtn} onClick={(e) => {e.stopPropagation(); deleteBuildItem(slotKey);}}><XMarkIcon /></button>
+                            {gearPiece.sharpness && (
+                                <div className={styles.weaponSharpness}>
+                                    {Object.entries(gearPiece.sharpness).map(([color, value]) => (
+                                        <div key={color} className={`${styles.sharpnessColor} ${styles[color]}`}
+                                             style={{width: `${(value / 400) * 150}px`}}></div>
+                                    ))}
+                                </div>
+                            )}
+                            <div className={styles.gearPieceSkillsContainer}>
+                                {gearPiece.bonuses && (
+                                    <>
+                                        <p className={styles.setBonusSkillName}>{gearPiece.bonuses.setBonus}</p>
+                                        <p className={styles.groupSkillName}>{gearPiece.bonuses.groupBonus}</p>
+                                    </>
+                                )}
+                            </div>
+                            <div className={styles.gearPieceSkillsContainer}>
+                                {gearPiece.skills.map((skill, i) => (
+                                    <p key={i}>{skill.skill.name} {skill.level}</p>
+                                ))}
+                                {gearPiece.reinforcements?.map((reinforcement, i) => (
+                                    <p key={i}
+                                       className={`${reinforcement.lvl === "EX" ? styles.EX : styles.notEX}`}>{reinforcement.reinforcement} {reinforcement.lvl}</p>
+                                ))}
+                            </div>
                         </div>
-                    ) : (
-                        <div className={styles.pieceContainerHeader} onClick={() => openGearSelector(slotKey)}>
+                        <button className={styles.deleteBtn} onClick={(e) => {
+                            e.stopPropagation();
+                            deleteBuildItem(slotKey);
+                        }}><XMarkIcon/></button>
+                    </div>
+                ) : isArmorPiece(gearPiece) ? (
+                    <div className={styles.pieceContainerHeader} onClick={() => openGearSelector(slotKey)}>
                   <span
                       className={styles.buildPieceIcon}
-                      style={{ backgroundPosition: bgPos }}
+                      style={{backgroundPosition: bgPos}}
                   />
-                            <div className={styles.buildPieceInfo}>
-                                <p className={styles.pieceTitle}>{gearPiece?.name ?? ""}</p>
-                                <div className={styles.gearPieceSkillsContainer}>
+                        <div className={styles.buildPieceInfo}>
+                            <p className={styles.pieceTitle}>{gearPiece?.name ?? ""}</p>
+                            <div className={styles.gearPieceSkillsContainer}>
+                                {gearPiece.skills.map((skill, i) => (
+                                    "kind" in skill.skill && skill.skill.kind !== "set" && (
+                                        <p key={i}>{skill.skill.name} {skill.level}</p>
+                                    )
+                                ))}
 
-                                    {gearPiece.skills.map((skill, i) => (
-                                        "kind" in skill.skill && skill.skill.kind !== "set" && (
-                                            <p key={i}>{skill.skill.name} {skill.level}</p>
-                                        )
-                                    ))}
-
-                                    {findBonuses?.setBonuses.map((bonus, i) => (
-                                        <p key={i} className={styles.setBonusSkillName}>{bonus}</p>
-                                    ))}
-                                    {findBonuses?.groupBonuses.map((bonus, i) => (
-                                        <p key={i} className={styles.groupSkillName}>{bonus}</p>
-                                    ))}
-                                </div>
+                                {findBonuses?.setBonuses.map((bonus, i) => (
+                                    <p key={i} className={styles.setBonusSkillName}>{bonus}</p>
+                                ))}
+                                {findBonuses?.groupBonuses.map((bonus, i) => (
+                                    <p key={i} className={styles.groupSkillName}>{bonus}</p>
+                                ))}
                             </div>
-                            <button className={styles.deleteBtn} onClick={(e) => {e.stopPropagation(); deleteBuildItem(slotKey);}}><XMarkIcon /></button>
                         </div>
-                    ))}
-
-                    {/* ✅ Decorations only for THIS piece */}
-                    {(isWeaponPiece(gearPiece) || isArmorPiece(gearPiece)) && gearPiece.slots.length > 0 && (
-                        <>
-                            <div className={styles.decoSlotsContainer}>
-                                {gearPiece.slots.map((s, i) => {
-                                    const key = `${slotKey}-slot-${i}`;
-                                    let placement;
-                                    if (slotKey !== "charm") {
-                                        placement = build?.decorations?.[slotKey]?.[i];
-                                    }
-                                    const canFit = placement?.slotLevel != null && placement.slotLevel <= s; // optional check
-
-                                    return (
-                                        <div
-                                            key={key}
-                                            className={styles.slot}
-                                            onClick={() => openDecoSelector(s, slotKey === "weapon" ? "weapon" : "armor", slotKey, i)}
-                                        >
-                                            <span className={`${styles.decoIcon} ${styles[`deco${s}`]}`} />
-
-                                            {/* Inlaid deco display */}
-                                            {s > 0 && placement?.decoration && canFit && (
-                                                <div className={styles.slottedDeco}>
-                                                    <p className={styles.inlaidDecoName}>{placement.decoration.name}</p>
-                                                    <button className={styles.decoDeleteBtn} onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        deleteDecoration(slotKey, i);
-                                                    }}><XMarkIcon /></button>
-                                                </div>
-                                            )}
-                                        </div>
-                                    );
-                                })}
+                        <button className={styles.deleteBtn} onClick={(e) => {
+                            e.stopPropagation();
+                            deleteBuildItem(slotKey);
+                        }}><XMarkIcon/></button>
+                    </div>
+                ) : isCharmRank(gearPiece) ? (
+                    <div className={styles.pieceContainerHeader} onClick={() => openGearSelector(slotKey)}>
+                  <span
+                      className={styles.buildPieceIcon}
+                      style={{backgroundPosition: bgPos}}
+                  />
+                        <div className={styles.buildPieceInfo}>
+                            <p className={styles.pieceTitle}>{gearPiece?.name ?? ""}</p>
+                            <div className={styles.gearPieceSkillsContainer}>
+                                {gearPiece.skills.map((skill, i) => (
+                                    <p key={i}>{skill.skill.name} {skill.level}</p>
+                                ))}
                             </div>
-                        </>
-                    )}
-
-                    {/* Optional: you can render charm info differently if you want */}
-                    {isCharmRank(gearPiece) && null}
-                </>
+                        </div>
+                        <button className={styles.deleteBtn} onClick={(e) => {
+                            e.stopPropagation();
+                            deleteBuildItem(slotKey);
+                        }}><XMarkIcon/></button>
+                    </div>
+                ) : null
             ) : (
+                slotKey === "weapon" ? (
+                    <div className={styles.pieceContainerHeader} onClick={() => openWeaponSelector(slotKey)}>
+                        <span className={styles.buildPieceIcon} style={{backgroundPosition: bgPos}}></span>
+                        <div className={styles.buildPieceInfo}>
+                            <p className={styles.pieceTitle}>None</p>
+                        </div>
+                    </div>
+                ) : (
+                    <div className={styles.pieceContainerHeader} onClick={() => openGearSelector(slotKey)}>
+                        <span className={styles.buildPieceIcon} style={{backgroundPosition: bgPos}}></span>
+                        <div className={styles.buildPieceInfo}>
+                            <p className={styles.pieceTitle}>None</p>
+                        </div>
+                    </div>
+                )
+            )}
+            {(isWeaponPiece(gearPiece) || isArmorPiece(gearPiece)) && gearPiece.slots.length > 0 && (
                 <>
-                    {slotKey === "weapon" ? (
-                        <div className={styles.pieceContainerHeader} onClick={() => openWeaponSelector(slotKey)}>
-                            <span className={styles.buildPieceIcon} style={{ backgroundPosition: bgPos }}></span>
-                            <div className={styles.buildPieceInfo}>
-                                <p className={styles.pieceTitle}>None</p>
-                            </div>
-                        </div>
-                    ) : (
-                        <div className={styles.pieceContainerHeader} onClick={() => openGearSelector(slotKey)}>
-                            <span className={styles.buildPieceIcon} style={{ backgroundPosition: bgPos }}></span>
-                            <div className={styles.buildPieceInfo}>
-                                <p className={styles.pieceTitle}>None</p>
-                            </div>
-                        </div>
-                    )}
+                    <div className={styles.decoSlotsContainer}>
+                        {gearPiece.slots.map((s, i) => {
+                            const key = `${slotKey}-slot-${i}`;
+                            let placement;
+                            if (slotKey !== "charm") {
+                                placement = build?.decorations?.[slotKey]?.[i];
+                            }
+                            const canFit = placement?.slotLevel != null && placement.slotLevel <= s; // optional check
+
+                            return (
+                                <div
+                                    key={key}
+                                    className={styles.slot}
+                                    onClick={() => openDecoSelector(s, slotKey === "weapon" ? "weapon" : "armor", slotKey, i)}
+                                >
+                                    <span className={`${styles.decoIcon} ${styles[`deco${s}`]}`}/>
+
+                                    {/* Inlaid deco display */}
+                                    {s > 0 && placement?.decoration && canFit && (
+                                        <div className={styles.slottedDeco}>
+                                            <p className={styles.inlaidDecoName}>{placement.decoration.name}</p>
+                                            <button className={styles.decoDeleteBtn} onClick={(e) => {
+                                                e.stopPropagation();
+                                                deleteDecoration(slotKey, i);
+                                            }}><XMarkIcon/></button>
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
                 </>
             )}
         </div>

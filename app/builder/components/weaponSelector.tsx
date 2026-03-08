@@ -164,9 +164,9 @@ export default function WeaponSelector({ weaponSelectorOpen, setWeaponSelectorOp
                             ))}
                         </div>
                     </div>
+                    <button className={styles.closeBtn} onClick={() => setWeaponSelectorOpen(false)}><XMarkIcon /></button>
                 </div>
                 <ArtianCreator showArtian={showArtian} setShowArtian={setShowArtian} addWeapon={addWeapon} />
-                <button className={styles.closeBtn} onClick={() => setWeaponSelectorOpen(false)}><XMarkIcon /></button>
             </div>
         </div>
     )

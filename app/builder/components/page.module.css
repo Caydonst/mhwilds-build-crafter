@@ -165,7 +165,7 @@
     cursor: pointer;
 }
 .artianWeaponBtn:hover {
-    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.3);
 }
 .slideLeft {
     transform: translateX(calc(-100% - 20px));
@@ -319,7 +319,7 @@
 .equipmentSkillsContainer {
     width: 100%;
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 16px;
 }
 .equipSkillsHeader {
@@ -425,7 +425,7 @@
     color: #fff;
     width: 100%;
     height: 100%;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
     background: rgba(255, 255, 255, 0.05);
     overflow: hidden;
@@ -591,7 +591,7 @@
     gap: 5px;
     width: 100%;
     padding: 10px;
-    border-left: 1px solid rgba(255, 255, 255, 0.05);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
 }
 .slot {
     width: 100%;
@@ -964,7 +964,7 @@
     }
     .decoSlotsContainer {
         border-left: unset;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
 }
 @media (max-width: 600px) {
@@ -973,7 +973,7 @@
     }
     .decoSlotsContainer {
         border-left: unset;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
 }
 @media (max-width: 500px) {

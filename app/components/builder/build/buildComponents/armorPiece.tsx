@@ -7,7 +7,6 @@ type ArmorSlotKey = "head" | "chest" | "arms" | "waist" | "legs";
 type GearSlotKey = ArmorSlotKey | "charm";
 type WeaponArmorCharm = Weapon | Armor | CharmRank;
 const ARMOR_KINDS = ["head", "chest", "arms", "waist", "legs"] as const;
-type ArmorKind = typeof ARMOR_KINDS[number];
 
 interface Props {
     gearPiece: WeaponArmorCharm | null;
@@ -51,10 +50,8 @@ export default function ArmorPiece({ gearPiece, armorSets, slotKey, build }: Pro
         "sword-shield": 0,
     }
 
-    type WeaponKind = typeof weapons[number];
-
     function isWeaponPiece(piece: WeaponArmorCharm | null | undefined): piece is Weapon {
-        return !!piece && "kind" in piece;
+        return !!piece && "specials" in piece;
     }
 
     function isArmorPiece(piece: WeaponArmorCharm | null | undefined): piece is Armor {
@@ -63,10 +60,6 @@ export default function ArmorPiece({ gearPiece, armorSets, slotKey, build }: Pro
 
     function isCharmRank(piece: WeaponArmorCharm | null | undefined): piece is CharmRank {
         return !!piece && "charm" in piece && !("kind" in piece);
-    }
-
-    function isSlotLevel(x: number): x is SlotLevel {
-        return x === 1 || x === 2 || x === 3;
     }
 
     const armorIndex: Record<GearSlotKey, number> = {
@@ -79,8 +72,7 @@ export default function ArmorPiece({ gearPiece, armorSets, slotKey, build }: Pro
     };
 
     let rarity;
-    let bgPos
-    let armorSlots
+    let bgPos;
 
     if (gearPiece) {
         rarity = gearPiece?.rarity ?? 0;
@@ -94,13 +86,6 @@ export default function ArmorPiece({ gearPiece, armorSets, slotKey, build }: Pro
                     : armorIndex.charm;
 
         bgPos = `calc((-64px * ${spriteX}) * var(--build-icon-size)) calc((-64px * ${rarity}) * var(--build-icon-size))`;
-
-        const ZEROS = [0, 0, 0] as const;
-        // Normalize armor slots to SlotLevel[]
-        armorSlots =
-            isArmorPiece(gearPiece)
-                ? ([...gearPiece.slots.filter(isSlotLevel), ...ZEROS].slice(0, 3))
-                : [...ZEROS];
     }
 
     if (!isArmorPiece(gearPiece) && !isCharmRank(gearPiece)) {
@@ -116,115 +101,121 @@ export default function ArmorPiece({ gearPiece, armorSets, slotKey, build }: Pro
     return (
         <div className={styles.buildPieceContainer}>
             {gearPiece !== null ? (
-                <>
-                    {(isWeaponPiece(gearPiece) && gearPiece.kind && weapons.includes(gearPiece.kind) ? (
-                        <div className={styles.pieceContainerHeader}>
-                            <span className={`${styles.buildPieceIcon}`} style={{ backgroundPosition: `calc((-64px * ${weaponIndex[gearPiece.kind]}) * var(--build-icon-size)) calc((-64px * ${rarity}) * var(--build-icon-size))` }} />
-                            <div className={styles.buildPieceInfo}>
-                                <p className={styles.pieceTitle}>{gearPiece.name}</p>
-                                <div className={styles.weaponStatsContainer}>
-                                    <div className={styles.rawValContainer}>
-                                        <span className={`${styles.statsIcon} ${styles.damageIcon}`}></span>
-                                        <p>{gearPiece.damage.raw}</p>
-                                    </div>
-                                    <div className={styles.affinityValContainer}>
-                                        <span  className={`${styles.statsIcon} ${styles.affinityIcon}`}></span>
-                                        <p>{gearPiece.affinity}%</p>
-                                    </div>
-                                    {gearPiece.specials.length !== 0 && (
-                                        <div className={styles.elementValContainer}>
-                                            {gearPiece.specials[0].hasOwnProperty("status") ? (
-                                                <>
-                                                    <span className={`${styles.statsIcon} ${styles[`${gearPiece.specials[0].status}`]}`}></span>
-                                                    <p>{gearPiece.specials[0].damage.display}</p>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <span className={`${styles.statsIcon} ${styles[`${gearPiece.specials[0].element}`]}`}></span>
-                                                    <p>{gearPiece.specials[0].damage.display}</p>
-                                                </>
-                                            )}
-                                        </div>
-                                    )}
+                isWeaponPiece(gearPiece) && gearPiece.kind && weapons.includes(gearPiece.kind) ? (
+                    <div className={styles.pieceContainerHeader}>
+                        <span className={`${styles.buildPieceIcon}`} style={{ backgroundPosition: `calc((-64px * ${weaponIndex[gearPiece.kind]}) * var(--build-icon-size)) calc((-64px * ${rarity}) * var(--build-icon-size))` }} />
+                        <div className={styles.buildPieceInfo}>
+                            <p className={styles.pieceTitle}>{gearPiece.name}</p>
+                            <div className={styles.weaponStatsContainer}>
+                                <div className={styles.rawValContainer}>
+                                    <span className={`${styles.statsIcon} ${styles.damageIcon}`}></span>
+                                    <p>{gearPiece.damage.raw}</p>
                                 </div>
-                                {gearPiece.sharpness && (
-                                    <div className={styles.weaponSharpness}>
-                                        {Object.entries(gearPiece.sharpness).map(([color, value]) => (
-                                            <div key={color} className={`${styles.sharpnessColor} ${styles[color]}`} style={{ width: `${(value / 400) * 150}px`}}></div>
-                                        ))}
+                                <div className={styles.affinityValContainer}>
+                                    <span  className={`${styles.statsIcon} ${styles.affinityIcon}`}></span>
+                                    <p>{gearPiece.affinity}%</p>
+                                </div>
+                                {gearPiece.specials.length !== 0 && (
+                                    <div className={styles.elementValContainer}>
+                                        {gearPiece.specials[0].hasOwnProperty("status") ? (
+                                            <>
+                                                <span className={`${styles.statsIcon} ${styles[`${gearPiece.specials[0].status}`]}`}></span>
+                                                <p>{gearPiece.specials[0].damage.display}</p>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <span className={`${styles.statsIcon} ${styles[`${gearPiece.specials[0].element}`]}`}></span>
+                                                <p>{gearPiece.specials[0].damage.display}</p>
+                                            </>
+                                        )}
                                     </div>
                                 )}
-                                <div className={styles.gearPieceSkillsContainer}>
-                                    {gearPiece.skills.map((skill, i) => (
-                                        <p key={i}>{skill.skill.name} {skill.level}</p>
+                            </div>
+                            {gearPiece.sharpness && (
+                                <div className={styles.weaponSharpness}>
+                                    {Object.entries(gearPiece.sharpness).map(([color, value]) => (
+                                        <div key={color} className={`${styles.sharpnessColor} ${styles[color]}`} style={{ width: `${(value / 400) * 150}px`}}></div>
                                     ))}
                                 </div>
+                            )}
+                            <div className={styles.gearPieceSkillsContainer}>
+                                {gearPiece.skills.map((skill, i) => (
+                                    <p key={i}>{skill.skill.name} {skill.level}</p>
+                                ))}
                             </div>
                         </div>
-                    ) : (
-                        <div className={styles.pieceContainerHeader}>
-                  <span
-                      className={styles.buildPieceIcon}
-                      style={{ backgroundPosition: bgPos }}
-                  />
-                            <div className={styles.buildPieceInfo}>
-                                <p className={styles.pieceTitle}>{gearPiece?.name ?? ""}</p>
-                                <div className={styles.gearPieceSkillsContainer}>
-
-                                    {gearPiece.skills.map((skill, i) => (
-                                        "kind" in skill.skill && skill.skill.kind !== "set" && (
-                                            <p key={i}>{skill.skill.name} {skill.level}</p>
-                                        )
-                                    ))}
-                                    {findBonuses?.setBonuses.map((bonus, i) => (
-                                        <p key={i} className={styles.setBonusSkillName}>{bonus}</p>
-                                    ))}
-                                    {findBonuses?.groupBonuses.map((bonus, i) => (
-                                        <p key={i} className={styles.groupSkillName}>{bonus}</p>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-
-                    {/* ✅ Decorations only for THIS piece */}
-                    <div className={styles.decoSlotsContainer}>
-                        {!isCharmRank(gearPiece) && gearPiece.slots.map((s, i) => {
-                            const placement = build?.decorations?.[slotKey as ArmorSlotKey]?.[i];
-                            const key = `${slotKey}-slot-${i}`;
-                            return (
-                                <div key={key} className={styles.slot}>
-                                    {s === 0 ? (
-                                        <div className={styles.decoDash}>
-                                            <p>-</p>
-                                        </div>
-                                    ) : (
-                                        <span className={`${styles.decoIcon} ${styles[`deco${s}`]}`} />
-                                    )}
-                                    {placement && placement.slotLevel <= s && (
-                                        <p>{placement.decoration?.name ?? ""}</p>
-                                    )}
-                                </div>
-                            );
-                        })}
                     </div>
-
-                    {/* Optional: you can render charm info differently if you want */}
-                    {slotKey === "charm" && isCharmRank(gearPiece) && null}
-                </>
-            ) : (
-                <>
+                ) : isArmorPiece(gearPiece) ? (
                     <div className={styles.pieceContainerHeader}>
                   <span
                       className={styles.buildPieceIcon}
                       style={{ backgroundPosition: bgPos }}
                   />
                         <div className={styles.buildPieceInfo}>
-                            <p className={styles.pieceTitle}>None</p>
+                            <p className={styles.pieceTitle}>{gearPiece?.name ?? ""}</p>
+                            <div className={styles.gearPieceSkillsContainer}>
+
+                                {gearPiece.skills.map((skill, i) => (
+                                    "kind" in skill.skill && skill.skill.kind !== "set" && (
+                                        <p key={i}>{skill.skill.name} {skill.level}</p>
+                                    )
+                                ))}
+                                {findBonuses?.setBonuses.map((bonus, i) => (
+                                    <p key={i} className={styles.setBonusSkillName}>{bonus}</p>
+                                ))}
+                                {findBonuses?.groupBonuses.map((bonus, i) => (
+                                    <p key={i} className={styles.groupSkillName}>{bonus}</p>
+                                ))}
+                            </div>
                         </div>
                     </div>
-                </>
+                ) : isCharmRank(gearPiece) ? (
+                    <div className={styles.pieceContainerHeader}>
+                  <span
+                      className={styles.buildPieceIcon}
+                      style={{backgroundPosition: bgPos}}
+                  />
+                        <div className={styles.buildPieceInfo}>
+                            <p className={styles.pieceTitle}>{gearPiece?.name ?? ""}</p>
+                            <div className={styles.gearPieceSkillsContainer}>
+                                {gearPiece.skills.map((skill, i) => (
+                                    <p key={i}>{skill.skill.name} {skill.level}</p>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                ) : null
+            ) : (
+                <div className={styles.pieceContainerHeader}>
+                  <span
+                      className={styles.buildPieceIcon}
+                      style={{ backgroundPosition: bgPos }}
+                  />
+                    <div className={styles.buildPieceInfo}>
+                        <p className={styles.pieceTitle}>None</p>
+                    </div>
+                </div>
             )}
+            <div className={styles.decoSlotsContainer}>
+                {!isCharmRank(gearPiece) && gearPiece?.slots.map((s, i) => {
+                    const placement = build?.decorations?.[slotKey as ArmorSlotKey]?.[i];
+                    const key = `${slotKey}-slot-${i}`;
+                    return (
+                        <div key={key} className={styles.slot}>
+                            {s === 0 ? (
+                                <div className={styles.decoDash}>
+                                    <p>-</p>
+                                </div>
+                            ) : (
+                                <span className={`${styles.decoIcon} ${styles[`deco${s}`]}`} />
+                            )}
+                            {placement && placement.slotLevel <= s && (
+                                <p>{placement.decoration?.name ?? ""}</p>
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
         </div>
     )
 }

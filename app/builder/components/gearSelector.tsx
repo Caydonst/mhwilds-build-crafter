@@ -4,6 +4,7 @@ import React, {useState} from "react";
 import {useGameData} from "@/app/hooks/useGameData";
 import ArmorPiece from "@/app/components/builder/build/buildComponents/armorPiece"
 import type {BuilderBuild, Armor, CharmRank, DecoPlacement, Skill} from "@/app/api/types/types";
+import CharmCreator from "@/app/components/charmCreator/charmCreator"
 
 type ArmorSlotKey = "weapon" | "head" | "chest" | "arms" | "waist" | "legs" | "charm";
 
@@ -18,6 +19,7 @@ interface Props {
 export default function GearSelector({ gearSelectorOpen, setGearSelectorOpen, type, build, setBuild }: Props) {
     const { weapons, armorBySlot, charms } = useGameData();
     const [searchQuery, setSearchQuery] = useState<string>("");
+    const [charmCreatorOpen, setCharmCreatorOpen] = useState<boolean>(false);
 
     let gear: (Armor | CharmRank)[];
 
@@ -84,6 +86,9 @@ export default function GearSelector({ gearSelectorOpen, setGearSelectorOpen, ty
                         <div className={styles.searchContainer}>
                             <p>{type.charAt(0).toUpperCase() + type.slice(1)}</p>
                             <input type={"text"} placeholder={"Search"} value={searchQuery} onChange={(e) => updateSearchQuery(e)} />
+                            {type === "charm" && (
+                                <button className={styles.artianWeaponBtn} onClick={() => setCharmCreatorOpen(true)}>+ Custom Charm</button>
+                            )}
                         </div>
                     </div>
                     {type !== "charm" && (
@@ -110,6 +115,7 @@ export default function GearSelector({ gearSelectorOpen, setGearSelectorOpen, ty
                         </div>
                     </div>
                 </div>
+                <CharmCreator charmCreatorOpen={charmCreatorOpen} setCharmCreatorOpen={setCharmCreatorOpen} />
             </div>
         </div>
     )
