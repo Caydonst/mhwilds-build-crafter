@@ -1,6 +1,6 @@
 :root {
     --weapon-icon-size: 0.50;
-    --stats-icon-size: 0.30;
+    --stats-icon-size: 0.35;
 }
 
 .gearSelectorContainer {
@@ -19,6 +19,7 @@
     animation: fadeIn 0.15s;
     z-index: 2;
     padding: 10px;
+
 }
 @keyframes fadeIn {
     from {
@@ -354,7 +355,7 @@
     padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
     color: #fff;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(255, 255, 255, 0.02);

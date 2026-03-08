@@ -20,9 +20,6 @@ export default function SkillsComponent({ build, skills, armorSets }: Props) {
     const [equipSkillsOpen, setEquipSkillsOpen] = useState(true);
     const [bonusSkillsOpen, setBonusSkillsOpen] = useState(true);
     const [groupSkillsOpen, setGroupSkillsOpen] = useState(true);
-    //const [equipSkillsHeight, setEquipSkillsHeight] = useState<number>(70);
-    //const [bonusSkillsHeight, setBonusSkillsHeight] = useState<number>(70);
-    //const [groupSkillsHeight, setGroupSkillsHeight] = useState<number>(70);
     const equipSkillsRef = useRef<HTMLDivElement>(null);
     const bonusSkillsRef = useRef<HTMLDivElement>(null);
     const groupSkillsRef = useRef<HTMLDivElement>(null);

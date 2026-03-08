@@ -167,15 +167,19 @@
     background: #0A0A0A;
     z-index: 3;
     max-height: 400px;
-    overflow-y: auto;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
-.reinforcementDropdown::-webkit-scrollbar {
+.dropdownSkillsContainer::-webkit-scrollbar {
     width: 10px;
 }
-.reinforcementDropdown::-webkit-scrollbar-track {
+.dropdownSkillsContainer::-webkit-scrollbar-track {
     background: transparent;
 }
-.reinforcementDropdown::-webkit-scrollbar-thumb {
+.dropdownSkillsContainer::-webkit-scrollbar-thumb {
     background: rgba(255,255,255,0.3);
     border-radius: 10px;
     background-clip: padding-box;
@@ -186,7 +190,19 @@
     height: 16px;
     color: #fff;
 }
-.reinforcementDropdown button {
+.dropdownSkillsContainer button:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+.dropdownSkillsContainer {
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    padding: 0 5px 5px 5px;
+    overflow: auto;
+}
+.dropdownSkillsContainer button {
     width: 100%;
     height: 40px;
     color: #fff;
@@ -200,24 +216,12 @@
     gap: 5px;
     padding: 0 10px;
     font-size: 14px;
-}
-.reinforcementDropdown button:hover {
-    background: rgba(255, 255, 255, 0.1);
-}
-.dropdownSkillsContainer {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    padding: 5px;
+    font-weight: 300;
 }
 .searchContainer input:focus {
     border-color: #fff;
 }
 .searchContainer {
-    position: sticky;
-    top: 0;
     height: 50px;
     width: 100%;
     display: flex;
@@ -255,7 +259,7 @@
     height: 100%;
     width: 100%;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
+    border-radius: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -314,4 +318,56 @@
 }
 .addBtn:disabled:hover {
     background: #153823;
+}
+
+.skillIcon {
+    display: inline-block;
+    flex-shrink: 0;
+    width: calc(100px * var(--size-factor));
+    height: calc(100px * var(--size-factor));
+    background-image: url("@/app/assets/skills.png");
+    background-size: calc(1400px * var(--size-factor)) calc(100px * var(--size-factor)); /* or set to sheet width/height if scaling */
+    background-repeat: no-repeat;
+}
+.skill1 {
+    background-position: 0 0;
+}
+.skill2 {
+    background-position: calc(-100px * var(--size-factor)) 0;
+}
+.skill3 {
+    background-position: calc(-200px * var(--size-factor)) 0;
+}
+.skill4 {
+    background-position: calc(-300px * var(--size-factor)) 0;
+}
+.skill5 {
+    background-position: calc(-400px * var(--size-factor)) 0;
+}
+.skill6 {
+    background-position: calc(-500px * var(--size-factor)) 0;
+}
+.skill7 {
+    background-position: calc(-600px * var(--size-factor)) 0;
+}
+.skill8 {
+    background-position: calc(-700px * var(--size-factor)) 0;
+}
+.skill9 {
+    background-position: calc(-800px * var(--size-factor)) 0;
+}
+.skill10 {
+    background-position: calc(-900px * var(--size-factor)) 0;
+}
+.skill11 {
+    background-position: calc(-1000px * var(--size-factor)) 0;
+}
+.skill12 {
+    background-position: calc(-1100px * var(--size-factor)) 0;
+}
+.skill13 {
+    background-position: calc(-1200px * var(--size-factor)) 0;
+}
+.skill14 {
+    background-position: calc(-1300px * var(--size-factor)) 0;
 }
