@@ -124,7 +124,7 @@ export function findBonuses(build: BuilderBuild, armorSets: ArmorSet[], skills: 
             }
 
             for (const skill of piece.skills) {
-                if (skill.skill.kind === "set") {
+                if ("kind" in skill.skill && skill.skill.kind === "set") {
                     const setBonus = bonusesArray.find(bonus => bonus.id === skill.skill.id);
                     if (setBonus) {
                         setBonus.count++
@@ -196,7 +196,7 @@ export function findGearPieceBonuses(piece: Armor, armorSets: ArmorSet[]) {
     }
 
     piece.skills.forEach(skill => {
-        if (skill.skill.kind === "set") {
+        if ("kind" in skill.skill && skill.skill.kind === "set") {
             setBonuses.push(skill.skill.name);
         }
     })

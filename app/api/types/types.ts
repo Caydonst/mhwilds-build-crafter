@@ -303,7 +303,7 @@ export interface CharmRank {
     description: string;
     level: number;
     rarity: number;
-    skills: CharmSkill[];
+    skills: ArmorSkill[];
     crafting: CharmRankCrafting | null;
 }
 
