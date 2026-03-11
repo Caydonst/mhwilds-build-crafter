@@ -687,6 +687,7 @@ export function generateBuild(
             waist: [],
             legs: [],
             weapon: [], // NEW/CHANGED
+            charm: [],
         };
 
         if (slotRefsKinded.length === 0) {

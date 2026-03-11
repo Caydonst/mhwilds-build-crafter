@@ -10,10 +10,6 @@ interface Props {
 
 export default function GearPieceBreakdown({ buildStats, skillData }: Props) {
 
-    function getMaxLvl(skill: ArmorSkill) {
-        return skill.skill.ranks[skill.skill.ranks.length-1].level;
-    }
-
     console.log(buildStats);
 
     return (
