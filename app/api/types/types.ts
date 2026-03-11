@@ -386,7 +386,7 @@ export type DecoPlacement = {
     decoration: Decoration | null;
 };
 
-export type BuildDecorationSlot = "head" | "chest" | "arms" | "waist" | "legs" | "weapon";
+export type BuildDecorationSlot =  "weapon" | "head" | "chest" | "arms" | "waist" | "legs" | "charm";
 
 export type BuildDecorations = Record<BuildDecorationSlot, DecoPlacement[]>;
 

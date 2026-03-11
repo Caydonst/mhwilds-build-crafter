@@ -29,6 +29,7 @@ export default function DecoSelector({ decoSlotIndex, slotLevel, kind, decoSelec
         arms: [],
         waist: [],
         legs: [],
+        charm: [],
     };
 
     const thisKind = useMemo(() => {
@@ -45,7 +46,7 @@ export default function DecoSelector({ decoSlotIndex, slotLevel, kind, decoSelec
 
     function addDecoration(decoration: DecoType) {
         if (!decoration) return;
-        if (type === "charm") return;
+        //if (type === "charm") return;
 
         setBuild(prev => {
             const decos = prev.decorations ?? DEFAULT_DECOS;

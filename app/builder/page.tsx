@@ -38,6 +38,7 @@ export default function Builder() {
             arms: [],
             waist: [],
             legs: [],
+            charm: [],
         },
     });
     const [selectedPage, setSelectedPage] = useState<string>("gear");
@@ -50,6 +51,7 @@ export default function Builder() {
         arms: [],
         waist: [],
         legs: [],
+        charm: [],
     };
 
     function updateSlider(page: string, amt: number) {
@@ -106,10 +108,6 @@ export default function Builder() {
     function deleteDecoration(slotKey: ArmorSlotKey, slotIndex: number) {
         setBuild((prev) => {
             const decos = prev.decorations ?? DEFAULT_DECOS;
-
-
-            // charms don't have deco slots
-            if (slotKey === "charm") return prev;
 
             const nextSlot = [...prev.decorations[slotKey]];
             nextSlot[slotIndex] = {

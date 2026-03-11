@@ -216,7 +216,7 @@ export default function GearPiece({
                             deleteBuildItem(slotKey);
                         }}><XMarkIcon/></button>
                     </div>
-                ) : isCharmRank(gearPiece) ? (
+                ) : isCharmRank(gearPiece) || isCustomCharm(gearPiece) ? (
                     <div className={styles.pieceContainerHeader} onClick={() => openGearSelector(slotKey)}>
                   <span
                       className={styles.buildPieceIcon}
@@ -253,15 +253,12 @@ export default function GearPiece({
                     </div>
                 )
             )}
-            {(isWeaponPiece(gearPiece) || isArmorPiece(gearPiece)) || isCustomCharm(gearPiece) && gearPiece.slots.length > 0 && (
+            {(isWeaponPiece(gearPiece) || isArmorPiece(gearPiece) || isCustomCharm(gearPiece)) && gearPiece.slots.length > 0 && (
                 <>
                     <div className={styles.decoSlotsContainer}>
                         {gearPiece.slots.map((s, i) => {
                             const key = `${slotKey}-slot-${i}`;
-                            let placement;
-                            if (slotKey !== "charm") {
-                                placement = build?.decorations?.[slotKey]?.[i];
-                            }
+                            const placement = build?.decorations?.[slotKey]?.[i];
                             const canFit = placement?.slotLevel != null && placement.slotLevel <= s; // optional check
 
                             return (
