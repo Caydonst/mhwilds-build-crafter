@@ -3,11 +3,15 @@ import React, {useEffect, useRef, useState} from "react"
 import {ChevronDownIcon} from "@heroicons/react/24/outline";
 import {useGameData} from "@/app/hooks/useGameData";
 import {XMarkIcon, InformationCircleIcon} from "@heroicons/react/24/outline";
-import {Skill} from "@/app/api/types/types";
+import {type BuilderBuild, Skill} from "@/app/api/types/types";
+import {createCharm} from "./helperFunctions"
 
 type props = {
     charmCreatorOpen: boolean;
     setCharmCreatorOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    setGearSelectorOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    setBuild: React.Dispatch<React.SetStateAction<BuilderBuild>>;
+    build: BuilderBuild;
 }
 
 type CharmSkill = {
@@ -17,7 +21,7 @@ type CharmSkill = {
     level: number;
 }
 
-export default function CharmCreator({ charmCreatorOpen, setCharmCreatorOpen }: props) {
+export default function CharmCreator({ charmCreatorOpen, setCharmCreatorOpen, setGearSelectorOpen, setBuild, build }: props) {
     const { skills } = useGameData();
 
     const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -26,12 +30,19 @@ export default function CharmCreator({ charmCreatorOpen, setCharmCreatorOpen }: 
     const [currentSkillId, setCurrentSkillId] = useState(0);
     const [decoList, setDecoList] = useState([0]);
     const [searchQuery, setSearchQuery] = useState("");
-    const [decoInputValues, setDecoInputValues] = useState({
-        input1: "",
-        input2: "",
-        input3: ""
-    });
     const dropdownRefs = useRef<Record<string, HTMLDivElement | null>>({});
+    const [allDecoSlots, setAllDecoSlots] = useState([
+        ["None"],
+        ["1"],
+        ["1", "1"],
+        ["2"],
+        ["2", "1"],
+        ["3"],
+        ["W1"],
+        ["W1", "1"],
+        ["W1", "1", "1"],
+    ]);
+    const [selectedDecoCard, setSelectedDecoCard] = useState<number>(0);
 
     function addSkill() {
         const newId = currentSkillId + 1;
@@ -77,6 +88,21 @@ export default function CharmCreator({ charmCreatorOpen, setCharmCreatorOpen }: 
         setSkillList(newSkillList);
     }
 
+    function changeSkillLevel(skill: CharmSkill, lvl: number) {
+        const newSkillList = skillList.map(s => {
+            if (s.id !== skill.id) {
+                return s;
+            } else {
+                return {
+                    ...s,
+                    level: lvl,
+                }
+            }
+        })
+
+        setSkillList(newSkillList);
+    }
+
     function checkCharmReqs() {
         let reqsMet = false;
         for (const skill of skillList) {
@@ -110,19 +136,13 @@ export default function CharmCreator({ charmCreatorOpen, setCharmCreatorOpen }: 
         [validSkills, skillList, searchQuery]
     );
 
-    function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
-        const { name, value } = e.target;
-        if (["", "1", "2", "3"].includes(value)) {
-            setDecoInputValues(prev => ({
-                ...prev,
-                [name]: value
-            }));
+    function constructCharm() {
+        const charmSuccessful = createCharm(skillList, skills, allDecoSlots[selectedDecoCard]);
+        if (charmSuccessful) {
+            setBuild(prev => ({...prev, charm: charmSuccessful}))
+            setGearSelectorOpen(false);
         }
     }
-
-    useEffect(() => {
-        console.log(decoInputValues)
-    }, [decoInputValues]);
 
     useEffect(() => {
         function handleClickOutside(e: MouseEvent) {
@@ -132,6 +152,7 @@ export default function CharmCreator({ charmCreatorOpen, setCharmCreatorOpen }: 
 
             if (currentRef && !currentRef.contains(e.target as Node)) {
                 setOpenDropdown(null);
+                setSearchQuery("");
             }
         }
 
@@ -190,6 +211,7 @@ export default function CharmCreator({ charmCreatorOpen, setCharmCreatorOpen }: 
                                                 <div className={styles.skillLvlContainer}>
                                                     {getSkillLevel(skill).map((lvl: number, index: number) => (
                                                         <button key={index} onClick={() => {
+                                                            changeSkillLevel(skill, lvl);
                                                             setOpenDropdown(null); // close after pick
                                                         }}>
                                                             {lvl}
@@ -213,9 +235,16 @@ export default function CharmCreator({ charmCreatorOpen, setCharmCreatorOpen }: 
                 <div className={styles.decoContainer}>
                     <p>Decoration Slots</p>
                     <div className={styles.decoSlotsContainer}>
-                        <input type={"text"} placeholder={"Lvl"} pattern={"[1-3]+"} name={"input1"} value={decoInputValues.input1} onChange={handleInputChange} />
-                        <input type={"text"} placeholder={"Lvl"} pattern={"[1-3]+"} name={"input2"} value={decoInputValues.input2} onChange={handleInputChange} />
-                        <input type={"text"} placeholder={"Lvl"} pattern={"[1-3]+"} name={"input3"} value={decoInputValues.input3} onChange={handleInputChange} />
+                        {allDecoSlots.map((decoSlot, decoCardIndex) => (
+                            <div key={decoCardIndex} className={selectedDecoCard === decoCardIndex ? `${styles.decoCard} ${styles.selected}` : styles.decoCard} onClick={() => setSelectedDecoCard(decoCardIndex)}>
+                                {decoSlot.map((slot, decoSlotIndex) => (
+                                    <div key={decoSlotIndex} className={styles.decoSlot}>
+                                        <span className={`${styles.decoIcon} ${styles[`deco${slot}`]}`}></span>
+                                        <p>{slot}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        ))}
                     </div>
                     <div className={styles.msgContainer}>
                         <span><InformationCircleIcon /></span>
@@ -223,7 +252,7 @@ export default function CharmCreator({ charmCreatorOpen, setCharmCreatorOpen }: 
                     </div>
                 </div>
                 <div className={styles.addBtnContainer}>
-                    <button className={styles.addBtn} disabled={!checkCharmReqs()}>Equip</button>
+                    <button className={styles.addBtn} disabled={!checkCharmReqs()} onClick={() => constructCharm()}>Equip</button>
                 </div>
             </div>
             <button className={styles.backBtn} onClick={() => setCharmCreatorOpen(false)}><ChevronDownIcon className={styles.arrowLeftIcon} /></button>

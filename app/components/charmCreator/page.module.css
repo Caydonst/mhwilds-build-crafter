@@ -58,25 +58,39 @@
 .decoSlotsContainer {
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     gap: 10px;
+    flex-wrap: wrap;
 }
-.decoSlotsContainer input {
-    width: 100%;
-    height: 40px;
-    outline: none;
-    background: transparent;
+.decoCard {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 8px 5px 5px;
+
     border: 1px solid rgba(255, 255, 255, 0.1);
-    text-align: center;
-    color: #fff;
-    border-radius: 10px;
+    border-radius: 6px;
+    will-change: transform;
+    transition: 0.1s;
+    cursor: pointer;
 }
-.decoSlotsContainer input:hover {
-    border-color: rgba(255, 255, 255, 0.2);
+.decoCard:hover {
+    background: rgba(255, 255, 255, 0.05);
 }
-.decoSlotsContainer input:focus {
+.decoCard:active {
+    transform: scale(0.95);
+}
+.decoCard.selected {
+    background: rgba(255, 255, 255, 0.1);
     border-color: #fff;
+}
+.decoSlot {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
 }
 .msgContainer {
     display: flex;
@@ -204,7 +218,6 @@
 }
 .dropdownSkillsContainer button {
     width: 100%;
-    height: 40px;
     color: #fff;
     border: none;
     background: transparent;
@@ -214,7 +227,7 @@
     justify-content: start;
     align-items: center;
     gap: 5px;
-    padding: 0 10px;
+    padding: 3px 10px;
     font-size: 14px;
     font-weight: 300;
 }
@@ -249,6 +262,18 @@
     align-items: center;
     flex-direction: column;
     padding: 5px;
+}
+.skillLvlContainer button {
+    width: 100%;
+    height: 40px;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #fff;
+}
+.skillLvlContainer button:hover {
+    background: rgba(255, 255, 255, 0.1);
 }
 .lvlWrapper {
     position: relative;
@@ -320,6 +345,15 @@
     background: #153823;
 }
 
+@media (max-width: 500px) {
+    .skillsContainer {
+        padding: 30px 10px;
+    }
+    .decoContainer {
+        padding: 30px 10px;
+    }
+}
+
 .skillIcon {
     display: inline-block;
     flex-shrink: 0;
@@ -370,4 +404,26 @@
 }
 .skill14 {
     background-position: calc(-1300px * var(--size-factor)) 0;
+}
+
+.decoIcon {
+    display: inline-block;
+    flex-shrink: 0;
+    width: calc(33px * 0.8);
+    height: calc(33px * 0.8);
+    background-image: url("@/app/assets/decorations.png");
+    background-size: calc(660px * 0.8) calc(840px * 0.8); /* or set to sheet width/height if scaling */
+    background-repeat: no-repeat;
+}
+.deco1 {
+    background-position: 0 0;
+}
+.deco2 {
+    background-position: calc((-33px * 5) * 0.8) 0;
+}
+.deco3 {
+    background-position: calc((-33px * 10) * 0.8) 0;
+}
+.decoW1 {
+    background-position: 0 0;
 }

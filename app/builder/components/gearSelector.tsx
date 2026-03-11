@@ -115,7 +115,7 @@ export default function GearSelector({ gearSelectorOpen, setGearSelectorOpen, ty
                         </div>
                     </div>
                 </div>
-                <CharmCreator charmCreatorOpen={charmCreatorOpen} setCharmCreatorOpen={setCharmCreatorOpen} />
+                <CharmCreator charmCreatorOpen={charmCreatorOpen} setCharmCreatorOpen={setCharmCreatorOpen} setGearSelectorOpen={setGearSelectorOpen} setBuild={setBuild} build={build} />
             </div>
         </div>
     )

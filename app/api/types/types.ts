@@ -105,12 +105,22 @@ export interface ArmorCrafting {
 /**
  * ArmorPiece pieces (head/chest/arms/waist/legs)
  */
+type CharmSkill = {
+    description: string;
+    id: number
+    level: number;
+    name: string | null
+    skill: {
+        id: number;
+        name: string;
+    }
+}
 export interface ArmorSkill {
     description: string;
     id: number
     level: number;
     name: string | null
-    skill: Skill
+    skill: Skill | CharmSkill
 }
 export interface Armor {
     id: number;
@@ -293,8 +303,8 @@ export interface CharmRank {
     description: string;
     level: number;
     rarity: number;
-    skills: ArmorSkill[];
-    crafting: CharmRankCrafting;
+    skills: CharmSkill[];
+    crafting: CharmRankCrafting | null;
 }
 
 /**
@@ -305,6 +315,18 @@ export interface Charm {
     id: number;
     gameId: number;
     ranks: CharmRank[];
+}
+
+export interface CustomCharm {
+    customCharm: number;
+    id: number;
+    name: string;
+    description: string;
+    level: number;
+    rarity: number;
+    skills: CharmSkill[];
+    crafting: CharmRankCrafting | null;
+    slots: number[];
 }
 
 /** A single skill entry on a Decoration */
@@ -427,7 +449,7 @@ export type BuilderBuild = {
     arms: Armor | null;
     waist: Armor | null;
     legs: Armor | null;
-    charm: CharmRank | null;
+    charm: CharmRank | CustomCharm | null;
     decorations: BuildDecorations;
 }
 

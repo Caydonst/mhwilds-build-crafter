@@ -1,5 +1,5 @@
 import styles from "./page.module.css"
-import type {BuilderBuild, SlotLevel, Armor, CharmRank, Weapon, ArmorSet} from "@/app/api/types/types";
+import type {BuilderBuild, SlotLevel, Armor, CharmRank, CustomCharm, Weapon, ArmorSet} from "@/app/api/types/types";
 import React, {useMemo} from "react";
 import {XMarkIcon} from "@heroicons/react/24/outline";
 import {findGearPieceBonuses} from "./helperFunctions"
@@ -7,7 +7,7 @@ import {useGameData} from "@/app/hooks/useGameData";
 
 type ArmorSlotKey = "weapon" | "head" | "chest" | "arms" | "waist" | "legs" | "charm";
 type GearSlotKey = "head" | "chest" | "arms" | "waist" | "legs" | "charm";
-type WeaponArmorCharm = Weapon | Armor | CharmRank;
+type WeaponArmorCharm = Weapon | Armor | CharmRank | CustomCharm;
 const ARMOR_KINDS = ["head", "chest", "arms", "waist", "legs"] as const;
 
 interface Props {
@@ -77,6 +77,9 @@ export default function GearPiece({
 
     function isCharmRank(piece: WeaponArmorCharm | null | undefined): piece is CharmRank {
         return !!piece && "charm" in piece && !("kind" in piece);
+    }
+    function isCustomCharm(piece: WeaponArmorCharm | null | undefined): piece is CustomCharm {
+        return !!piece && "customCharm" in piece;
     }
 
     const armorIndex: Record<GearSlotKey, number> = {
@@ -250,7 +253,7 @@ export default function GearPiece({
                     </div>
                 )
             )}
-            {(isWeaponPiece(gearPiece) || isArmorPiece(gearPiece)) && gearPiece.slots.length > 0 && (
+            {(isWeaponPiece(gearPiece) || isArmorPiece(gearPiece)) || isCustomCharm(gearPiece) && gearPiece.slots.length > 0 && (
                 <>
                     <div className={styles.decoSlotsContainer}>
                         {gearPiece.slots.map((s, i) => {
