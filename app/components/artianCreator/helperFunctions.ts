@@ -313,7 +313,7 @@ function getTarredDeviceStats(weapon: Weapon) {
     switch (weapon.tarredDevice) {
         case "Attack Focus":
             weapon.damage.raw += 10;
-            weapon.affinity -= 10;
+            weapon.affinity -= 15;
             if (weapon.sharpness) {
                 weapon.sharpness.blue -= 10;
             }

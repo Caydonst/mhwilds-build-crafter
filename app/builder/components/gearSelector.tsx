@@ -68,7 +68,7 @@ export default function GearSelector({ gearSelectorOpen, setGearSelectorOpen, ty
         const query = searchQuery.toLowerCase();
 
         return (gear ?? []).filter(piece =>
-            piece.name.toLowerCase().startsWith(query)
+            piece.name.toLowerCase().includes(query)
         );
         // @ts-expect-error : Error
     }, [searchQuery, gear]);

@@ -86,13 +86,6 @@ export default function Builder() {
     }
     function deleteBuildItem(slotKey: ArmorSlotKey) {
         setBuild((prev) => {
-            if (slotKey === "charm") {
-                return {
-                    ...prev,
-                    [slotKey]: null,
-                };
-            }
-
             const emptySlots: DecoPlacement[] = [];
 
             return {

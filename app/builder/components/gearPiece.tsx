@@ -253,7 +253,7 @@ export default function GearPiece({
                     </div>
                 )
             )}
-            {(isWeaponPiece(gearPiece) || isArmorPiece(gearPiece) || isCustomCharm(gearPiece)) && gearPiece.slots.length > 0 && (
+            {(isWeaponPiece(gearPiece) || isArmorPiece(gearPiece)) && gearPiece.slots.length > 0 && (
                 <>
                     <div className={styles.decoSlotsContainer}>
                         {gearPiece.slots.map((s, i) => {
@@ -271,6 +271,38 @@ export default function GearPiece({
 
                                     {/* Inlaid deco display */}
                                     {s > 0 && placement?.decoration && canFit && (
+                                        <div className={styles.slottedDeco}>
+                                            <p className={styles.inlaidDecoName}>{placement.decoration.name}</p>
+                                            <button className={styles.decoDeleteBtn} onClick={(e) => {
+                                                e.stopPropagation();
+                                                deleteDecoration(slotKey, i);
+                                            }}><XMarkIcon/></button>
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
+                </>
+            )}
+            {isCustomCharm(gearPiece) && gearPiece.slots.length > 0 && (
+                <>
+                    <div className={styles.decoSlotsContainer}>
+                        {gearPiece.slots.map((s, i) => {
+                            const key = `${slotKey}-slot-${i}`;
+                            const placement = build?.decorations?.[slotKey]?.[i];
+                            const canFit = placement?.slotLevel != null && placement.slotLevel <= s.level; // optional check
+
+                            return (
+                                <div
+                                    key={key}
+                                    className={styles.slot}
+                                    onClick={() => openDecoSelector(s.level, s.type === "weapon" ? "weapon" : "armor", slotKey, i)}
+                                >
+                                    <span className={`${styles.decoIcon} ${styles[`deco${s.level}`]}`}/>
+
+                                    {/* Inlaid deco display */}
+                                    {s.level > 0 && placement?.decoration && canFit && (
                                         <div className={styles.slottedDeco}>
                                             <p className={styles.inlaidDecoName}>{placement.decoration.name}</p>
                                             <button className={styles.decoDeleteBtn} onClick={(e) => {

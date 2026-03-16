@@ -77,6 +77,31 @@ export function updateElement(aggregatedSkillsMap: Record<number, AggregatedSkil
     }
 }
 
+let affinityBoost = 0;
+
+export function setAffinityBoost() {
+    affinityBoost = 0;
+}
+export function getAffinityBoost() {
+    return affinityBoost;
+}
+export function updateAffinity(aggregatedSkills: AggregatedSkill[]) {
+    affinityBoost = 0;
+
+    Object.values(aggregatedSkills).forEach(skill => {
+        switch(skill.skill.name) {
+            case "Maximum Might":
+                const boost = 10 * skill.totalLevel[0]
+                affinityBoost += boost
+                break;
+            case "Critical Eye":
+                const boost1 = 4 * skill.totalLevel[0]
+                affinityBoost += boost1
+                break;
+        }
+    })
+}
+
 export const addSkillLevel = (skillData: SkillType[] | null, skillId: number, add: number, aggregatedSkillsMap: Record<number, AggregatedSkill>) => {
     const fullSkill = findFullSkill(skillData, skillId);
     const max = getMaxSkillLevel(skillData, skillId);

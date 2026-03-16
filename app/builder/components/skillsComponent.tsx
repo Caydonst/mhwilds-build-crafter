@@ -1,10 +1,12 @@
 import styles from "./page.module.css"
 import React, {useLayoutEffect, useMemo, useRef, useState} from "react";
-import {BuilderBuild, type Skill as SkillType, ArmorSet} from "@/app/api/types/types";
+import {BuilderBuild, type Skill as SkillType, ArmorSet, type BuildWeapon} from "@/app/api/types/types";
 import {
     addDecoSkillsToAggregate,
     addSkillLevel,
-    updateElement
+    updateElement,
+    updateAffinity,
+    setAffinityBoost
 } from "@/app/components/builder/build/buildComponents/helperFunctions";
 import Skill from "@/app/components/builder/build/buildComponents/skill";
 import {ChevronDownIcon, XMarkIcon, CheckIcon} from "@heroicons/react/24/outline"
@@ -52,6 +54,12 @@ export default function SkillsComponent({ build, skills, armorSets }: Props) {
 
         return Object.values(map).sort((a, b) => b.totalLevel[0] - a.totalLevel[0]);
     }, [build, skills]);
+
+    console.log("AGGREGATED SKILLS: " + aggregatedSkills)
+
+    if (aggregatedSkills) {
+        updateAffinity(aggregatedSkills);
+    }
 
 
     const getBonuses = useMemo(() => {

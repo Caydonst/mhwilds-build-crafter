@@ -3,8 +3,9 @@ import React, {useEffect, useRef, useState} from "react"
 import {ChevronDownIcon} from "@heroicons/react/24/outline";
 import {useGameData} from "@/app/hooks/useGameData";
 import {XMarkIcon, InformationCircleIcon} from "@heroicons/react/24/outline";
-import {type BuilderBuild, Skill} from "@/app/api/types/types";
+import {type Armor, type BuilderBuild, type CharmRank, type DecoPlacement, Skill} from "@/app/api/types/types";
 import {createCharm} from "./helperFunctions"
+import {fetchArmorSets} from "@/app/api/apiCalls/apiCalls";
 
 type props = {
     charmCreatorOpen: boolean;
@@ -139,7 +140,21 @@ export default function CharmCreator({ charmCreatorOpen, setCharmCreatorOpen, se
     function constructCharm() {
         const charmSuccessful = createCharm(skillList, skills, allDecoSlots[selectedDecoCard]);
         if (charmSuccessful) {
-            setBuild(prev => ({...prev, charm: charmSuccessful}))
+            setBuild(prev => {
+                const emptySlots: DecoPlacement[] = charmSuccessful.slots.map(() => ({
+                    slotLevel: 1,
+                    decoration: null,
+                }));
+                return {
+                    ...prev,
+                    charm: charmSuccessful,
+
+                    decorations: {
+                        ...prev.decorations,
+                        charm: emptySlots,
+                    },
+                };
+            })
             setGearSelectorOpen(false);
         }
     }

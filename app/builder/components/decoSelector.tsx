@@ -75,8 +75,9 @@ export default function DecoSelector({ decoSlotIndex, slotLevel, kind, decoSelec
     const searchedDecos = React.useMemo(() => {
         const query = searchQuery.toLowerCase();
 
-        return (filteredDecos ?? []).filter(piece =>
-            piece.name.toLowerCase().includes(query)
+        return (filteredDecos ?? []).filter(deco =>
+            deco.name.toLowerCase().includes(query) ||
+            deco.skills.some(skill => skill.skill.name.toLowerCase().includes(query))
         );
     }, [searchQuery, filteredDecos]);
 

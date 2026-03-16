@@ -1,5 +1,5 @@
 import styles from "./page.module.css";
-import React from "react";
+import React, {useEffect, useMemo} from "react";
 import type {
     Build,
     Skill as SkillType,
@@ -56,7 +56,6 @@ export default function Build({ index, build, skillData, setBuildBreakdownOpen, 
         build.armor.charm,
     ].filter((p): p is ArmorOrCharm => Boolean(p));
 
-
     for (const piece of pieces) {
         for (const s of piece.skills) {
 
@@ -72,7 +71,7 @@ export default function Build({ index, build, skillData, setBuildBreakdownOpen, 
         addDecoSkillsToAggregate(skillData, aggregatedSkillsMap, build.decorations?.[slot]);
     }
 
-// --- 3) Weapon decorations skills (NEW) ---
+// --- 3) Weapon decorations skills ---
     addDecoSkillsToAggregate(skillData, aggregatedSkillsMap, build.decorations?.weapon);
 
     // --- Bonuses ---
@@ -89,7 +88,6 @@ export default function Build({ index, build, skillData, setBuildBreakdownOpen, 
     }
 
     const aggregatedSkills = Object.values(aggregatedSkillsMap).sort((a, b) => b.totalLevel[0] - a.totalLevel[0]);
-    console.log(aggregatedSkills);
 
     // Weapon (assumes your Build type has been updated to include weapon)
     const weapon: BuildWeapon | null = build.weapon ?? null;
