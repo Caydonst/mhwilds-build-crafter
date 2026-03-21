@@ -1,4 +1,4 @@
-import {CharmRank, ArmorSkill, CharmRankCrafting, Skill, CustomCharm} from "@/app/api/types/types";
+import {CharmRank, ArmorSkill, CharmRankCrafting, Skill, CustomCharm, CharmDecoSlot} from "@/app/api/types/types";
 /*
 export interface CharmRank {
     //charm: CharmIdentifier;
@@ -29,10 +29,14 @@ type CharmSkill = {
 }
 
 export function createCharm(skillList: CharmSkill[], skills: Skill[], slots: string[]) {
-    const decoSlots: number[] = [];
+    const decoSlots: CharmDecoSlot[] = [];
     if (!(slots.includes("None"))) {
         for (const slot of slots) {
-            decoSlots.push(Number(slot));
+            if (slot === "W1") {
+                decoSlots.push({type: "weapon", level: 1});
+            } else {
+                decoSlots.push({type: "armor", level: Number(slot)});
+            }
         }
     }
 

@@ -316,7 +316,10 @@ export interface Charm {
     gameId: number;
     ranks: CharmRank[];
 }
-
+export type CharmDecoSlot = {
+    type: string;
+    level: number;
+}
 export interface CustomCharm {
     customCharm: number;
     id: number;
@@ -326,7 +329,7 @@ export interface CustomCharm {
     rarity: number;
     skills: CharmSkill[];
     crafting: CharmRankCrafting | null;
-    slots: number[];
+    slots: CharmDecoSlot[];
 }
 
 /** A single skill entry on a Decoration */

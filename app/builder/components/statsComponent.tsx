@@ -20,12 +20,6 @@ export default function StatsComponent({ build }: Props) {
         return newStats;
     }, [build]);
 
-    function calcRaw() {}
-    function calcElement() {}
-    function calcAffinity() {}
-
-    function calcDefenses() {}
-
     function useCollapsibleHeight(
         ref: React.RefObject<HTMLElement | null>,
         isOpen: boolean,
