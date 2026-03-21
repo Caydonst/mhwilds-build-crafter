@@ -81,7 +81,7 @@ export default function GearSelector({ gearSelectorOpen, setGearSelectorOpen, ty
                     <div className={styles.info}>
                         <div className={styles.header}>
                             <p>Select Gear</p>
-                            <button onClick={() => setGearSelectorOpen(false)}><XMarkIcon /></button>
+                            <button className={styles.closeBtn} onClick={() => setGearSelectorOpen(false)}><XMarkIcon /></button>
                         </div>
                         <div className={styles.searchContainer}>
                             <p>{type.charAt(0).toUpperCase() + type.slice(1)}</p>

@@ -85,28 +85,7 @@
     justify-content: space-between;
     align-items: center;
 }
-.info .header button {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 34px;
-    height: 34px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.05);
-    cursor: pointer;
-}
-.info .header button > * {
-    width: 22px;
-    height: 22px;
-    color: #fff;
-}
-.info .header button:hover {
-    background: rgba(255, 255, 255, 0.1);
-}
+
 .info .searchContainer {
     display: flex;
     flex-direction: column;
@@ -989,5 +968,9 @@
     }
     .gearSelectorInner {
         padding: 10px;
+    }
+    .closeBtn {
+        top: 10px;
+        right: 10px;
     }
 }
