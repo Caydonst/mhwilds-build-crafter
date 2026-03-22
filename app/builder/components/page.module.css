@@ -312,9 +312,31 @@
     cursor: pointer;
     padding: 0 20px;
     background: rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+.equipSkillsHeader span {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.6);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    animation: animate 0.8s linear forwards;
+    border-radius: 50%;
+}
+@keyframes animate {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 0.25;
+    }
+    100% {
+        width: 800px;
+        height: 800px;
+        opacity: 0;
+    }
 }
 .equipSkillsHeader:hover {
-    background: rgba(255, 255, 255, 0.07);
+    background: rgba(255, 255, 255, 0.1);
 }
 .equipSkillsHeader p {
     line-height: 1;
@@ -327,7 +349,12 @@
     justify-content: center;
     align-items: center;
 }
-.equipSkillsHeader span.rotated {
+.chevronContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.chevronContainer.rotated {
     transform: rotate(180deg);
 }
 .equipSkillsContent {
@@ -408,7 +435,6 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
     background: rgba(255, 255, 255, 0.05);
-    overflow: hidden;
 }
 .buildPieceInfo {
     display: flex;
@@ -470,23 +496,45 @@
     border-radius: 50%;
     background: #AAF1F2;
 }
+.pieceContainerHeaderWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 70px;
+    position: relative;
+}
 .pieceContainerHeader {
     display: flex;
     justify-content: start;
     align-items: center;
     gap: 10px;
     width: 100%;
+    height: 100%;
     padding: 10px 40px 10px 10px;
-    min-height: 70px;
     cursor: pointer;
     position: relative;
+    overflow: hidden;
+    border-radius: 12px;
 }
-.pieceContainerHeader:hover {
-    background: transparent;
+.pieceContainerHeaderInner {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    border-radius: 12px;
+    transition: 0.15s;
+    z-index: -1;
 }
-.pieceContainerHeader:hover:not(:has(button:hover)) {
-    background: rgba(255, 255, 255, 0.02);
+.pieceContainerHeader:hover .pieceContainerHeaderInner {
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    background: rgba(255, 255, 255, 0.05);
 }
+
 .weaponStatsContainer {
     display: flex;
     justify-content: center;
@@ -541,27 +589,104 @@
 .white {
     background: white;
 }
-.deleteBtn {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    border: none;
-    background: transparent;
-    border-radius: 50%;
+.moreOptionsBtnContainer {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 32px;
-    height: 32px;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+.moreOptionsBtnContainer.open {
+    z-index: 3;
+}
+.moreOptionsBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
     cursor: pointer;
 }
-.deleteBtn:hover {
+.moreOptionsBtn > * {
+    width: 20px;
+    height: 20px;
+    color: #fff;
+}
+.moreOptionsBtn:hover {
     background: rgba(255, 255, 255, 0.1);
+}
+.moreOptionsContainer {
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    background: #242424;
+    padding: 5px;
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: 0.2s;
+}
+.moreOptionsContainer.open {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+}
+.transcendBtn {
+    background: transparent;
+    border-radius: 11px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    width: 150px;
+    cursor: pointer;
+    color: #fff;
+    padding: 10px;
+    gap: 5px;
+    border: 1px solid transparent;
+    font-size: 14px;
+}
+.transcendBtn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.05);
+}
+.transcendBtn > * {
+    width: 22px;
+    height: 22px;
+    color: #fff;
+}
+.deleteBtn {
+    border: 1px solid transparent;
+    background: transparent;
+    border-radius: 11px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    width: 150px;
+    cursor: pointer;
+    color: #ff6b6b;
+    padding: 10px;
+    gap: 5px;
+    font-size: 14px;
+}
+.deleteBtn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.05);
 }
 .deleteBtn > * {
     width: 22px;
     height: 22px;
-    color: #fff;
+    color: #ff6b6b;
 }
 .decoSlotsContainer {
     display: flex;

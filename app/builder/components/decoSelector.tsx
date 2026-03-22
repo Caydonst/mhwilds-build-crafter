@@ -88,7 +88,7 @@ export default function DecoSelector({ decoSlotIndex, slotLevel, kind, decoSelec
                     <div className={styles.info}>
                         <div className={styles.header}>
                             <p>Select Decoration</p>
-                            <button onClick={() => setDecoSelectorOpen(false)}><XMarkIcon /></button>
+                            <button className={styles.closeBtn} onClick={() => setDecoSelectorOpen(false)}><XMarkIcon /></button>
                         </div>
                         <div className={styles.searchContainer}>
                             <p>{thisKind.charAt(0).toUpperCase() + thisKind.slice(1)} Decoration</p>

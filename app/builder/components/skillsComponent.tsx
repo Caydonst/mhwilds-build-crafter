@@ -6,7 +6,7 @@ import {
     addSkillLevel,
     updateElement,
     updateAffinity,
-    setAffinityBoost
+    updateAttackBoost
 } from "@/app/components/builder/build/buildComponents/helperFunctions";
 import Skill from "@/app/components/builder/build/buildComponents/skill";
 import {ChevronDownIcon, XMarkIcon, CheckIcon} from "@heroicons/react/24/outline"
@@ -59,6 +59,7 @@ export default function SkillsComponent({ build, skills, armorSets }: Props) {
 
     if (aggregatedSkills) {
         updateAffinity(aggregatedSkills);
+        updateAttackBoost(aggregatedSkills, build.weapon);
     }
 
 
@@ -120,12 +121,34 @@ export default function SkillsComponent({ build, skills, armorSets }: Props) {
         groupSkillsOpen
     );
 
+    function clickEffect(e: React.MouseEvent<HTMLDivElement>) {
+        const button = e.currentTarget;
+
+        const rect = button.getBoundingClientRect();
+
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const ripple = document.createElement("span");
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+
+        button.appendChild(ripple);
+
+        setTimeout(() => {
+            ripple.remove();
+        }, 800);
+    }
+
     return (
         <div className={styles.skillsComponentContainer}>
             <div className={styles.equipmentSkillsContainer} style={{ height: equipSkillsHeight }}>
-                <div className={styles.equipSkillsHeader} onClick={() => setEquipSkillsOpen(!equipSkillsOpen)}>
+                <div className={styles.equipSkillsHeader} onClick={(e) => {
+                    setEquipSkillsOpen(!equipSkillsOpen);
+                    clickEffect(e);
+                }}>
                     <p>Equipment Skills</p>
-                    <span className={equipSkillsOpen ? styles.rotated : ""}><ChevronDownIcon className={styles.chevronIcon} /></span>
+                    <div className={equipSkillsOpen ? `${styles.chevronContainer} ${styles.rotated}` : ""}><ChevronDownIcon className={styles.chevronIcon} /></div>
                 </div>
                 <div ref={equipSkillsRef} className={styles.equipSkillsContent}>
                     {aggregatedSkills.length > 0 ? (
@@ -140,9 +163,12 @@ export default function SkillsComponent({ build, skills, armorSets }: Props) {
                 </div>
             </div>
             <div className={styles.equipmentSkillsContainer} style={{ height: bonusSkillsHeight }}>
-                <div className={styles.equipSkillsHeader} onClick={() => setBonusSkillsOpen(!bonusSkillsOpen)}>
+                <div className={styles.equipSkillsHeader} onClick={(e) => {
+                    setBonusSkillsOpen(!bonusSkillsOpen);
+                    clickEffect(e);
+                }}>
                     <p>Set Bonus Skills</p>
-                    <span className={bonusSkillsOpen ? styles.rotated : ""}><ChevronDownIcon className={styles.chevronIcon} /></span>
+                    <div className={bonusSkillsOpen ? `${styles.chevronContainer} ${styles.rotated}` : ""}><ChevronDownIcon className={styles.chevronIcon} /></div>
                 </div>
                 <div ref={bonusSkillsRef} className={styles.equipSkillsContent}>
                     {getBonuses.setBonuses.length > 0 ? (
@@ -171,9 +197,12 @@ export default function SkillsComponent({ build, skills, armorSets }: Props) {
                 </div>
             </div>
             <div className={styles.equipmentSkillsContainer} style={{ height: groupSkillsHeight }}>
-                <div className={styles.equipSkillsHeader} onClick={() => setGroupSkillsOpen(!groupSkillsOpen)}>
+                <div className={styles.equipSkillsHeader} onClick={(e) => {
+                    setGroupSkillsOpen(!groupSkillsOpen);
+                    clickEffect(e);
+                }}>
                     <p>Group Skills</p>
-                    <span className={groupSkillsOpen ? styles.rotated : ""}><ChevronDownIcon className={styles.chevronIcon} /></span>
+                    <div className={groupSkillsOpen ? `${styles.chevronContainer} ${styles.rotated}` : ""}><ChevronDownIcon className={styles.chevronIcon} /></div>
                 </div>
                 <div ref={groupSkillsRef} className={styles.equipSkillsContent}>
                     {getBonuses.groupBonuses.length > 0 ? (

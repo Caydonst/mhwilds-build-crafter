@@ -57,12 +57,34 @@ export default function StatsComponent({ build }: Props) {
         defenseOpen
     );
 
+    function clickEffect(e: React.MouseEvent<HTMLDivElement>) {
+        const button = e.currentTarget;
+
+        const rect = button.getBoundingClientRect();
+
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const ripple = document.createElement("span");
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+
+        button.appendChild(ripple);
+
+        setTimeout(() => {
+            ripple.remove();
+        }, 800);
+    }
+
     return (
         <div className={styles.statsInner}>
             <div className={styles.equipmentSkillsContainer} style={{ height: equipSkillsHeight }}>
-                <div className={styles.equipSkillsHeader} onClick={() => setEquipSkillsOpen(!equipSkillsOpen)}>
+                <div className={styles.equipSkillsHeader} onClick={(e) => {
+                    setEquipSkillsOpen(!equipSkillsOpen);
+                    clickEffect(e);
+                }}>
                     <p>Attack</p>
-                    <span className={equipSkillsOpen ? styles.rotated : ""}><ChevronDownIcon className={styles.chevronIcon} /></span>
+                    <div className={equipSkillsOpen ? `${styles.chevronContainer} ${styles.rotated}` : ""}><ChevronDownIcon className={styles.chevronIcon} /></div>
                 </div>
                 <div ref={equipSkillsRef} className={styles.equipSkillsContent}>
                     <div className={styles.rawContainer}>
@@ -125,9 +147,12 @@ export default function StatsComponent({ build }: Props) {
                 </div>
             </div>
             <div className={styles.equipmentSkillsContainer} style={{ height: defenseHeight }}>
-                <div className={styles.equipSkillsHeader} onClick={() => setDefenseOpen(!defenseOpen)}>
+                <div className={styles.equipSkillsHeader} onClick={(e) => {
+                    setDefenseOpen(!defenseOpen);
+                    clickEffect(e);
+                }}>
                     <p>Defense</p>
-                    <span className={defenseOpen ? styles.rotated : ""}><ChevronDownIcon className={styles.chevronIcon} /></span>
+                    <div className={defenseOpen ? `${styles.chevronContainer} ${styles.rotated}` : ""}><ChevronDownIcon className={styles.chevronIcon} /></div>
                 </div>
                 <div ref={defenseRef} className={styles.equipSkillsContent}>
                     <div className={styles.defenseChild}>

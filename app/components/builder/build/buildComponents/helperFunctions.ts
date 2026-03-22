@@ -78,7 +78,6 @@ export function updateElement(aggregatedSkillsMap: Record<number, AggregatedSkil
 }
 
 let affinityBoost = 0;
-
 export function setAffinityBoost() {
     affinityBoost = 0;
 }
@@ -86,7 +85,7 @@ export function getAffinityBoost() {
     return affinityBoost;
 }
 export function updateAffinity(aggregatedSkills: AggregatedSkill[]) {
-    affinityBoost = 0;
+    setAffinityBoost()
 
     Object.values(aggregatedSkills).forEach(skill => {
         switch(skill.skill.name) {
@@ -98,6 +97,44 @@ export function updateAffinity(aggregatedSkills: AggregatedSkill[]) {
                 const boost1 = 4 * skill.totalLevel[0]
                 affinityBoost += boost1
                 break;
+        }
+    })
+}
+
+let attackBoost = 0;
+export function setAttackBoost() {
+    attackBoost = 0;
+}
+export function getAttackBoost() {
+    return attackBoost;
+}
+export function updateAttackBoost(aggregatedSkills: AggregatedSkill[], weapon: Weapon | null) {
+    setAttackBoost()
+
+    Object.values(aggregatedSkills).forEach(skill => {
+        if (skill.skill.name === "Attack Boost" && weapon) {
+            switch(skill.totalLevel[0]) {
+                case 1:
+                    const boost1 = 3;
+                    attackBoost += boost1;
+                    break;
+                case 2:
+                    const boost2 = 5;
+                    attackBoost += boost2;
+                    break;
+                case 3:
+                    const boost3 = 7;
+                    attackBoost += boost3;
+                    break;
+                case 4:
+                    const boost4 = weapon.damage.raw * 0.02 + 8;
+                    attackBoost += boost4;
+                    break;
+                case 5:
+                    const boost5 = weapon.damage.raw * 0.04 + 9;
+                    attackBoost += boost5;
+                    break;
+            }
         }
     })
 }

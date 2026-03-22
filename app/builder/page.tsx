@@ -1,7 +1,7 @@
 "use client"
 import styles from "./page.module.css"
 import {useGameData} from "@/app/hooks/useGameData";
-import React, {useState, useEffect, useMemo} from "react";
+import React, {useState, useEffect, useMemo, useRef} from "react";
 import ArmorPiece from "@/app/components/builder/build/buildComponents/armorPiece";
 import GearSelector from "./components/gearSelector"
 import WeaponSelector from "./components/weaponSelector"
@@ -120,6 +120,25 @@ export default function Builder() {
         });
     }
 
+    function clickEffect(e: React.MouseEvent<HTMLButtonElement>) {
+        const button = e.currentTarget;
+
+        const rect = button.getBoundingClientRect();
+
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const ripple = document.createElement("span");
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+
+        button.appendChild(ripple);
+
+        setTimeout(() => {
+            ripple.remove();
+        }, 800);
+    }
+
     return (
         <main className={styles.builderPageWrapper}>
             {isLoading ? (
@@ -142,21 +161,30 @@ export default function Builder() {
                         <div className={styles.headerInner}>
                             <button
                                 className={`${styles.gearHeaderMobile} ${selectedPage === "gear" ? styles.selected : ""}`}
-                                onClick={() => updateSlider("gear", 0)}
+                                onClick={(e) => {
+                                    updateSlider("gear", 0);
+                                    clickEffect(e);
+                                }}
                             >
                                 Gear
                             </button>
 
                             <button
                                 className={`${styles.skillsHeaderMobile} ${selectedPage === "skills" ? styles.selected : ""}`}
-                                onClick={() => updateSlider("skills", 100)}
+                                onClick={(e) => {
+                                    updateSlider("skills", 100);
+                                    clickEffect(e);
+                                }}
                             >
                                 Skills
                             </button>
 
                             <button
                                 className={`${styles.statsHeaderMobile} ${selectedPage === "stats" ? styles.selected : ""}`}
-                                onClick={() => updateSlider("stats", 200)}
+                                onClick={(e) => {
+                                    updateSlider("stats", 200);
+                                    clickEffect(e);
+                                }}
                             >
                                 Stats
                             </button>
