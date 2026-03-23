@@ -135,6 +135,7 @@ export interface Armor {
     skills: ArmorSkill[];
     armorSet: ArmorSetStub | null;
     crafting: ArmorCrafting;
+    transcendence?: boolean;
 }
 
 export interface ArmorSetBonusRank {

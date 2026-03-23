@@ -211,7 +211,7 @@ export default function Builder() {
                             </div>
                             {armorBySlot && (
                                 ARMOR_SLOTS.map((slot) => (
-                                    <GearPiece key={slot} slotKey={slot} gearPiece={build[slot]} build={build} armorSets={armorBySlot.armorSets} deleteBuildItem={deleteBuildItem} openGearSelector={openGearSelector} openWeaponSelector={openWeaponSelector} openDecoSelector={openDecoSelector} deleteDecoration={deleteDecoration} />
+                                    <GearPiece key={slot} slotKey={slot} gearPiece={build[slot]} build={build} setBuild={setBuild} armorSets={armorBySlot.armorSets} deleteBuildItem={deleteBuildItem} openGearSelector={openGearSelector} openWeaponSelector={openWeaponSelector} openDecoSelector={openDecoSelector} deleteDecoration={deleteDecoration} />
                                 ))
                             )}
                         </div>
@@ -234,7 +234,7 @@ export default function Builder() {
                                 </div>
                                 {armorBySlot && (
                                     ARMOR_SLOTS.map((slot) => (
-                                        <GearPiece key={slot} slotKey={slot} gearPiece={build[slot]} build={build} armorSets={armorBySlot.armorSets} deleteBuildItem={deleteBuildItem} openGearSelector={openGearSelector} openWeaponSelector={openWeaponSelector} openDecoSelector={openDecoSelector} deleteDecoration={deleteDecoration} />
+                                        <GearPiece key={slot} slotKey={slot} gearPiece={build[slot]} build={build} setBuild={setBuild} armorSets={armorBySlot.armorSets} deleteBuildItem={deleteBuildItem} openGearSelector={openGearSelector} openWeaponSelector={openWeaponSelector} openDecoSelector={openDecoSelector} deleteDecoration={deleteDecoration} />
                                     ))
                                 )}
                             </div>

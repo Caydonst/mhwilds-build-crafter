@@ -269,3 +269,77 @@ export function updateStats(build: BuilderBuild) {
 
     return buildStats;
 }
+
+export function handleTranscendence(gearPiece: Armor) {
+    const transcendence = !gearPiece.transcendence;
+
+    return {
+        ...gearPiece,
+        transcendence,
+        slots: updateSlots(gearPiece.slots, gearPiece.rarity, transcendence),
+    };
+}
+
+function updateSlots(currentSlots: number[], rarity: number, transcendence: boolean) {
+    const newSlots = []
+    if (transcendence) {
+        switch (rarity) {
+            case 5:
+                for (let i = 0; i < 3; i++) {
+                    if (currentSlots[i]) {
+                        if (currentSlots[i] !== 3) {
+                            newSlots.push(currentSlots[i] + 1);
+                        }
+                    } else {
+                        newSlots.push(1);
+                    }
+                }
+                break;
+            case 6:
+                for (let i = 0; i < 2; i++) {
+                    if (currentSlots[i]) {
+                        if (currentSlots[i] !== 3) {
+                            newSlots.push(currentSlots[i] + 1);
+                        }
+                    } else {
+                        newSlots.push(1);
+                    }
+                }
+                if (currentSlots[2]) {
+                    newSlots.push(1);
+                }
+                break;
+            default:
+                return [...currentSlots];
+        }
+    } else {
+        switch (rarity) {
+            case 5:
+                for (let i = 0; i < 3; i++) {
+                    if (currentSlots[i]) {
+                        if (currentSlots[i] !== 1) {
+                            newSlots.push(currentSlots[i] - 1);
+                        }
+                    }
+                }
+                break;
+            case 6:
+                for (let i = 0; i < 2; i++) {
+                    if (currentSlots[i]) {
+                        if (currentSlots[i] !== 1) {
+                            newSlots.push(currentSlots[i] - 1);
+                        }
+                    }
+                }
+                if (currentSlots[2]) {
+                    newSlots.push(currentSlots[2]);
+                }
+                break;
+            default:
+                return [...currentSlots];
+        }
+    }
+    console.log("Current slots: " + currentSlots);
+    console.log("New slots: " + newSlots);
+    return newSlots;
+}

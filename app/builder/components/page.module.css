@@ -621,8 +621,8 @@
 }
 .moreOptionsContainer {
     position: absolute;
-    top: calc(100% + 5px);
-    right: 0;
+    right: calc(100% + 5px);
+    top: 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -634,7 +634,7 @@
     box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
     visibility: hidden;
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateX(-10px);
     transition: 0.2s;
 }
 .moreOptionsContainer.open {
@@ -935,7 +935,22 @@
 .deco3 {
     background-position: calc((-33px * 10) * var(--deco-icon-size)) 0;
 }
+.transcendenceIcon {
+    position: absolute;
+    top: -8px;
+    left: -5px;
+    width: 20px;
+    height: 20px;
+    color: #e880ff;
+    stroke-width: 3;
+    filter:
+            drop-shadow(1px 0 0 #000)
+            drop-shadow(-1px 0 0 #000)
+            drop-shadow(0 1px 0 #000)
+            drop-shadow(0 -1px 0 #000);
+}
 .buildPieceIcon {
+    position: relative;
     display: inline-block;
     flex-shrink: 0;
     width: calc(64px * var(--build-icon-size));

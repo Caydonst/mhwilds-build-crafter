@@ -197,6 +197,13 @@ export default function ArmorPiece({ gearPiece, armorSets, slotKey, build }: Pro
                 </div>
             )}
             <div className={styles.decoSlotsContainer}>
+                {!isCharmRank(gearPiece) && gearPiece?.slots.map((s, i) => (
+                    <div key={i} className={styles.slot}>
+                        <span className={`${styles.decoIcon} ${styles[`deco${s}`]}`} />
+                    </div>
+                ))}
+            </div>
+            {/*<div className={styles.decoSlotsContainer}>
                 {!isCharmRank(gearPiece) && gearPiece?.slots.map((s, i) => {
                     const placement = build?.decorations?.[slotKey as ArmorSlotKey]?.[i];
                     const key = `${slotKey}-slot-${i}`;
@@ -216,6 +223,7 @@ export default function ArmorPiece({ gearPiece, armorSets, slotKey, build }: Pro
                     );
                 })}
             </div>
+            */}
         </div>
     )
 }
