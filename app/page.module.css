@@ -71,10 +71,13 @@
     gap: 10px;
 }
 .tileHeader {
+    position: absolute;
+    top: 20px;
+    left: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 5px;
+    gap: 10px;
 }
 .comingSoon {
     display: flex;
@@ -87,6 +90,9 @@
     font-size: 12px;
 }
 .arrowIcon {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
     width: 20px;
     height: 20px;
     color: #fff;
