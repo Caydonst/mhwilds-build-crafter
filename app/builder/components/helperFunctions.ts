@@ -84,7 +84,7 @@ export function findBonuses(build: BuilderBuild, armorSets: ArmorSet[], skills: 
         }
 
         // IF SET IS GOGMAZIOS ALPHA
-        if (setId === 181 && piece.id === 670) {
+        if (setId === 181) {
             const gogmapocalypse = bonusesArray.find(bonus => bonus.id === 178);
             if (gogmapocalypse) {
                 gogmapocalypse.count++
@@ -104,7 +104,7 @@ export function findBonuses(build: BuilderBuild, armorSets: ArmorSet[], skills: 
         if (set) {
             // Check for set bonus
             if (set.bonus) {
-                if (!(setId === 182 && set.bonus.skill.id === 26)) {
+                if (!(setId === 182 && set.bonus.skill.id === 26) && !(setId === 181 && set.bonus.skill.id === 51)) {
                     const setBonus = bonusesArray.find(bonus => bonus.id === set?.bonus?.skill.id);
                     if (setBonus) {
                         setBonus.count++
@@ -176,7 +176,7 @@ export function findGearPieceBonuses(piece: Armor, armorSets: ArmorSet[]) {
     //const groupBonus = armorSets.find(set => set.id === setId);
 
     if (set) {
-        if (set.id === 182) {
+        if (set.id === 182 || set.id === 181) {
             setBonuses.push("Gogmapocalypse");
         } else {
             if (set.bonus) {
