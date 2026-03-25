@@ -122,11 +122,11 @@ export default function Build({ index, build, skillData, setBuildBreakdownOpen, 
                 <div className={styles.equipSkillsContainer}>
                     <p className={styles.equipSkillsText}>Equipment Skills</p>
 
-                    {aggregatedSkills.map(({ skill, totalLevel }) => {
+                    {/*{aggregatedSkills.map(({ skill, totalLevel }) => {
                         return (
                             <Skill key={skill.id} skill={skill} skillData={skillData} totalLevel={totalLevel} />
                         );
-                    })}
+                    })}*/}
                 </div>
 
                 {setBonusSkills.length > 0 && (
