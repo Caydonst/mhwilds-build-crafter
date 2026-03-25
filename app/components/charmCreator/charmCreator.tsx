@@ -261,10 +261,6 @@ export default function CharmCreator({ charmCreatorOpen, setCharmCreatorOpen, se
                             </div>
                         ))}
                     </div>
-                    <div className={styles.msgContainer}>
-                        <span><InformationCircleIcon /></span>
-                        <p className={styles.msg}> Crafted charms can have 1-3 decoration slots. Enter the level into each slot. If you would not like to utilize a slot, leave it empty.</p>
-                    </div>
                 </div>
                 <div className={styles.addBtnContainer}>
                     <button className={styles.addBtn} disabled={!checkCharmReqs()} onClick={() => constructCharm()}>Equip</button>
