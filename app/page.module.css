@@ -6,7 +6,6 @@
     width: 100%;
     min-height: 100svh;
     background: transparent;
-    padding: 10px;
     overflow: hidden;
     position: relative;
     gap: 70px;
@@ -32,13 +31,12 @@
 .mainContainer {
     display: flex;
     flex-direction: column;
-    justify-content: start;
+    justify-content: center;
     align-items: center;
-    max-width: 1200px;
     width: 100%;
     background: transparent;
-    gap: 20px;
-    padding-top: 80px;
+    gap: 40px;
+    height: 100vh;
 }
 .mainContainer span {
     display: flex;
@@ -54,13 +52,20 @@
     color: #fff;
     text-align: center;
 }
-.titleContainer h1 {
+.titleContainer h2 {
     color: rgba(255, 255, 255, 0.5);
     font-size: 20px;
 }
-.titleContainer h2 {
+.titleContainer h1 {
     color: #fff;
-    font-size: 50px;
+    font-size: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.mainContainer p {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
 }
 .tileContainer {
     display: flex;
@@ -90,31 +95,38 @@
     font-size: 12px;
 }
 .arrowIcon {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
     width: 20px;
     height: 20px;
-    color: #fff;
+    color: #000;
+    transition: 0.2s;
 }
 .buildGeneratorBtn {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-    width: 100%;
-    aspect-ratio: 3/2;
-    background: rgba(255, 255, 255, 0.02);
-    /*border: 1px solid #57ff9d;*/
-    color: #fff;
+    background: #fff;
+    border: none;
+    width: 200px;
+    height: 60px;
+    color: #000;
     border-radius: 15px;
     cursor: pointer;
     transition: 0.2s;
     font-size: 16px;
     text-decoration: none;
-    will-change: scale;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 10px;
+    will-change: transform;
+    gap: 10px;
+}
+.buildGeneratorBtn:hover {
+    opacity: 0.7;
+}
+.buildGeneratorBtn:hover .arrowIcon {
+    transform: translateX(6px);
+}
+.buildGeneratorBtn div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     gap: 10px;
 }
 .buildGeneratorBtn p {
@@ -126,9 +138,25 @@
     background: #1d4f32;
 }
 .sparklesIcon {
-    width: 20px;
-    height: 20px;
+    width: 26px;
+    height: 26px;
     color: #fff;
+    stroke-width: 2;
+}
+.titleIcon {
+    width: 80px;
+    height: 80px;
+    color: #fff;
+    stroke-width: 2;
+    animation: spin 5s infinite linear;
+}
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 .tileIconContainer {
     width: 40px;
@@ -139,10 +167,6 @@
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 5px;
-}
-.buildGeneratorBtn:hover {
-    transform: scale(0.98);
-    border-color: rgba(255, 255, 255, 0.3);
 }
 .spinnerWrapper {
     display: inline-flex;
@@ -234,11 +258,11 @@
         width: 300px;
         filter: blur(150px);
     }
-    .titleContainer h1 {
+    .titleContainer h2 {
         color: rgba(255, 255, 255, 0.5);
         font-size: 18px;
     }
-    .titleContainer h2 {
+    .titleContainer h1 {
         color: #fff;
         font-size: 30px;
     }
