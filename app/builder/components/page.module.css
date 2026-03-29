@@ -375,7 +375,7 @@
     border-radius: 20px;
     pointer-events: none;
     transform: translate(5px, -50%);
-    z-index: 1;
+    z-index: 4;
     display: flex;
     flex-direction: column;
     justify-content: center;
