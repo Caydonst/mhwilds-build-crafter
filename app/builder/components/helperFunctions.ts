@@ -65,6 +65,7 @@ export function findBonuses(build: BuilderBuild, armorSets: ArmorSet[], skills: 
         const setId = piece?.armorSet?.id;
         const set = armorSets.find((set) => set.id === setId);
 
+        /*
         // IF SET IS GOGMAZIOS BETA
         if (setId === 182) {
             const gogmapocalypse = bonusesArray.find(bonus => bonus.id === 178);
@@ -101,7 +102,10 @@ export function findBonuses(build: BuilderBuild, armorSets: ArmorSet[], skills: 
             }
         }
 
+         */
+
         if (set) {
+            /*
             // Check for set bonus
             if (set.bonus) {
                 if (!(setId === 182 && set.bonus.skill.id === 26) && !(setId === 181 && set.bonus.skill.id === 51)) {
@@ -113,6 +117,8 @@ export function findBonuses(build: BuilderBuild, armorSets: ArmorSet[], skills: 
                     }
                 }
             }
+
+             */
             // Check for group bonus
             if (set.groupBonus) {
                 const groupBonuses = bonusesArray.find(bonus => bonus.id === set?.groupBonus?.skill.id);
@@ -166,8 +172,8 @@ export function findGearPieceBonuses(piece: Armor, armorSets: ArmorSet[]) {
 
     const setId = piece?.armorSet?.id;
 
-    const setBonuses = [];
-    const groupBonuses = [];
+    const setBonuses: string[] = [];
+    const groupBonuses: string[] = [];
 
     //const setBonus = armorSets.find(set => set.id === setId)?.bonus?.skill.name;
     //const groupBonus = armorSets.find(set => set.id === setId)?.groupBonus?.skill.name;
@@ -175,29 +181,12 @@ export function findGearPieceBonuses(piece: Armor, armorSets: ArmorSet[]) {
     const set = armorSets.find(set => set.id === setId);
     //const groupBonus = armorSets.find(set => set.id === setId);
 
-    if (set) {
-        if (set.id === 182 || set.id === 181) {
-            setBonuses.push("Gogmapocalypse");
-        } else {
-            if (set.bonus) {
-                setBonuses.push(set.bonus.skill.name);
-            }
-        }
-        if (set.groupBonus) {
-            groupBonuses.push(set.groupBonus.skill.name);
-        }
-    }
-
-    if (piece.id === 670) {
-        setBonuses.push("Zoh Shia's Pulse")
-    }
-    if (piece.id === 675) {
-        setBonuses.push("Guardian Arkveld's Vitality")
-    }
-
     piece.skills.forEach(skill => {
         if ("kind" in skill.skill && skill.skill.kind === "set") {
             setBonuses.push(skill.skill.name);
+        }
+        if ("kind" in skill.skill && skill.skill.kind === "group") {
+            groupBonuses.push(skill.skill.name);
         }
     })
 
@@ -218,7 +207,7 @@ type BuildStats = {
 }
 
 export function updateStats(build: BuilderBuild) {
-    const buildArmor = [build.head, build.arms, build.waist, build.legs];
+    const buildArmor = [build.head, build.chest, build.arms, build.waist, build.legs];
     const buildWeapon = build.weapon;
 
     const resistKeys = ["fire", "water", "thunder", "ice", "dragon"] as const;
@@ -275,13 +264,13 @@ export function handleTranscendence(gearPiece: Armor) {
 
     return {
         ...gearPiece,
-        transcendence,
+        transcendence: !gearPiece.transcendence,
         slots: updateSlots(gearPiece.slots, gearPiece.rarity, transcendence),
     };
 }
 
 function updateSlots(currentSlots: number[], rarity: number, transcendence: boolean) {
-    const newSlots = []
+    let newSlots = []
     if (transcendence) {
         switch (rarity) {
             case 5:
@@ -310,7 +299,7 @@ function updateSlots(currentSlots: number[], rarity: number, transcendence: bool
                 }
                 break;
             default:
-                return [...currentSlots];
+                newSlots = [...currentSlots];
         }
     } else {
         switch (rarity) {
@@ -336,7 +325,7 @@ function updateSlots(currentSlots: number[], rarity: number, transcendence: bool
                 }
                 break;
             default:
-                return [...currentSlots];
+                newSlots = [...currentSlots];
         }
     }
     console.log("Current slots: " + currentSlots);
