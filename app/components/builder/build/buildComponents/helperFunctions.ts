@@ -146,7 +146,7 @@ export const addSkillLevel = (skillData: SkillType[] | null, skillId: number, ad
     console.log("Add: " + add);
     console.log("SkillId: " + skillId);
 
-    if (fullSkill?.kind === "set") {
+    if (fullSkill?.kind === "set" || fullSkill?.kind === "group") {
         return;
     }
 
