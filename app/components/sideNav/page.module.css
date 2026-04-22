@@ -1,0 +1,71 @@
+.sideNavContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #101219;
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.2s;
+}
+.sideNavContainer.open {
+    visibility: visible;
+    opacity: 1;
+}
+.closeBtn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+}
+.closeBtn > * {
+    width: 24px;
+    height: 24px;
+    color: #fff;
+}
+.no-scroll {
+    overflow: hidden;
+}
+.navButtons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    height: 100%;
+}
+.builderBtn, .homeBtn {
+    text-decoration: none;
+    color: #fff;
+    font-size: 40px;
+    font-weight: 700;
+}
+.discordBtn {
+    position: absolute;
+    bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 16px;
+    color: #fff;
+    text-decoration: none;
+    gap: 5px;
+}
+.discordBtn > * {
+    fill: #5865F2;
+    width: 26px;
+    height: 26px;
+}

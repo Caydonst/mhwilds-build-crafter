@@ -1,0 +1,173 @@
+.authContainerWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.2s;
+    backdrop-filter: blur(10px);
+    z-index: 5;
+    padding: 10px;
+}
+.authContainerWrapper.open {
+    opacity: 1;
+    visibility: visible;
+}
+.authContainer {
+    padding: 30px;
+    background: #101219;
+    width: 100%;
+    max-width: 420px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    position: relative;
+    transform: scale(0.98);
+    transition: 0.2s;
+}
+.authContainer.open {
+    transform: scale(1);
+}
+.logoContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    height: 60px;
+    width: 100%;
+}
+.logoContainer h1 {
+    color: #fff;
+    font-size: 22px;
+}
+.logoContainer img {
+    height: 30px;
+}
+.authHeader {
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+.authHeader h2 {
+    color: #fff;
+    font-size: 20px;
+}
+.authHeader p {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 14px;
+}
+.googleBtn {
+    background: #fff;
+    color: #000;
+    border: none;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    transition: 0.2s;
+    cursor: pointer;
+    gap: 5px;
+}
+.googleBtn:hover {
+    opacity: 0.7;
+}
+.googleBtn img {
+    width: 20px;
+    height: 20px;
+}
+.dividerContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 20px;
+}
+.dividerContainer hr {
+    width: 100%;
+    height: 1px;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+}
+.dividerContainer p {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.5);
+}
+.emailLoginContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+}
+.emailLoginContainer input {
+    width: 100%;
+    height: 46px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: transparent;
+    border-radius: 12px;
+    padding: 0 14px;
+    color: #fff;
+    outline: none;
+    transition: 0.2s;
+}
+.emailLoginContainer input:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+.emailLoginContainer input:focus {
+    border-color: #fff;
+    background: transparent;
+}
+.emailLoginContainer button {
+    background: #fff;
+    color: #000;
+    border: none;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 46px;
+    transition: 0.2s;
+    cursor: pointer;
+}
+.emailLoginContainer button:hover {
+    opacity: 0.7;
+}
+.closeBtn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.closeBtn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+.closeBtn > * {
+    color: #fff;
+    width: 20px;
+    height: 20px;
+}

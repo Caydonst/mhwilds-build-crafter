@@ -1,5 +1,5 @@
 import styles from "./page.module.css"
-import {ChevronDownIcon, XMarkIcon} from "@heroicons/react/24/outline"
+import {ChevronUpDownIcon, XMarkIcon} from "@heroicons/react/24/solid"
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import {useGameData} from "@/app/hooks/useGameData";
 import ArmorPiece from "@/app/components/builder/build/buildComponents/armorPiece"
@@ -136,7 +136,7 @@ export default function WeaponSelector({ weaponSelectorOpen, setWeaponSelectorOp
                                                 <div className={styles.weaponSelectorLeft}>
                                                     <span className={`${styles.weaponIcon} ${styles[weaponFilter]}`} />
                                                 </div>
-                                                <ChevronDownIcon className={styles.dropDownIcon} />
+                                                <ChevronUpDownIcon className={styles.dropDownIcon} />
                                             </>
                                         )}
                                     </div>

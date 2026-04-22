@@ -47,7 +47,10 @@ export default function GearPiece({
                                   }: Props) {
     const [moreOptionsOpen, setMoreOptionsOpen] = useState(false);
     const moreOptionsRef = useRef<HTMLDivElement | null>(null);
-    const [slots, setSlots] = useState<number[]>([]);
+
+    type Sharpness = NonNullable<Weapon["sharpness"]>;
+    type SharpnessKey = keyof Sharpness;
+    const sharpnessList: SharpnessKey[] = ["red", "orange", "yellow", "green", "blue", "white", "purple"];
 
     const weapons = [
         "bow",
@@ -151,9 +154,15 @@ export default function GearPiece({
 
     function updateTranscendence() {
         if (isArmorPiece(gearPiece)) {
-            const emptySlots: DecoPlacement[] = [];
 
             const newGearPiece = handleTranscendence(gearPiece);
+            console.log(newGearPiece);
+
+            const emptySlots: DecoPlacement[] = newGearPiece.slots.map(() => ({
+                slotLevel: 1,
+                decoration: null,
+            }));
+
             setBuild(prev => {
                 return {
                     ...prev, [slotKey]: newGearPiece,
@@ -165,11 +174,6 @@ export default function GearPiece({
             })
         }
     }
-
-    useEffect(() => {
-        console.log("Gear PIECE: ");
-        console.log(gearPiece);
-    }, [gearPiece]);
 
 
     return (
@@ -211,9 +215,9 @@ export default function GearPiece({
                                 </div>
                                 {gearPiece.sharpness && (
                                     <div className={styles.weaponSharpness}>
-                                        {Object.entries(gearPiece.sharpness).map(([color, value]) => (
-                                            <div key={color} className={`${styles.sharpnessColor} ${styles[color]}`}
-                                                 style={{width: `${(value / 400) * 150}px`}}></div>
+                                        {sharpnessList.map(sharpness => (
+                                            <div key={sharpness} className={`${styles.sharpnessColor} ${styles[sharpness]}`}
+                                                 style={{ width: `${(gearPiece.sharpness?.[sharpness] ?? 0 / 400) * 150}px` }}></div>
                                         ))}
                                     </div>
                                 )}
@@ -239,14 +243,16 @@ export default function GearPiece({
                         </div>
 
                         <div ref={moreOptionsRef} className={styles.moreOptionsBtnContainer}>
-                            <button className={styles.moreOptionsBtn} onClick={(e) => {
+                            <button className={styles.moreOptionsBtn} onClick={() => {
                                 setMoreOptionsOpen(prev => !prev);
                             }}><EllipsisHorizontalIcon /></button>
                             <div className={moreOptionsOpen ? `${styles.moreOptionsContainer} ${styles.open}` : styles.moreOptionsContainer}>
-                                <button className={styles.deleteBtn} onClick={(e) => {
-                                    deleteBuildItem(slotKey);
-                                    setMoreOptionsOpen(prev => !prev);
-                                }}><TrashIcon /> Delete</button>
+                                <div className={styles.optionBtnContainer}>
+                                    <button className={styles.deleteBtn} onClick={() => {
+                                        deleteBuildItem(slotKey);
+                                        setMoreOptionsOpen(prev => !prev);
+                                    }}><TrashIcon /> Delete</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -278,27 +284,34 @@ export default function GearPiece({
                             <div className={styles.pieceContainerHeaderInner}></div>
                         </div>
                         <div ref={moreOptionsRef} className={moreOptionsOpen ? `${styles.moreOptionsBtnContainer} ${styles.open}` : styles.moreOptionsBtnContainer}>
-                            <button className={styles.moreOptionsBtn} onClick={(e) => {
+                            <button className={styles.moreOptionsBtn} onClick={() => {
                                 setMoreOptionsOpen(prev => !prev);
                             }}><EllipsisHorizontalIcon /></button>
                             <div className={moreOptionsOpen ? `${styles.moreOptionsContainer} ${styles.open}` : styles.moreOptionsContainer}>
                                 {gearPiece.rarity >= 5 && (
-                                    gearPiece.transcendence === true ? (
-                                        <button className={styles.transcendBtn} onClick={() => {
-                                            updateTranscendence();
-                                            setMoreOptionsOpen(prev => !prev);
-                                        }}><ChevronDoubleDownIcon /> Untranscend</button>
-                                    ) : (
-                                        <button className={styles.transcendBtn} onClick={() => {
-                                            updateTranscendence();
-                                            setMoreOptionsOpen(prev => !prev);
-                                        }}><ChevronDoubleUpIcon /> Transcend</button>
-                                    )
+                                    <>
+                                        <div className={styles.optionBtnContainer}>
+                                            {gearPiece.transcendence === true ? (
+                                                <button className={styles.transcendBtn} onClick={() => {
+                                                    updateTranscendence();
+                                                    setMoreOptionsOpen(prev => !prev);
+                                                }}><ChevronDoubleDownIcon /> Untranscend</button>
+                                            ) : (
+                                                <button className={styles.transcendBtn} onClick={() => {
+                                                    updateTranscendence();
+                                                    setMoreOptionsOpen(prev => !prev);
+                                                }}><ChevronDoubleUpIcon /> Transcend</button>
+                                            )}
+                                        </div>
+                                        <hr />
+                                    </>
                                 )}
-                                <button className={styles.deleteBtn} onClick={(e) => {
-                                    deleteBuildItem(slotKey);
-                                    setMoreOptionsOpen(prev => !prev);
-                                }}><TrashIcon /> Delete</button>
+                                <div className={styles.optionBtnContainer}>
+                                    <button className={styles.deleteBtn} onClick={() => {
+                                        deleteBuildItem(slotKey);
+                                        setMoreOptionsOpen(prev => !prev);
+                                    }}><TrashIcon /> Delete</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -324,10 +337,12 @@ export default function GearPiece({
                                     setMoreOptionsOpen(prev => !prev);
                                 }}><EllipsisHorizontalIcon /></button>
                                 <div className={moreOptionsOpen ? `${styles.moreOptionsContainer} ${styles.open}` : styles.moreOptionsContainer}>
-                                    <button className={styles.deleteBtn} onClick={(e) => {
-                                        deleteBuildItem(slotKey);
-                                        setMoreOptionsOpen(prev => !prev);
-                                    }}><TrashIcon /> Delete</button>
+                                    <div className={styles.optionBtnContainer}>
+                                        <button className={styles.deleteBtn} onClick={() => {
+                                            deleteBuildItem(slotKey);
+                                            setMoreOptionsOpen(prev => !prev);
+                                        }}><TrashIcon /> Delete</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

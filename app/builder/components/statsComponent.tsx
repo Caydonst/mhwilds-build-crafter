@@ -1,5 +1,5 @@
 import styles from "./page.module.css"
-import {BuilderBuild} from "@/app/api/types/types"
+import {BuilderBuild, type Weapon} from "@/app/api/types/types"
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import {ChevronDownIcon} from "@heroicons/react/24/outline";
 import Skill from "@/app/components/builder/build/buildComponents/skill";
@@ -14,6 +14,11 @@ export default function StatsComponent({ build }: Props) {
     const [defenseOpen, setDefenseOpen] = useState(true);
     const equipSkillsRef = useRef<HTMLDivElement>(null);
     const defenseRef = useRef<HTMLDivElement>(null);
+
+    type Sharpness = NonNullable<Weapon["sharpness"]>;
+    type SharpnessKey = keyof Sharpness;
+    const sharpnessList: SharpnessKey[] = ["red", "orange", "yellow", "green", "blue", "white", "purple"];
+
 
     const buildStats = useMemo(() => {
         const newStats = updateStats(build);
@@ -123,18 +128,19 @@ export default function StatsComponent({ build }: Props) {
                             <>
                                 {build.weapon && build.weapon.sharpness && (
                                     <div className={styles.weaponSharpness}>
-                                        {Object.entries(build.weapon.sharpness).map(([color, value]) => (
-                                            value !== 0 && (
-                                                <div key={color} className={`${styles.sharpnessColor} ${styles[color]}`} style={{ width: `${(value / 400) * 150}px`}}></div>
-                                            )
+                                        {sharpnessList.map(sharpness => (
+                                            <div key={sharpness} className={`${styles.sharpnessColor} ${styles[sharpness]}`}
+                                                 style={{ width: `${(build.weapon?.sharpness?.[sharpness] ?? 0 / 400) * 150}px` }}></div>
                                         ))}
+
+
                                     </div>
                                 )}
                                 {build.weapon && build.weapon.sharpness && (
                                     <div className={styles.sharpnessNumbers}>
-                                        {Object.entries(build.weapon.sharpness).map(([color, value]) => (
-                                            value !== 0 && (
-                                                <div key={color} className={`${styles.sharpnessNumber} ${styles[color]}`}>{value}</div>
+                                        {sharpnessList.map(sharpness => (
+                                            build.weapon?.sharpness?.[sharpness] !== 0 && (
+                                                <div key={sharpness} className={`${styles.sharpnessNumber} ${styles[sharpness]}`}>{build.weapon?.sharpness?.[sharpness]}</div>
                                             )
                                         ))}
                                     </div>

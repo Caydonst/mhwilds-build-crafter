@@ -45,6 +45,8 @@ export default function GearSelector({ gearSelectorOpen, setGearSelectorOpen, ty
                 decoration: null,
             }));
 
+            armor.transcendence = false;
+
             return {
                 ...prev,
                 [type]: armor,

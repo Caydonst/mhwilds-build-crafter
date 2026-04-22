@@ -455,5 +455,13 @@ export type BuilderBuild = {
     legs: Armor | null;
     charm: CharmRank | CustomCharm | null;
     decorations: BuildDecorations;
+    transcendence?: boolean;
 }
 
+export type SavedBuild = {
+    id: number;
+    created_at: string;
+    build_data: BuilderBuild;
+    uuid: string;
+    name: string;
+}

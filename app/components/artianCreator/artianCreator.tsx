@@ -282,9 +282,9 @@ export default function ArtianCreator({ showArtian, setShowArtian, addWeapon }: 
                     </div>
                     <div className={styles.artianSelectorWrapper}>
                         <div className={styles.artianSelectorContainer}>
-                            <div className={`${styles.slider} ${artian === "Artian" ? styles.artian : styles.gogmaArtian}`} style={{ transform: `translateX(${sliderAmount}%)` }}></div>
-                            <button className={styles.selectorBtn} onClick={() => changeArtian(0, "Artian")}>Artian</button>
-                            <button className={styles.selectorBtn} onClick={() => changeArtian(100, "Gogma Artian")}>Gogma Artian</button>
+                            <div className={`${styles.slider}`} style={{ transform: `translateX(${sliderAmount}%)` }}></div>
+                            <button className={artian === "Artian" ? `${styles.selectorBtn} ${styles.selected}` : styles.selectorBtn} onClick={() => changeArtian(0, "Artian")}>Artian</button>
+                            <button className={artian === "Gogma Artian" ? `${styles.selectorBtn} ${styles.selected}` : styles.selectorBtn} onClick={() => changeArtian(100, "Gogma Artian")}>Gogma Artian</button>
                         </div>
                     </div>
                 </div>

@@ -25,8 +25,6 @@ export default function SkillsComponent({ build, skills, armorSets }: Props) {
     const equipSkillsRef = useRef<HTMLDivElement>(null);
     const bonusSkillsRef = useRef<HTMLDivElement>(null);
     const groupSkillsRef = useRef<HTMLDivElement>(null);
-    const [hoveredSkill, setHoveredSkill] = useState<SkillType | null>(null);
-    const [hoveredSkillLevel, setHoveredSkillLevel] = useState<number>(0);
 
     type AggregatedSkill = {
         skill: SkillType;
@@ -36,6 +34,8 @@ export default function SkillsComponent({ build, skills, armorSets }: Props) {
     const aggregatedSkills = useMemo(() => {
         const map: Record<number, AggregatedSkill> = {};
         const pieces = [build.weapon, build.head, build.chest, build.arms, build.waist, build.legs, build.charm];
+
+        console.log(pieces);
 
         for (const piece of pieces) {
             if (!piece) continue;
@@ -143,34 +143,8 @@ export default function SkillsComponent({ build, skills, armorSets }: Props) {
         }, 800);
     }
 
-    const [hovering, setHovering] = React.useState(false);
-    const containerRef = useRef<HTMLDivElement | null>(null);
-    const followerRef = useRef<HTMLDivElement | null>(null);
-
-    function handleMouseMove(e: React.MouseEvent) {
-        if (!containerRef.current) return;
-
-        const rect = containerRef.current.getBoundingClientRect();
-
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        if (followerRef.current) {
-            followerRef.current.style.left = `${x}px`;
-            followerRef.current.style.top = `${y}px`;
-        }
-    }
-
-    const findSkillIcon = (skill: SkillType | null) => {
-        if (skill === null) return;
-        const foundSkill = skills?.find((thisSkill) => thisSkill.id === skill.id);
-        return foundSkill?.icon.id ?? 0;
-    };
-
-    const iconId = findSkillIcon(hoveredSkill);
-
     return (
-        <div ref={containerRef} className={styles.skillsComponentContainer}>
+        <div className={styles.skillsComponentContainer}>
             <div className={styles.equipmentSkillsContainer} style={{ height: equipSkillsHeight }}>
                 <div className={styles.equipSkillsHeader} onClick={(e) => {
                     setEquipSkillsOpen(!equipSkillsOpen);
@@ -181,11 +155,11 @@ export default function SkillsComponent({ build, skills, armorSets }: Props) {
                 </div>
                 <div ref={equipSkillsRef} className={styles.equipSkillsContent}>
 
-                    <p className={styles.tapMsg}><span><InformationCircleIcon /></span>Tap/hover skills for more info.</p>
+                    <p className={styles.tapMsg}><span><InformationCircleIcon /></span>Tap skills for more info.</p>
                     {aggregatedSkills.length > 0 ? (
                         aggregatedSkills.map(({ skill, totalLevel }) => {
                             return (
-                                <Skill key={skill.id} skill={skill} skillData={skills} totalLevel={totalLevel} setHovering={setHovering} handleMouseMove={handleMouseMove} setHoveredSkill={setHoveredSkill} setHoveredSkillLevel={setHoveredSkillLevel} />
+                                <Skill key={skill.id} skill={skill} skillData={skills} totalLevel={totalLevel} clickEffect={clickEffect} />
                             );
                         })
                     ) : (
@@ -261,20 +235,6 @@ export default function SkillsComponent({ build, skills, armorSets }: Props) {
                     )}
                 </div>
             </div>
-            {hovering && (
-                <div ref={followerRef} className={styles.skillHoverContainer}>
-                    <span className={`${styles.hoverSkillIcon} ${styles[`skill${iconId}`]}`} />
-                    <h3>{hoveredSkill?.name}</h3>
-                    <div className={styles.skillRanksContainer}>
-                        {hoveredSkill?.ranks.map((rank, i) => (
-                            <div key={i} className={rank.level === hoveredSkillLevel ? `${styles.rankContainer} ${styles.activeSkillLevel}` : `${styles.rankContainer}`}>
-                                <p>Level {rank.level}</p>
-                                <p>{rank.description}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            )}
         </div>
     )
 }

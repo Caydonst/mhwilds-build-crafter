@@ -4,7 +4,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: #0A0A0A;
+    background: #101219;
     transform: translateY(100%);
     transition: 0.3s;
 }
@@ -178,7 +178,7 @@
     width: 100%;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 10px;
-    background: #0A0A0A;
+    background: #101219;
     z-index: 3;
     max-height: 400px;
     overflow: hidden;
@@ -242,7 +242,7 @@
     align-items: center;
     flex-shrink: 0;
     padding: 5px;
-    background: #0A0A0A;
+    background: #101219;
 }
 .searchContainer input {
     width: 100%;
@@ -328,21 +328,22 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #2d7a4d;
-    border: 1px solid #57ff9d;
-    border-radius: 10px;
-    color: #fff;
+    background: #fff;
+    border: none;
+    border-radius: 50px;
+    color: #000;
     cursor: pointer;
+    transition: 0.2s;
 }
 .addBtn:hover {
-    background: #1d4f32;
+    opacity: 0.7;
 }
 .addBtn:disabled {
     opacity: 0.3;
     pointer-events: none;
 }
 .addBtn:disabled:hover {
-    background: #153823;
+    opacity: 0.3;
 }
 
 @media (max-width: 500px) {
@@ -350,6 +351,9 @@
         padding: 30px 10px;
     }
     .decoContainer {
+        padding: 30px 10px;
+    }
+    .addBtnContainer {
         padding: 30px 10px;
     }
 }

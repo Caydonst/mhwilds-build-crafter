@@ -1,0 +1,153 @@
+.saveBuildWrapper {
+    position: fixed;
+    z-index: 4;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.2s;
+}
+.saveBuildWrapper.open {
+    visibility: visible;
+    opacity: 1;
+}
+.saveBuildContainer {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #101219;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 450px;
+    gap: 20px;
+    position: relative;
+    transform: scale(0.98);
+    transition: 0.2s;
+    will-change: transform;
+}
+.saveBuildWrapper.open .saveBuildContainer {
+    transform: scale(1);
+}
+.buildInfoContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+.saveBuildContainer h3 {
+    color: #fff;
+}
+.buildNameContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    width: 100%;
+    gap: 10px;
+}
+.buildNameContainer p {
+    color: #fff;
+    font-size: 14px;
+}
+.buildNameContainer input {
+    width: 100%;
+    height: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: transparent;
+    color: #fff;
+    outline: none;
+    border-radius: 14px;
+    padding: 0 14px;
+    font-size: 16px;
+    transition: 0.2s;
+}
+.buildNameContainer input:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+.buildNameContainer input:focus {
+    background: transparent;
+    border-color: #fff;
+}
+.saveBtn {
+    width: 100%;
+    height: 50px;
+    border: none;
+    background: #fff;
+    color: #000;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.saveBtn:hover {
+    opacity: 0.8;
+}
+.saveBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+.saveBtn p {
+    color: #000;
+}
+.closeBtn {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    background: transparent;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.closeBtn > * {
+    color: #fff;
+    width: 20px;
+    height: 20px;
+}
+.closeBtn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.spinnerContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex: 1 1 100%;
+}
+.spinnerWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: #000;
+    gap: 8px;
+}
+.spinner {
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    border: 3px solid rgba(0, 0, 0, 0.3);
+    border-top-color: rgba(0, 0, 0, 1);
+    animation: spin 1.2s linear infinite;
+}
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
