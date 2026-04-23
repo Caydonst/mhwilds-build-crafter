@@ -90,6 +90,24 @@ export async function testSaveBuild(build: BuilderBuild, name: string, buildId: 
     }
 }
 
+export async function checkBuildLimit() {
+    const supabase = await createClient();
+
+    const user = await checkUser();
+
+    if (!user) return;
+
+    const { count, error } = await supabase
+        .from('test_builds')
+        .select('id', { count: 'exact', head: true })
+        .eq('uuid', user.id)
+
+    console.log("Num builds: " + count)
+
+    return (count && count >= 20);
+
+}
+
 export async function getData(user: User | null) {
     const supabase = await createClient();
 

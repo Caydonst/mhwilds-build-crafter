@@ -156,7 +156,7 @@ export default function ArmorPiece({ gearPiece, armorSets, slotKey, build }: Pro
                             <div className={styles.gearPieceSkillsContainer}>
 
                                 {gearPiece.skills.map((skill, i) => (
-                                    "kind" in skill.skill && skill.skill.kind !== "set" && (
+                                    "kind" in skill.skill && skill.skill.kind !== "set" && skill.skill.kind !== "group" && (
                                         <p key={i}>{skill.skill.name} {skill.level}</p>
                                     )
                                 ))}
