@@ -137,11 +137,6 @@ export default function BuilderClient() {
     }, [router]);
 
     useEffect(() => {
-        console.log("Build with transcendence:")
-        console.log(build)
-    }, [build]);
-
-    useEffect(() => {
         updateBuild(build);
     }, [build]);
 
@@ -158,7 +153,6 @@ export default function BuilderClient() {
             if (!raw) return;
 
             try {
-                console.log(raw);
                 const draft = JSON.parse(raw) as BuilderBuild;
                 setBuild(draft);
             } finally {
@@ -186,9 +180,6 @@ export default function BuilderClient() {
                 }
 
                 const build = await getBuild(buildId);
-
-                console.log("BUILLDERD")
-                console.log(build);
 
                 if (build) {
                     setBuild(build);
@@ -229,18 +220,6 @@ export default function BuilderClient() {
             } else {
                 setOpen(true);
             }
-            /*
-            const saved = await testSaveBuild(build, buildId);
-
-            if (saved) {
-                setSavedBuild(saved.build_data);
-                console.log("Saved build:", saved);
-                alert("Build saved!");
-            } else {
-                setOpen(true);
-            }
-
-             */
         } finally {
             setLoading(false);
         }
@@ -253,7 +232,6 @@ export default function BuilderClient() {
 
                 if (saved) {
                     setSavedBuild(saved[0].build_data);
-                    console.log("Saved build:", saved);
                     alert("Build saved!");
                     setLoading(false);
                 }
@@ -264,7 +242,6 @@ export default function BuilderClient() {
 
                 if (saved) {
                     setSavedBuild(saved[0].build_data);
-                    console.log("Saved build:", saved);
                     //alert("Build saved!");
                     router.replace(`/builder?build=${saved[0].id}`);
                     setSaveBuildOpen(false);
