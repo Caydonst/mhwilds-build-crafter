@@ -144,26 +144,35 @@ export default function BuilderClient() {
         if (!shouldRestore) return;
 
         async function restorePendingBuild() {
+            const supabase = createClient();
 
-            const user = await checkUser();
+            const {
+                data: { user },
+                error,
+            } = await supabase.auth.getUser();
 
-            if (!user) return;
-
-            const raw = sessionStorage.getItem("pendingBuildDraft");
-            if (!raw) return;
-
-            try {
-                const draft = JSON.parse(raw) as BuilderBuild;
-                setBuild(draft);
-            } finally {
-                sessionStorage.removeItem("pendingBuildDraft");
+            if (error) {
+                console.error(error.message);
             }
+
+            if (user) {
+                const raw = sessionStorage.getItem("pendingBuildDraft");
+
+                if (raw) {
+                    try {
+                        const draft = JSON.parse(raw) as BuilderBuild;
+                        setBuild(draft);
+                    } finally {
+                        sessionStorage.removeItem("pendingBuildDraft");
+                    }
+                }
+            }
+
+            router.replace("/builder");
         }
 
-        restorePendingBuild().then(() => {
-            router.replace("/builder"); // removes ?restore=1
-        });
-    }, [shouldRestore, router]);
+        restorePendingBuild();
+    }, [shouldRestore, router, setBuild]);
 
     useEffect(() => {
         if (!buildId) return;
