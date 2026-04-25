@@ -145,7 +145,7 @@ export default function BuilderClient() {
 
         async function restorePendingBuild() {
 
-            const user = checkUser();
+            const user = await checkUser();
 
             if (!user) return;
 
