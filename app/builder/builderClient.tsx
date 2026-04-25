@@ -163,7 +163,7 @@ export default function BuilderClient() {
         restorePendingBuild().then(() => {
             router.replace("/builder"); // removes ?restore=1
         });
-    }, [shouldRestore]);
+    }, [shouldRestore, router]);
 
     useEffect(() => {
         if (!buildId) return;
