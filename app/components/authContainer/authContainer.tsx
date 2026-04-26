@@ -34,7 +34,7 @@ export default function AuthContainer({open, setOpen}: Props) {
             const { error } = await supabase.auth.signInWithOAuth({
                 provider: "google",
                 options: {
-                    redirectTo: `${window.location.origin}/builder?restore=1`
+                    redirectTo: `${window.location.origin}/auth/callback?next=/builder&restore=1`
                 },
             });
 

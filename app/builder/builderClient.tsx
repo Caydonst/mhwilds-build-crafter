@@ -78,26 +78,6 @@ export default function BuilderClient() {
     };
 
     useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-
-        if (params.get("restore") !== "1") return;
-
-        try {
-            const raw = sessionStorage.getItem("pendingBuildDraft");
-
-            if (raw) {
-                const draft = JSON.parse(raw) as BuilderBuild;
-                setBuild(draft);
-                sessionStorage.removeItem("pendingBuildDraft");
-            }
-        } catch (err) {
-            console.error(err);
-        } finally {
-            window.history.replaceState(null, "", "/builder");
-        }
-    }, []);
-
-    useEffect(() => {
         const supabase = createClient();
         let mounted = true;
 
@@ -159,6 +139,26 @@ export default function BuilderClient() {
     useEffect(() => {
         updateBuild(build);
     }, [build]);
+
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+
+        if (params.get("restore") !== "1") return;
+
+        try {
+            const raw = sessionStorage.getItem("pendingBuildDraft");
+
+            if (raw) {
+                const draft = JSON.parse(raw) as BuilderBuild;
+                setBuild(draft);
+                sessionStorage.removeItem("pendingBuildDraft");
+            }
+        } catch (err) {
+            console.error(err);
+        } finally {
+            router.replace("/builder");
+        }
+    }, [router]);
 
     /*
     useEffect(() => {
