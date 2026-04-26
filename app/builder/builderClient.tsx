@@ -141,9 +141,9 @@ export default function BuilderClient() {
     }, [build]);
 
     useEffect(() => {
-        if (!shouldRestore) return;
+        if (searchParams.get("restore") !== "1") return;
 
-        async function restorePendingBuild() {
+        async function restore() {
             try {
                 const raw = sessionStorage.getItem("pendingBuildDraft");
 
@@ -154,13 +154,14 @@ export default function BuilderClient() {
                 }
             } catch (err) {
                 console.error(err);
+            } finally {
+                // ALWAYS remove the query param
+                router.replace("/builder");
             }
-
-            router.replace("/builder");
         }
 
-        restorePendingBuild();
-    }, [shouldRestore, router]);
+        restore();
+    }, [searchParams, router]);
 
     useEffect(() => {
         if (!buildId) return;
@@ -169,7 +170,7 @@ export default function BuilderClient() {
             try {
                 setPageLoading(true);
 
-                const user = checkUser();
+                const user = await checkUser();
 
                 if (!user) {
                     router.replace("/builder");
