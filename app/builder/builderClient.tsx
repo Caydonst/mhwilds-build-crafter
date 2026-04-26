@@ -156,7 +156,7 @@ export default function BuilderClient() {
         } catch (err) {
             console.error(err);
         } finally {
-            router.replace("/builder");
+            router.replace("/builder", { scroll: false });
         }
     }, [router]);
 
