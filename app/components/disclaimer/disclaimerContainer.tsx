@@ -14,7 +14,7 @@ export default function DisclaimerContainer({ googleNoticeOpen, setGoogleNoticeO
                 <div className={styles.iconContainer}>!</div>
                 <h2>Google Sign-in Notice</h2>
                 <p>Google sign in is not supported through the <span>MHWilds Assistant</span> app.</p>
-                <p>If you would like to save builds, visit the <a href={"https://mhwilds-build-crafter.vercel.app/"} target={"_blank"} className={styles.linkBtn}>www.mhwildsbuilder.com</a> website directly and sign in with google.</p>
+                <p>If you would like to save builds, visit the <a href={"https://mhwildsbuilder.com/"} target={"_blank"} className={styles.linkBtn}>www.mhwildsbuilder.com</a> website directly and sign in with google.</p>
                 <p>Alternate sign-in methods are being worked on to allow sign in through the MHWilds Assistant app.</p>
                 <hr />
                 <div className={styles.updatesContainer}>
