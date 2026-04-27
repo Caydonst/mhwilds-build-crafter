@@ -95,6 +95,34 @@
     border-top-color: rgba(0, 0, 0, 1);
     animation: spin 1.2s linear infinite;
 }
+.headerBtnContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    height: 100%;
+}
+.clearBtn {
+    background: none;
+    color: #ff2929;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background: rgba(255, 41, 41, 0.1);
+    height: 100%;
+    padding: 0 10px;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 41, 41, 0.1);
+}
+.clearBtn:hover {
+    background: rgba(255, 41, 41, 0.2);
+}
+.clearBtn > * {
+    color: #ff2929;
+    width: 16px;
+    height: 16px;
+}
 .publishBtn {
     width: 160px;
     height: 100%;

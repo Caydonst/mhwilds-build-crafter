@@ -11,7 +11,7 @@ import GearPiece from "@/app/builder/components/gearPiece";
 import DecoSelector from "./components/decoSelector"
 import StatsComponent from "./components/statsComponent";
 import SkillsComponent from "@/app/builder/components/skillsComponent";
-import { GlobeAsiaAustraliaIcon, InboxArrowDownIcon } from "@heroicons/react/24/solid"
+import {GlobeAsiaAustraliaIcon, InboxArrowDownIcon, XMarkIcon} from "@heroicons/react/24/solid"
 import {testSaveBuild, getBuild, checkUser, getBuildForRedirect, checkBuildLimit} from "@/lib/actions";
 import AuthContainer from "@/app/components/authContainer/authContainer";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -21,6 +21,7 @@ import {updateBuild} from "@/app/builder/components/helperFunctions";
 import {createClient} from "@/lib/supabase/client";
 import {User} from "@supabase/auth-js";
 import BuildsFull from "@/app/components/buildsFullComponent/buildsFull";
+import DisclaimerContainer from "@/app/components/disclaimer/disclaimerContainer";
 
 type ArmorSlotKey = "weapon" | "head" | "chest" | "arms" | "waist" | "legs" | "charm";
 
@@ -28,7 +29,6 @@ export default function BuilderClient() {
     const { skills, armorBySlot, isLoading, error } = useGameData();
     const searchParams = useSearchParams();
     const buildId = searchParams.get("build");
-    const shouldRestore = searchParams.get("restore") === "1";
     const router = useRouter();
     const [loading, setLoading] = useState<boolean>(false);
     const [pageLoading, setPageLoading] = useState<boolean>(false);
@@ -57,6 +57,24 @@ export default function BuilderClient() {
             charm: [],
         },
     });
+    const [emptyBuild, setEmptyBuild] = useState<BuilderBuild>({
+        weapon: null,
+        head: null,
+        chest: null,
+        arms: null,
+        waist: null,
+        legs: null,
+        charm: null,
+        decorations: {
+            weapon: [],
+            head: [],
+            chest: [],
+            arms: [],
+            waist: [],
+            legs: [],
+            charm: [],
+        },
+    });
     const [savedBuild, setSavedBuild] = useState<BuilderBuild>();
     const [selectedPage, setSelectedPage] = useState<string>("gear");
     const [sliderAmount, setSliderAmount] = useState<number>(0);
@@ -66,6 +84,8 @@ export default function BuilderClient() {
     const [saveBuildLoading, setSaveBuildLoading] = useState(false);
     const [user, setUser] = useState<User | null>(null);
     const [buildsFullOpen, setBuildsFullOpen] = useState<boolean>(false);
+    const [hasLoadedBuild, setHasLoadedBuild] = useState(false);
+    const [googleNoticeOpen, setGoogleNoticeOpen] = useState<boolean>(true);
 
     const DEFAULT_DECOS: BuildDecorations = {
         weapon: [],
@@ -76,6 +96,7 @@ export default function BuilderClient() {
         legs: [],
         charm: [],
     };
+
 
     useEffect(() => {
         const supabase = createClient();
@@ -88,12 +109,11 @@ export default function BuilderClient() {
 
             if (error || !data.user) {
                 setUser(null);
-                router.replace("/builder");
             } else {
                 setUser(data.user);
             }
 
-            setLoading(false);
+            setPageLoading(false);
         }
 
         checkCurrentUser();
@@ -104,10 +124,9 @@ export default function BuilderClient() {
 
                 const nextUser = session?.user ?? null;
                 setUser(nextUser);
-                setLoading(false);
+                setPageLoading(false);
 
                 if (!nextUser) {
-                    router.replace("/builder");
                     setSavedBuild({
                         weapon: null,
                         head: null,
@@ -137,54 +156,22 @@ export default function BuilderClient() {
     }, [router]);
 
     useEffect(() => {
+        const savedBuild = localStorage.getItem("savedBuild");
+
+        if (savedBuild) {
+            const parsedBuild = JSON.parse(savedBuild);
+            setBuild(parsedBuild);
+            setSavedBuild(parsedBuild);
+        }
+
+        setHasLoadedBuild(true);
+    }, []);
+
+    useEffect(() => {
+        if (!hasLoadedBuild) return;
+
         updateBuild(build);
-    }, [build]);
-
-    useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-
-        if (params.get("restore") !== "1") return;
-
-        try {
-            const raw = sessionStorage.getItem("pendingBuildDraft");
-
-            if (raw) {
-                const draft = JSON.parse(raw) as BuilderBuild;
-                setBuild(draft);
-                sessionStorage.removeItem("pendingBuildDraft");
-            }
-        } catch (err) {
-            console.error(err);
-        } finally {
-            router.replace("/builder", { scroll: false });
-        }
-    }, [router]);
-
-    /*
-    useEffect(() => {
-        if (searchParams.get("restore") !== "1") return;
-
-        async function restore() {
-            try {
-                const raw = sessionStorage.getItem("pendingBuildDraft");
-
-                if (raw) {
-                    const draft = JSON.parse(raw) as BuilderBuild;
-                    setBuild(draft);
-                    sessionStorage.removeItem("pendingBuildDraft");
-                }
-            } catch (err) {
-                console.error(err);
-            } finally {
-                // ALWAYS remove the query param
-                router.replace("/builder");
-            }
-        }
-
-        restore();
-    }, [searchParams, router]);
-
-     */
+    }, [build, hasLoadedBuild]);
 
     useEffect(() => {
         if (!buildId) return;
@@ -283,12 +270,12 @@ export default function BuilderClient() {
     }
 
     useEffect(() => {
-        if (weaponSelectorOpen || gearSelectorOpen || decoSelectorOpen) {
+        if (weaponSelectorOpen || gearSelectorOpen || decoSelectorOpen || googleNoticeOpen) {
             document.body.classList.add("no-scroll");
         } else {
             document.body.classList.remove("no-scroll");
         }
-    }, [weaponSelectorOpen, gearSelectorOpen, decoSelectorOpen]);
+    }, [weaponSelectorOpen, gearSelectorOpen, decoSelectorOpen, googleNoticeOpen]);
 
     const ARMOR_SLOTS: ArmorSlotKey[] = ["weapon", "head", "chest", "arms", "waist", "legs", "charm"]
 
@@ -366,6 +353,11 @@ export default function BuilderClient() {
         }, 800);
     }
 
+    function clearBuild() {
+        localStorage.removeItem("savedBuild");
+        setBuild(emptyBuild);
+    }
+
     return (
         <main className={styles.builderPageWrapper}>
             {isLoading || pageLoading ? (
@@ -386,21 +378,26 @@ export default function BuilderClient() {
                             Publish
                         </button>
                         */}
-                            <button className={styles.saveBuildBtn} onClick={handleSave}
-                                    disabled={loading || isEqual(build, savedBuild)}>
-                                {loading ? (
-                                    <div className={styles.saveSpinnerContainer}>
+                            <div className={styles.headerBtnContainer}>
+                                {!isEqual(build, emptyBuild) || !buildId && (
+                                    <button className={styles.clearBtn} onClick={() => clearBuild()}><XMarkIcon />Clear</button>
+                                )}
+                                <button className={styles.saveBuildBtn} onClick={handleSave}
+                                        disabled={buildId ? loading || isEqual(build, savedBuild) : loading}>
+                                    {loading ? (
+                                        <div className={styles.saveSpinnerContainer}>
                                     <span className={styles.saveSpinnerWrapper}>
                                         <span className={styles.saveSpinner}></span>
                                     </span>
-                                    </div>
-                                ) : (
-                                    <div className={styles.saveBtnInner}>
-                                        <InboxArrowDownIcon className={styles.saveIcon}/>
-                                        <span>Save</span>
-                                    </div>
-                                )}
-                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className={styles.saveBtnInner}>
+                                            <InboxArrowDownIcon className={styles.saveIcon}/>
+                                            <span>Save</span>
+                                        </div>
+                                    )}
+                                </button>
+                            </div>
                         </div>
                         <div className={styles.headerRoutes}>
                             <div className={styles.skillsHeaderDesktop}>Skills</div>
@@ -418,21 +415,26 @@ export default function BuilderClient() {
                                 Publish
                             </button>
                             */}
-                                <button className={styles.saveBuildBtn} onClick={handleSave}
-                                        disabled={loading || isEqual(build, savedBuild)}>
-                                    {loading ? (
-                                        <div className={styles.saveSpinnerContainer}>
+                                <div className={styles.headerBtnContainer}>
+                                    {!isEqual(build, emptyBuild) || !buildId && (
+                                        <button className={styles.clearBtn} onClick={() => clearBuild()}><XMarkIcon />Clear</button>
+                                    )}
+                                    <button className={styles.saveBuildBtn} onClick={handleSave}
+                                            disabled={buildId ? loading || isEqual(build, savedBuild) : loading}>
+                                        {loading ? (
+                                            <div className={styles.saveSpinnerContainer}>
                                     <span className={styles.saveSpinnerWrapper}>
                                         <span className={styles.saveSpinner}></span>
                                     </span>
-                                        </div>
-                                    ) : (
-                                        <div className={styles.saveBtnInner}>
-                                            <InboxArrowDownIcon className={styles.saveIcon}/>
-                                            <span>Save</span>
-                                        </div>
-                                    )}
-                                </button>
+                                            </div>
+                                        ) : (
+                                            <div className={styles.saveBtnInner}>
+                                                <InboxArrowDownIcon className={styles.saveIcon}/>
+                                                <span>Save</span>
+                                            </div>
+                                        )}
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
@@ -557,12 +559,15 @@ export default function BuilderClient() {
                                       decoSelectorOpen={decoSelectorOpen} setDecoSelectorOpen={setDecoSelectorOpen}
                                       build={build} setBuild={setBuild} type={type}/>
                     )}
+                    <AuthContainer open={open} setOpen={setOpen} />
+                    <SaveBuildContainer saveBuildOpen={saveBuildOpen} setSaveBuildOpen={setSaveBuildOpen}
+                                        buildName={buildName} setBuildName={setBuildName} saveBuild={saveBuild} saveBuildLoading={saveBuildLoading} />
+                    <BuildsFull buildsFullOpen={buildsFullOpen} setBuildsFullOpen={setBuildsFullOpen} />
+                    {!buildId && (
+                        <DisclaimerContainer googleNoticeOpen={googleNoticeOpen} setGoogleNoticeOpen={setGoogleNoticeOpen} />
+                    )}
                 </>
             )}
-            <AuthContainer open={open} setOpen={setOpen} />
-            <SaveBuildContainer saveBuildOpen={saveBuildOpen} setSaveBuildOpen={setSaveBuildOpen}
-                                buildName={buildName} setBuildName={setBuildName} saveBuild={saveBuild} saveBuildLoading={saveBuildLoading} />
-            <BuildsFull buildsFullOpen={buildsFullOpen} setBuildsFullOpen={setBuildsFullOpen} />
         </main>
     )
 }

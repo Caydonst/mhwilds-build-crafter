@@ -5,8 +5,6 @@ import {createClient} from "@/lib/supabase/client";
 import React, {useEffect, useState} from "react";
 import {XMarkIcon} from "@heroicons/react/24/solid"
 import Logo from "@/app/assets/logo3.png"
-import {BuilderBuild} from "@/app/api/types/types";
-import {getBuild} from "@/app/builder/components/helperFunctions"
 
 type Props = {
     open: boolean | null;
@@ -27,31 +25,16 @@ export default function AuthContainer({open, setOpen}: Props) {
 
     async function googleLogin() {
         const supabase = createClient();
-        const build = getBuild()
 
-        if (window.location.href.includes("/builder")) {
-            sessionStorage.setItem("pendingBuildDraft", JSON.stringify(build));
-            const { error } = await supabase.auth.signInWithOAuth({
-                provider: "google",
-                options: {
-                    redirectTo: `${window.location.origin}/auth/callback?next=/builder&restore=1`
-                },
-            });
+        const { error } = await supabase.auth.signInWithOAuth({
+            provider: "google",
+            options: {
+                redirectTo: window.location.href
+            },
+        });
 
-            if (error) {
-                console.error(error.message);
-            }
-        } else {
-            const { error } = await supabase.auth.signInWithOAuth({
-                provider: "google",
-                options: {
-                    redirectTo: window.location.href
-                },
-            });
-
-            if (error) {
-                console.error(error.message);
-            }
+        if (error) {
+            console.error(error.message);
         }
     }
 

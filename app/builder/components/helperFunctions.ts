@@ -274,12 +274,6 @@ function updateSlots(currentSlots: number[], rarity: number, transcendence: bool
     return newSlots;
 }
 
-let build: BuilderBuild;
-
 export function updateBuild(updatedBuild: BuilderBuild) {
-    build = updatedBuild;
-}
-
-export function getBuild() {
-    return build;
+    localStorage.setItem("savedBuild", JSON.stringify(updatedBuild));
 }
