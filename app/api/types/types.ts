@@ -463,5 +463,6 @@ export type SavedBuild = {
     created_at: string;
     build_data: BuilderBuild;
     uuid: string;
-    name: string;
+    build_name: string;
+    account_name: string;
 }

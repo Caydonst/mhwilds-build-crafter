@@ -144,7 +144,7 @@ export default function BuildCard({ build, setSavedBuilds, setDeletePopup, setTo
                         )}
                     </div>
                     <div className={styles.titleInfoContainer}>
-                        <h2 className={styles.title}>{build.name}</h2>
+                        <h2 className={styles.title}>{build.build_name}</h2>
                         {build.build_data.weapon !== null ? (
                             <p className={styles.weaponName}>{build.build_data.weapon.name}</p>
                         ) : (

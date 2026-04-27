@@ -81,6 +81,7 @@ export default function BuilderClient() {
     const [open, setOpen] = useState(false);
     const [saveBuildOpen, setSaveBuildOpen] = useState(false);
     const [buildName, setBuildName] = useState<string>("");
+    const [savedBuildName, setSavedBuildName] = useState<string>("New build");
     const [saveBuildLoading, setSaveBuildLoading] = useState(false);
     const [user, setUser] = useState<User | null>(null);
     const [buildsFullOpen, setBuildsFullOpen] = useState<boolean>(false);
@@ -188,10 +189,12 @@ export default function BuilderClient() {
                 }
 
                 const build = await getBuild(buildId);
-
+                console.log("BUILD:");
+                console.log(build);
                 if (build) {
-                    setBuild(build);
-                    setSavedBuild(build);
+                    setBuild(build[0].build_data);
+                    setSavedBuild(build[0].build_data);
+                    setSavedBuildName(build[0].build_name);
                 } else {
                     router.replace("/builder");
                     return;
@@ -200,6 +203,7 @@ export default function BuilderClient() {
                 console.error(err);
                 router.replace("/builder");
             } finally {
+                setGoogleNoticeOpen(false);
                 setPageLoading(false);
             }
         }
@@ -371,7 +375,10 @@ export default function BuilderClient() {
                 <>
                     <div className={styles.desktopHeader}>
                         <div className={styles.headerInfoContainer}>
-                            <p>Builder</p>
+                            <div className={styles.buildNameContainer}>
+                                <p>{savedBuildName}</p>
+                            </div>
+                            <h2>Builder</h2>
                             {/*
                         <button className={styles.publishBtn}>
                             <GlobeAsiaAustraliaIcon className={styles.publishIcon} />
@@ -407,7 +414,9 @@ export default function BuilderClient() {
                     </div>
                     <div className={styles.mobileHeader}>
                         <div className={styles.headerInfoContainer}>
-                            <p>Builder</p>
+                            <div className={styles.buildNameContainer}>
+                                <p>{savedBuildName}</p>
+                            </div>
                             <div className={styles.headerInfoInner}>
                                 {/*
                             <button className={styles.publishBtn}>

@@ -28,7 +28,7 @@
     height: 50px;
     padding: 10px;
     display: flex;
-    justify-content: end;
+    justify-content: space-between;
     align-items: center;
     position: relative;
     gap: 10px;
@@ -40,7 +40,7 @@
     gap: 10px;
     height: 100%;
 }
-.headerInfoContainer p {
+.headerInfoContainer h2 {
     color: #fff;
     font-size: 20px;
     position: absolute;
@@ -48,6 +48,17 @@
     top: 50%;
     transform: translate(-50%, -50%);
     font-weight: 600;
+}
+.buildNameContainer {
+    height: 100%;
+    padding: 0 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-radius: 8px;
 }
 .saveBuildBtn {
     width: 100px;
@@ -433,5 +444,8 @@
     .statsContainer {
         width: 100%;
         order: 2;
+    }
+    .buildNameContainer {
+        font-size: 14px;
     }
 }

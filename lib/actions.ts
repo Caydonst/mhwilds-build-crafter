@@ -77,8 +77,9 @@ export async function testSaveBuild(build: BuilderBuild, name: string, buildId: 
             .from("test_builds")
             .insert({
                 build_data: build,
-                name: name.trim(),
-                uuid: user.id
+                build_name: name.trim(),
+                uuid: user.id,
+                account_name: user.user_metadata.full_name
             })
             .select("*")
 
@@ -134,7 +135,7 @@ export async function getBuild(id: string | null) {
 
     const { data, error } = await supabase
         .from("test_builds")
-        .select("build_data")
+        .select("*")
         .eq("id", id)
         .eq("uuid", user.id)
 
@@ -146,7 +147,7 @@ export async function getBuild(id: string | null) {
         return null;
     }
 
-    return data[0].build_data;
+    return data;
 
 }
 
