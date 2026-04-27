@@ -379,7 +379,7 @@ export default function BuilderClient() {
                         </button>
                         */}
                             <div className={styles.headerBtnContainer}>
-                                {!isEqual(build, emptyBuild) || !buildId && (
+                                {(!isEqual(build, emptyBuild) && !buildId) && (
                                     <button className={styles.clearBtn} onClick={() => clearBuild()}><XMarkIcon />Clear</button>
                                 )}
                                 <button className={styles.saveBuildBtn} onClick={handleSave}
@@ -416,7 +416,7 @@ export default function BuilderClient() {
                             </button>
                             */}
                                 <div className={styles.headerBtnContainer}>
-                                    {!isEqual(build, emptyBuild) || !buildId && (
+                                    {(!isEqual(build, emptyBuild) && !buildId) && (
                                         <button className={styles.clearBtn} onClick={() => clearBuild()}><XMarkIcon />Clear</button>
                                     )}
                                     <button className={styles.saveBuildBtn} onClick={handleSave}
