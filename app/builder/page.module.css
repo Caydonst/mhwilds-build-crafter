@@ -349,6 +349,20 @@
     animation: animate 0.8s linear forwards;
     border-radius: 50%;
 }
+.autoSaveContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    color: #fff;
+}
+.autoSaveContainer span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #19ff9f;
+    box-shadow: 0 0 10px #19ff9f;
+}
 @keyframes animate {
     0% {
         width: 0;
@@ -446,6 +460,9 @@
         order: 2;
     }
     .buildNameContainer {
+        font-size: 14px;
+    }
+    .autoSaveContainer {
         font-size: 14px;
     }
 }

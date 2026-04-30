@@ -87,6 +87,7 @@ export default function BuilderClient() {
     const [buildsFullOpen, setBuildsFullOpen] = useState<boolean>(false);
     const [hasLoadedBuild, setHasLoadedBuild] = useState(false);
     const [googleNoticeOpen, setGoogleNoticeOpen] = useState<boolean>(true);
+    const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "unsaved">("saved");
 
     const DEFAULT_DECOS: BuildDecorations = {
         weapon: [],
@@ -268,6 +269,23 @@ export default function BuilderClient() {
         }
     }
 
+    useEffect(() => {
+        if (!user || !buildId || !hasLoadedBuild) return;
+
+        setSaveStatus("unsaved");
+
+        const timeout = setTimeout(async () => {
+            setSaveStatus("saving");
+
+            await testSaveBuild(build, buildName, buildId);
+
+            console.log("SAVED");
+
+        }, 2000);
+
+        return () => clearTimeout(timeout);
+    }, [build, user, buildId, buildName, hasLoadedBuild]);
+
     function updateSlider(page: string, amt: number) {
         setSelectedPage(page);
         setSliderAmount(amt);
@@ -389,21 +407,28 @@ export default function BuilderClient() {
                                 {(!isEqual(build, emptyBuild) && !buildId) && (
                                     <button className={styles.clearBtn} onClick={() => clearBuild()}><XMarkIcon />Clear</button>
                                 )}
-                                <button className={styles.saveBuildBtn} onClick={handleSave}
-                                        disabled={buildId ? loading || isEqual(build, savedBuild) : loading}>
-                                    {loading ? (
-                                        <div className={styles.saveSpinnerContainer}>
+                                {!buildId ? (
+                                    <button className={styles.saveBuildBtn} onClick={handleSave}
+                                            disabled={buildId ? loading || isEqual(build, savedBuild) : loading}>
+                                        {loading ? (
+                                            <div className={styles.saveSpinnerContainer}>
                                     <span className={styles.saveSpinnerWrapper}>
                                         <span className={styles.saveSpinner}></span>
                                     </span>
-                                        </div>
-                                    ) : (
-                                        <div className={styles.saveBtnInner}>
-                                            <InboxArrowDownIcon className={styles.saveIcon}/>
-                                            <span>Save</span>
-                                        </div>
-                                    )}
-                                </button>
+                                            </div>
+                                        ) : (
+                                            <div className={styles.saveBtnInner}>
+                                                <InboxArrowDownIcon className={styles.saveIcon}/>
+                                                <span>Save</span>
+                                            </div>
+                                        )}
+                                    </button>
+                                ) : (
+                                    <div className={styles.autoSaveContainer}>
+                                        <span></span>
+                                        Auto-save
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <div className={styles.headerRoutes}>
@@ -428,21 +453,28 @@ export default function BuilderClient() {
                                     {(!isEqual(build, emptyBuild) && !buildId) && (
                                         <button className={styles.clearBtn} onClick={() => clearBuild()}><XMarkIcon />Clear</button>
                                     )}
-                                    <button className={styles.saveBuildBtn} onClick={handleSave}
-                                            disabled={buildId ? loading || isEqual(build, savedBuild) : loading}>
-                                        {loading ? (
-                                            <div className={styles.saveSpinnerContainer}>
+                                    {!buildId ? (
+                                        <button className={styles.saveBuildBtn} onClick={handleSave}
+                                                disabled={buildId ? loading || isEqual(build, savedBuild) : loading}>
+                                            {loading ? (
+                                                <div className={styles.saveSpinnerContainer}>
                                     <span className={styles.saveSpinnerWrapper}>
                                         <span className={styles.saveSpinner}></span>
                                     </span>
-                                            </div>
-                                        ) : (
-                                            <div className={styles.saveBtnInner}>
-                                                <InboxArrowDownIcon className={styles.saveIcon}/>
-                                                <span>Save</span>
-                                            </div>
-                                        )}
-                                    </button>
+                                                </div>
+                                            ) : (
+                                                <div className={styles.saveBtnInner}>
+                                                    <InboxArrowDownIcon className={styles.saveIcon}/>
+                                                    <span>Save</span>
+                                                </div>
+                                            )}
+                                        </button>
+                                    ) : (
+                                        <div className={styles.autoSaveContainer}>
+                                            <span></span>
+                                            Auto-save
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>

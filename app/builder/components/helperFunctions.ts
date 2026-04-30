@@ -110,8 +110,6 @@ export function findBonuses(build: BuilderBuild, armorSets: ArmorSet[], skills: 
         }
     }
 
-    console.log(setBonuses);
-
     return {bonusesArray, setBonuses, groupBonuses};
 }
 
@@ -269,8 +267,6 @@ function updateSlots(currentSlots: number[], rarity: number, transcendence: bool
                 newSlots = [...currentSlots];
         }
     }
-    console.log("Current slots: " + currentSlots);
-    console.log("New slots: " + newSlots);
     return newSlots;
 }
 

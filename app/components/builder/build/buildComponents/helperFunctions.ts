@@ -31,8 +31,6 @@ export function updateElement(aggregatedSkillsMap: Record<number, AggregatedSkil
     let foundSkill;
     let level;
 
-    console.log(aggregatedSkillsMap)
-
     if (weapon && weapon.specials[0]) {
         Object.entries(aggregatedSkillsMap).forEach(([key, value]) => {
             if (weapon.specials[0].element && value.skill.name.toLowerCase().includes(weapon.specials[0].element)) {
@@ -143,9 +141,6 @@ export const addSkillLevel = (skillData: SkillType[] | null, skillId: number, ad
     const fullSkill = findFullSkill(skillData, skillId);
     const max = getMaxSkillLevel(skillData, skillId);
 
-    console.log("Add: " + add);
-    console.log("SkillId: " + skillId);
-
     if (fullSkill?.kind === "set" || fullSkill?.kind === "group") {
         return;
     }
@@ -171,8 +166,6 @@ export const addSkillLevel = (skillData: SkillType[] | null, skillId: number, ad
     else {
         aggregatedSkillsMap[skillId].totalLevel[0] += add;
     }
-
-    console.log(aggregatedSkillsMap[skillId].totalLevel[0], aggregatedSkillsMap[skillId].totalLevel[1]);
 
 };
 

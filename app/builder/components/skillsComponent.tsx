@@ -35,8 +35,6 @@ export default function SkillsComponent({ build, skills, armorSets }: Props) {
         const map: Record<number, AggregatedSkill> = {};
         const pieces = [build.weapon, build.head, build.chest, build.arms, build.waist, build.legs, build.charm];
 
-        console.log(pieces);
-
         for (const piece of pieces) {
             if (!piece) continue;
             for (const s of piece.skills) {
@@ -57,9 +55,6 @@ export default function SkillsComponent({ build, skills, armorSets }: Props) {
         return Object.values(map).sort((a, b) => b.totalLevel[0] - a.totalLevel[0]);
     }, [build, skills]);
 
-    console.log("AGGREGATED SKILLS: ")
-    console.log(aggregatedSkills)
-
     if (aggregatedSkills) {
         updateAffinity(aggregatedSkills);
         updateAttackBoost(aggregatedSkills, build.weapon);
@@ -71,14 +66,8 @@ export default function SkillsComponent({ build, skills, armorSets }: Props) {
         return bonuses;
     }, [build, armorSets, skills]);
 
-    console.log("Bonuses")
-    console.log(getBonuses.bonusesArray);
-    console.log(getBonuses.groupBonuses);
-    console.log(getBonuses.setBonuses);
-
     function getBonusCount(id: number) {
         const bonus = getBonuses.bonusesArray.find(bonus => bonus.id === id);
-        console.log(bonus);
         return bonus?.count;
     }
 

@@ -88,10 +88,6 @@ export default function ArmorPiece({ gearPiece, armorSets, slotKey, build }: Pro
         bgPos = `calc((-64px * ${spriteX}) * var(--build-icon-size)) calc((-64px * ${rarity}) * var(--build-icon-size))`;
     }
 
-    if (!isArmorPiece(gearPiece) && !isCharmRank(gearPiece)) {
-        console.log(gearPiece?.kind)
-    }
-
     const findBonuses = useMemo(() => {
         if (isArmorPiece(gearPiece) && armorSets) {
             return findGearPieceBonuses(gearPiece, armorSets);

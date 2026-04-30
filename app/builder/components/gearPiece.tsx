@@ -156,7 +156,6 @@ export default function GearPiece({
         if (isArmorPiece(gearPiece)) {
 
             const newGearPiece = handleTranscendence(gearPiece);
-            console.log(newGearPiece);
 
             const emptySlots: DecoPlacement[] = newGearPiece.slots.map(() => ({
                 slotLevel: 1,
