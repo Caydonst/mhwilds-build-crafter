@@ -644,21 +644,22 @@
     }
 }
 @media (max-width: 1024px) {
-    .profilePageContainer {
-        min-height: calc(100vh - 50px);
+    .profileNavContainer button:hover {
+        background: transparent;
     }
-    .profilePageInner hr {
-        top: 50px;
-        height: calc(100vh - 50px);
+    .navButton.selected:hover {
+        background: rgba(255, 255, 255, 0.1);
     }
 }
 @media (max-width: 700px) {
     .profilePageContainer {
-        padding: 30px 0 0 0;
+        padding: 0;
     }
     .profilePageInner {
+        padding: 10px 0 0 0;
         flex-direction: column;
         justify-content: start;
+        gap: 10px;
     }
     .profileNavContainer {
         width: 100%;
