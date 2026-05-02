@@ -393,9 +393,15 @@ export default function BuilderClient() {
                 <>
                     <div className={styles.desktopHeader}>
                         <div className={styles.headerInfoContainer}>
-                            <div className={styles.buildNameContainer}>
-                                <p>{savedBuildName}</p>
-                            </div>
+                            {buildId ? (
+                                <div className={styles.buildNameContainer}>
+                                    <p>{savedBuildName}</p>
+                                </div>
+                            ) : (
+                                <div className={styles.buildNameContainer}>
+                                    <p>New build</p>
+                                </div>
+                            )}
                             <h2>Builder</h2>
                             {/*
                         <button className={styles.publishBtn}>

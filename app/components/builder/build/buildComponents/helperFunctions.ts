@@ -23,10 +23,12 @@ export function setBaseElement(elementNum: number) {
     currentElement = baseElement;
 }
 export function getElementDamage() {
-    return currentElement;
+    return currentElement - baseElement;
 }
 
 export function updateElement(aggregatedSkillsMap: Record<number, AggregatedSkill>, weapon: Weapon | null) {
+
+    if (weapon) setBaseElement(weapon.specials[0]?.damage.display);
 
     let foundSkill;
     let level;

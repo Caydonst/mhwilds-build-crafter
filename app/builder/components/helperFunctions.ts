@@ -181,7 +181,7 @@ export function updateStats(build: BuilderBuild) {
             } else if (buildWeapon.specials[0].element) {
                 buildStats.element = buildWeapon.specials[0].element
             }
-            buildStats.elementDamage = getElementDamage()
+            buildStats.elementDamage += buildWeapon.specials[0].damage.display + getElementDamage();
         }
     }
 

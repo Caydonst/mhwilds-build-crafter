@@ -174,6 +174,14 @@ export default function GearPiece({
         }
     }
 
+    function getDecoSlot(slotLvl: number, placement: DecoPlacement) {
+        if (placement.decoration) {
+            return (`${slotLvl}-${placement.slotLevel}`)
+        } else {
+            return slotLvl;
+        }
+    }
+
 
     return (
         <div className={styles.buildPieceContainer}>
@@ -380,7 +388,11 @@ export default function GearPiece({
                                     className={styles.slot}
                                     onClick={() => openDecoSelector(s, slotKey === "weapon" ? "weapon" : "armor", slotKey, i)}
                                 >
-                                    <span className={`${styles.decoIcon} ${styles[`deco${s}`]}`}/>
+                                    {placement ? (
+                                        <span className={`${styles.decoIcon} ${styles[`deco${getDecoSlot(s, placement)}`]}`}/>
+                                    ) : (
+                                        <span className={`${styles.decoIcon} ${styles[`deco${s}`]}`}/>
+                                    )}
 
                                     {/* Inlaid deco display */}
                                     {s > 0 && placement?.decoration && canFit && (
