@@ -20,7 +20,7 @@
 }
 .disclaimerContainer {
     padding: 30px;
-    background: #101219;
+    background: #090a0d;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 20px;
     width: 100%;
@@ -94,17 +94,18 @@
 }
 .closeBtn {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 20px;
+    right: 20px;
     background: transparent;
     width: 30px;
     height: 30px;
     border: none;
-    border-radius: 50%;
+    border-radius: 8px;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    transition: 0.2s;
 }
 .closeBtn:hover {
     background: rgba(255, 255, 255, 0.1);

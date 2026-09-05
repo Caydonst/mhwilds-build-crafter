@@ -4,10 +4,11 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: #101219;
+    background: #090a0d;
     visibility: hidden;
     opacity: 0;
     transition: 0.2s;
+    z-index: 1000;
 }
 .sideNavContainer.open {
     visibility: visible;
@@ -15,8 +16,8 @@
 }
 .closeBtn {
     position: absolute;
-    top: 10px;
-    left: 10px;
+    top: 20px;
+    left: 20px;
     width: 30px;
     height: 30px;
     display: flex;

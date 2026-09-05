@@ -5,8 +5,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.8);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -25,7 +24,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: #101219;
+    background: #090a0d;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
     width: 100%;
@@ -86,7 +85,7 @@
     border: none;
     background: #fff;
     color: #000;
-    border-radius: 50px;
+    border-radius: 16px;
     cursor: pointer;
     transition: 0.2s;
 }

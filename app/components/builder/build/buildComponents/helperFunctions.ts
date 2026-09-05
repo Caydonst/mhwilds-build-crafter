@@ -139,6 +139,52 @@ export function updateAttackBoost(aggregatedSkills: AggregatedSkill[], weapon: W
     })
 }
 
+let criticalBoostMultiplier = 1.25;
+
+export function setCriticalBoost() {
+    criticalBoostMultiplier = 1.25;
+}
+
+export function getCriticalBoost() {
+    return criticalBoostMultiplier;
+}
+
+export function updateCriticalBoost(
+    aggregatedSkills: AggregatedSkill[]
+) {
+    setCriticalBoost();
+
+    Object.values(aggregatedSkills).forEach((skill) => {
+        if (skill.skill.name !== "Critical Boost") return;
+
+        switch (skill.totalLevel[0]) {
+            case 1:
+                criticalBoostMultiplier = 1.28;
+                break;
+
+            case 2:
+                criticalBoostMultiplier = 1.31;
+                break;
+
+            case 3:
+                criticalBoostMultiplier = 1.34;
+                break;
+
+            case 4:
+                criticalBoostMultiplier = 1.37;
+                break;
+
+            case 5:
+                criticalBoostMultiplier = 1.40;
+                break;
+
+            default:
+                criticalBoostMultiplier = 1.25;
+                break;
+        }
+    });
+}
+
 export const addSkillLevel = (skillData: SkillType[] | null, skillId: number, add: number, aggregatedSkillsMap: Record<number, AggregatedSkill>) => {
     const fullSkill = findFullSkill(skillData, skillId);
     const max = getMaxSkillLevel(skillData, skillId);

@@ -5,7 +5,7 @@ import {createClient} from "@/lib/supabase/client";
 import {User} from "@supabase/auth-js";
 import AuthContainer from "@/app/components/authContainer/authContainer";
 import {UserCircleIcon} from "@heroicons/react/24/outline";
-import {GlobeAsiaAustraliaIcon, InboxArrowDownIcon, XMarkIcon} from "@heroicons/react/24/solid";
+import {ArrowRightStartOnRectangleIcon, GlobeAsiaAustraliaIcon, InboxArrowDownIcon, XMarkIcon, TrashIcon} from "@heroicons/react/24/solid";
 import {signInWithEmail, getData, deleteBuild} from "@/lib/actions";
 import Account from "@/app/account/account";
 import SavedBuilds from "@/app/account/savedBuilds";
@@ -177,6 +177,9 @@ export default function AccountPage() {
             <AuthContainer open={open} setOpen={setOpen} />
             <div className={deletePopup ? `${styles.deleteBuildPopupWrapper} ${styles.open}` : styles.deleteBuildPopupWrapper}>
                 <div className={styles.deleteBuildPopup}>
+                    <div className={styles.popupIcon}>
+                        <TrashIcon />
+                    </div>
                     <h3>Delete?</h3>
                     <p>Are you sure you want to delete this build?</p>
                     <div className={styles.optionsContainer}>
@@ -190,18 +193,47 @@ export default function AccountPage() {
                 </div>
             </div>
 
-            <div className={logoutPopup ? `${styles.deleteBuildPopupWrapper} ${styles.open}` : styles.deleteBuildPopupWrapper}>
+            <div
+                className={
+                    logoutPopup
+                        ? `${styles.deleteBuildPopupWrapper} ${styles.open}`
+                        : styles.deleteBuildPopupWrapper
+                }
+            >
                 <div className={styles.deleteBuildPopup}>
-                    <h3>Log out?</h3>
-                    <p>Are you sure you want to log out of the platform?</p>
-                    <div className={styles.optionsContainer}>
-                        <button className={styles.noBtn} onClick={() => setLogoutPopup(false)}>No</button>
-                        <button className={styles.yesBtn} onClick={() => {
-                            logout()
-                            setLogoutPopup(false)
-                        }}>Yes</button>
+                    <div className={styles.popupIcon}>
+                        <ArrowRightStartOnRectangleIcon />
                     </div>
-                    <button className={styles.closeBtn} onClick={() => setLogoutPopup(false)}><XMarkIcon /></button>
+
+                    <h3>Log out?</h3>
+
+                    <p>Are you sure you want to log out of your account?</p>
+
+                    <div className={styles.optionsContainer}>
+                        <button
+                            className={styles.noBtn}
+                            onClick={() => setLogoutPopup(false)}
+                        >
+                            Cancel
+                        </button>
+
+                        <button
+                            className={styles.yesBtn}
+                            onClick={async () => {
+                                await logout();
+                                setLogoutPopup(false);
+                            }}
+                        >
+                            Log out
+                        </button>
+                    </div>
+
+                    <button
+                        className={styles.closeBtn}
+                        onClick={() => setLogoutPopup(false)}
+                    >
+                        <XMarkIcon />
+                    </button>
                 </div>
             </div>
         </div>

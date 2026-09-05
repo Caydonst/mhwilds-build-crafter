@@ -92,6 +92,13 @@ export default function StatsComponent({ build }: Props) {
                     <div className={equipSkillsOpen ? `${styles.chevronContainer} ${styles.rotated}` : ""}><ChevronDownIcon className={styles.chevronIcon} /></div>
                 </div>
                 <div ref={equipSkillsRef} className={styles.equipSkillsContent}>
+                    <div className={styles.effectiveRawContainer}>
+                        <div className={styles.attackLeft}>
+                            <span className={`${styles.statsIcon} ${styles.damageIcon}`}></span>
+                            <p>Effective Raw</p>
+                        </div>
+                        <p>{buildStats.effectiveRaw}</p>
+                    </div>
                     <div className={styles.rawContainer}>
                         <div className={styles.attackLeft}>
                             <span className={`${styles.statsIcon} ${styles.damageIcon}`}></span>

@@ -6,7 +6,8 @@ import {
     addSkillLevel,
     updateElement,
     updateAffinity,
-    updateAttackBoost
+    updateAttackBoost,
+    updateCriticalBoost
 } from "@/app/components/builder/build/buildComponents/helperFunctions";
 import Skill from "@/app/components/builder/build/buildComponents/skill";
 import {ChevronDownIcon, XMarkIcon, CheckIcon, InformationCircleIcon} from "@heroicons/react/24/outline"
@@ -58,6 +59,7 @@ export default function SkillsComponent({ build, skills, armorSets }: Props) {
     if (aggregatedSkills) {
         updateAffinity(aggregatedSkills);
         updateAttackBoost(aggregatedSkills, build.weapon);
+        updateCriticalBoost(aggregatedSkills);
     }
 
 

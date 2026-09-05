@@ -86,7 +86,7 @@ export default function BuilderClient() {
     const [user, setUser] = useState<User | null>(null);
     const [buildsFullOpen, setBuildsFullOpen] = useState<boolean>(false);
     const [hasLoadedBuild, setHasLoadedBuild] = useState(false);
-    const [googleNoticeOpen, setGoogleNoticeOpen] = useState<boolean>(true);
+    const [googleNoticeOpen, setGoogleNoticeOpen] = useState<boolean>(false);
     const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "unsaved">("saved");
 
     const DEFAULT_DECOS: BuildDecorations = {
@@ -399,7 +399,7 @@ export default function BuilderClient() {
                                 </div>
                             ) : (
                                 <div className={styles.buildNameContainer}>
-                                    <p>New build</p>
+                                    <p>New build*</p>
                                 </div>
                             )}
                             <h2>Builder</h2>
@@ -411,7 +411,7 @@ export default function BuilderClient() {
                         */}
                             <div className={styles.headerBtnContainer}>
                                 {(!isEqual(build, emptyBuild) && !buildId) && (
-                                    <button className={styles.clearBtn} onClick={() => clearBuild()}><XMarkIcon />Clear</button>
+                                    <button className={styles.clearBtn} onClick={() => clearBuild()}><XMarkIcon />Clear all</button>
                                 )}
                                 {!buildId ? (
                                     <button className={styles.saveBuildBtn} onClick={handleSave}
@@ -457,7 +457,7 @@ export default function BuilderClient() {
                             */}
                                 <div className={styles.headerBtnContainer}>
                                     {(!isEqual(build, emptyBuild) && !buildId) && (
-                                        <button className={styles.clearBtn} onClick={() => clearBuild()}><XMarkIcon />Clear</button>
+                                        <button className={styles.clearBtn} onClick={() => clearBuild()}><XMarkIcon />Clear all</button>
                                     )}
                                     {!buildId ? (
                                         <button className={styles.saveBuildBtn} onClick={handleSave}
@@ -610,9 +610,9 @@ export default function BuilderClient() {
                     <SaveBuildContainer saveBuildOpen={saveBuildOpen} setSaveBuildOpen={setSaveBuildOpen}
                                         buildName={buildName} setBuildName={setBuildName} saveBuild={saveBuild} saveBuildLoading={saveBuildLoading} />
                     <BuildsFull buildsFullOpen={buildsFullOpen} setBuildsFullOpen={setBuildsFullOpen} />
-                    {!buildId && (
+                    {/*{!buildId && (
                         <DisclaimerContainer googleNoticeOpen={googleNoticeOpen} setGoogleNoticeOpen={setGoogleNoticeOpen} />
-                    )}
+                    )}*/}
                 </>
             )}
         </main>

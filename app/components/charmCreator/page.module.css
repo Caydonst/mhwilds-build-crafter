@@ -4,7 +4,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: #101219;
+    background: #090a0d;
     transform: translateY(100%);
     transition: 0.3s;
 }
@@ -178,7 +178,7 @@
     width: 100%;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 10px;
-    background: #101219;
+    background: #090a0d;
     z-index: 3;
     max-height: 400px;
     overflow: hidden;
@@ -242,7 +242,7 @@
     align-items: center;
     flex-shrink: 0;
     padding: 5px;
-    background: #101219;
+    background: #090a0d;
 }
 .searchContainer input {
     width: 100%;
