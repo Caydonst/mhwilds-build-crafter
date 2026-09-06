@@ -81,7 +81,7 @@ export default function BuilderClient() {
     const [open, setOpen] = useState(false);
     const [saveBuildOpen, setSaveBuildOpen] = useState(false);
     const [buildName, setBuildName] = useState<string>("");
-    const [savedBuildName, setSavedBuildName] = useState<string>("New build");
+    const [savedBuildName, setSavedBuildName] = useState<string>("New build*");
     const [saveBuildLoading, setSaveBuildLoading] = useState(false);
     const [user, setUser] = useState<User | null>(null);
     const [buildsFullOpen, setBuildsFullOpen] = useState<boolean>(false);

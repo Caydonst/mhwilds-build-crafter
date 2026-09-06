@@ -448,8 +448,6 @@
 
   transform: translateY(-5px);
 
-  backdrop-filter: blur(20px);
-
   transition: 0.2s;
 }
 
@@ -468,7 +466,6 @@
   gap: 11px;
 
   padding: 10px;
-  backdrop-filter: blur(20px);
 }
 
 .dropdownAvatar {
@@ -727,8 +724,6 @@
   opacity: 0;
 
   background: rgba(0, 0, 0, 0.65);
-
-  backdrop-filter: blur(8px);
 
   transition:
     opacity 0.2s ease,
