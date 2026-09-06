@@ -10,39 +10,28 @@ export async function GET(request: Request) {
     const type = requestUrl.searchParams.get("type") as EmailOtpType | null;
     const next = requestUrl.searchParams.get("next") ?? "/update-password";
 
-    console.log("Recovery URL:", request.url);
-    console.log("tokenHash:", tokenHash);
-    console.log("type:", type);
-    console.log("next:", next);
-
     if (!tokenHash || !type) {
-        console.error("Missing token_hash or type");
-
         return NextResponse.redirect(
-            new URL("/?authError=missing-reset-params", requestUrl.origin)
+            new URL("/?authError=invalid-reset-link", requestUrl.origin),
         );
     }
 
     const supabase = await createClient();
 
-    const { data, error } = await supabase.auth.verifyOtp({
+    const { error } = await supabase.auth.verifyOtp({
         token_hash: tokenHash,
         type,
     });
 
-    console.log("verifyOtp data:", data);
-    console.log("verifyOtp error:", error);
-
     if (error) {
+        console.error("Password recovery verification failed:", error);
+
         return NextResponse.redirect(
-            new URL(
-                `/?authError=${encodeURIComponent(error.message)}`,
-                requestUrl.origin
-            )
+            new URL("/?authError=invalid-reset-link", requestUrl.origin),
         );
     }
 
     return NextResponse.redirect(
-        new URL(next, requestUrl.origin)
+        new URL(next, requestUrl.origin),
     );
 }

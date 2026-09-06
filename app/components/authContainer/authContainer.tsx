@@ -154,7 +154,7 @@ export default function AuthContainer({ open, setOpen }: Props) {
       const supabase = createClient();
 
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/update-password`,
+        redirectTo: `${window.location.origin}/auth/confirm`,
       });
 
       if (error) {
