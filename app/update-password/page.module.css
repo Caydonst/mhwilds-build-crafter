@@ -1,0 +1,279 @@
+.page {
+  position: relative;
+
+  width: 100%;
+  min-height: calc(100svh - 60px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 50px 20px;
+
+  overflow: hidden;
+
+  background: var(--background);
+  color: white;
+}
+
+/* Subtle gold glow behind card */
+.page::before {
+  content: "";
+
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  width: 600px;
+  height: 500px;
+
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  background: rgba(215, 173, 103, 0.06);
+
+  filter: blur(120px);
+
+  pointer-events: none;
+}
+
+/* ---------------------------- */
+/* Card */
+/* ---------------------------- */
+
+.card {
+  position: relative;
+  z-index: 1;
+
+  width: 100%;
+  max-width: 470px;
+
+  padding: 42px;
+
+  border: 1px solid var(--border);
+  border-radius: 18px;
+
+  background: var(--surface);
+}
+
+/* ---------------------------- */
+/* Header */
+/* ---------------------------- */
+
+.header {
+  margin-bottom: 32px;
+}
+
+.eyebrow {
+  display: block;
+
+  margin-bottom: 12px;
+
+  color: var(--gold);
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.17em;
+}
+
+.header h1 {
+  margin: 0 0 12px;
+
+  color: white;
+
+  font-size: 30px;
+  font-weight: 650;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+}
+
+.header p {
+  max-width: 380px;
+
+  margin: 0;
+
+  color: rgba(255, 255, 255, 0.45);
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ---------------------------- */
+/* Form */
+/* ---------------------------- */
+
+.form {
+  display: flex;
+  flex-direction: column;
+
+  gap: 22px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+
+  gap: 9px;
+}
+
+.field label {
+  color: rgba(255, 255, 255, 0.72);
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.field input {
+  width: 100%;
+  height: 50px;
+
+  padding: 0 15px;
+
+  outline: none;
+
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.025);
+
+  color: white;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.field input::placeholder {
+  color: rgba(255, 255, 255, 0.22);
+}
+
+.field input:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.field input:focus {
+  border-color: rgba(215, 173, 103, 0.55);
+
+  background: rgba(215, 173, 103, 0.025);
+
+  box-shadow: 0 0 0 3px rgba(215, 173, 103, 0.07);
+}
+
+/* ---------------------------- */
+/* Error */
+/* ---------------------------- */
+
+.error {
+  padding: 11px 13px;
+
+  border: 1px solid rgba(239, 68, 68, 0.18);
+  border-radius: 9px;
+
+  background: rgba(239, 68, 68, 0.07);
+
+  color: #f08d8d;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* ---------------------------- */
+/* Button */
+/* ---------------------------- */
+
+.submitButton {
+  width: 100%;
+  height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 4px;
+  padding: 0 20px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: linear-gradient(135deg, var(--gold-light), var(--gold));
+
+  color: #0c0c0c;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.submitButton:hover:not(:disabled) {
+  opacity: 0.8;
+}
+
+.submitButton:active:not(:disabled) {
+  transform: scale(0.985);
+}
+
+.submitButton:disabled {
+  opacity: 0.45;
+
+  cursor: not-allowed;
+}
+
+.cooldown {
+  margin: -4px 0 0;
+
+  color: rgba(255, 255, 255, 0.42);
+
+  font-size: 12px;
+  text-align: center;
+}
+
+.cooldown strong {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+/* ---------------------------- */
+/* Responsive */
+/* ---------------------------- */
+
+@media (max-width: 640px) {
+  .page {
+    min-height: calc(100svh - 50px);
+
+    padding: 30px 15px;
+  }
+
+  .card {
+    padding: 30px 22px;
+
+    border-radius: 14px;
+  }
+
+  .header {
+    margin-bottom: 28px;
+  }
+
+  .header h1 {
+    font-size: 26px;
+  }
+
+  .header p {
+    font-size: 13px;
+  }
+
+  .field input {
+    font-size: 16px;
+  }
+}

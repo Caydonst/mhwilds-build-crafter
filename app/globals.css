@@ -1,3 +1,14 @@
+:root {
+  --background: #090a0d;
+  --surface: #0e1014;
+  --surface-light: #13151a;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(215, 173, 103, 0.35);
+
+  --gold: #d7ad67;
+  --gold-light: #efd19a;
+  --gold-dark: #8d692f;
+}
 * {
   padding: 0;
   margin: 0;

@@ -133,6 +133,14 @@
     transform: translateX(-50%);
 }
 
+.forgotContainer {
+    width: 100%;
+}
+
+.forgotContainer section {
+    width: 100%;
+}
+
 .authPanel {
     width: 50%;
 
