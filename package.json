@@ -12,6 +12,8 @@
     "@heroicons/react": "^2.2.0",
     "@supabase/ssr": "^0.10.0",
     "@supabase/supabase-js": "^2.101.1",
+    "@upstash/ratelimit": "^2.0.8",
+    "@upstash/redis": "^1.38.4",
     "@vercel/analytics": "^2.0.1",
     "lodash": "^4.18.1",
     "next": "^16.2.3",

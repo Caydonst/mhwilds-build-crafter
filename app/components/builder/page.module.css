@@ -1,449 +1,704 @@
 :root {
     --weapon-icon-size: 0.40;
 }
+
+
+/* =====================================================
+   BUILDER SHELL
+===================================================== */
+
 .builderWrapper {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
+
+    background: var(--background);
+
+    color: #fff;
+
+    z-index: 100;
 }
-.builderWrapper.open {
-    visibility: visible;
-    opacity: 1;
-}
+
 .builderContainer {
     width: 100%;
     height: 100%;
-    background: #040404;
+
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;   /* important: don’t center vertically */
-    align-items: stretch;          /* make children full width */
-    z-index: 1;
-    animation: fadeIn 0.3s;
+
+    background: var(--background);
+
+    animation: fadeIn 0.25s ease;
 }
+
 @keyframes fadeIn {
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
 }
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
 .buildGeneratorHeader {
+    flex: 0 0 58px;
+
+    width: 100%;
+
     display: flex;
     justify-content: center;
     align-items: center;
-    flex: 0 0 50px;
-    width: 100%;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+    position: relative;
+
+    background: rgba(14, 16, 20, 0.92);
+
+    border-bottom: 1px solid var(--border);
+
+    backdrop-filter: blur(12px);
+
     color: #fff;
-    position: relative;
+
+    font-size: 14px;
+    font-weight: 650;
+
+    letter-spacing: -0.01em;
+
+    z-index: 5;
 }
+
+
+/* =====================================================
+   MAIN LAYOUT
+===================================================== */
+
 .mainContainer {
-    display: flex;
-    width: 100%;
-    flex: 1 1 auto;                /* grow to fill, shrink if needed */
-    min-height: 0;
     position: relative;
+
+    display: flex;
+
+    width: 100%;
+
+    flex: 1 1 auto;
+
+    min-height: 0;
 }
+
 .buildInfoContainer,
 .generatedBuildsContainer {
     width: 50%;
-    /* remove height: 100%; let flexbox handle it */
     min-height: 0;
 }
+
+
+/* =====================================================
+   SCROLLBARS
+===================================================== */
+
 .buildInfoContainer::-webkit-scrollbar,
 .generatedBuilds::-webkit-scrollbar,
 .mainContainer::-webkit-scrollbar {
-    width: 10px;
+    width: 7px;
 }
+
 .buildInfoContainer::-webkit-scrollbar-track,
 .generatedBuilds::-webkit-scrollbar-track,
 .mainContainer::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
+    background: transparent;
 }
+
 .buildInfoContainer::-webkit-scrollbar-thumb,
 .generatedBuilds::-webkit-scrollbar-thumb,
 .mainContainer::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,0.3);
+    background: rgba(215, 173, 103, 0.22);
+
     border-radius: 10px;
+
     background-clip: padding-box;
+
     border: 2px solid transparent;
 }
-.footer {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    width: 100%;
-    padding: 10px;
-    flex: 0 0 50px;                /* “no flex, always 50px tall” */
-    gap: 10px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-.footer button {
-    width: 140px;
-    height: 34px;
-    border-radius: 5px;
-}
-.cancelBtn {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #fff;
-    cursor: pointer;
-    transition: 0.3s;
-}
-.cancelBtn:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-.saveBtn {
-    background: #2d7a4d;
-    border: 1px solid #57ff9d;
-    color: #fff;
-    cursor: pointer;
-    transition: 0.3s;
-}
-.saveBtn:hover {
-    background: #1d4f32;
-}
+
+
+/* =====================================================
+   LEFT PANEL
+===================================================== */
+
 .buildInfoContainer {
     display: flex;
     flex-direction: column;
-    padding: 30px;
-    gap: 30px;
-    overflow: auto;                /* internal scroll here */
+
+    gap: 32px;
+
+    padding: 36px;
+
+    overflow: auto;
+
+    background: var(--background);
 }
 
-.buildNameContainer {
+
+/* =====================================================
+   SECTION LABELS
+===================================================== */
+
+.weaponSelectorContainer,
+.skillSelectorContainer {
     width: 100%;
+
     display: flex;
-    justify-content: center;
-    align-items: start;
     flex-direction: column;
+
+    align-items: flex-start;
+
     gap: 10px;
 }
-.buildNameLabel {
-    color: #fff;
-    font-size: 16px;
+
+.weaponS,
+.skillSelectorContainer > p {
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.42);
+
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: 0.13em;
+
+    text-transform: uppercase;
 }
-.buildNameInput {
-    width: 100%;
-    height: 50px;
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 0 14px;
-    color: #fff;
-    outline: none;
-    border-radius: 8px;
-    font-size:  16px;
-}
-.buildNameInput:focus {
-    border-color: #fff;
-}
+
+
+/* =====================================================
+   WEAPON SELECTOR
+===================================================== */
+
 .weaponSelectorWrapper {
-    width: 100%;
-    max-width: 400px;
     position: relative;
+
+    width: 100%;
+    max-width: 420px;
 }
+
 .weaponSelector {
     width: 100%;
+    height: 48px;
+
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 50px;
-    padding: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
+
+    padding: 0 14px;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    background: var(--surface);
+
+    color: rgba(255, 255, 255, 0.78);
+
     cursor: pointer;
-    transition: 0.3s;
-    color: #fff;
-    position: relative;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease;
 }
+
+.weaponSelector:hover {
+    background: var(--surface-light);
+
+    border-color: var(--border-hover);
+
+    color: #fff;
+
+    box-shadow: 0 0 0 3px rgba(215, 173, 103, 0.035);
+}
+
 .weaponSelectorLeft {
     display: flex;
-    justify-content: center;
     align-items: center;
-    gap: 5px;
+
+    gap: 8px;
 }
-.weaponSelector:hover {
-    background: rgba(255, 255, 255, 0.05);
+
+.dropDownIcon {
+    width: 16px;
+    height: 16px;
+
+    flex-shrink: 0;
+
+    color: rgba(255, 255, 255, 0.35);
+
+    transition: color 0.2s ease;
 }
+
+.weaponSelector:hover .dropDownIcon {
+    color: var(--gold);
+}
+
+
+/* =====================================================
+   WEAPON DROPDOWN
+===================================================== */
+
 .weaponDropdown {
     display: none;
+
     position: absolute;
-    justify-content: start;
-    align-items: center;
-    flex-direction: column;
-    top: calc(100% + 5px);
+
+    top: calc(100% + 6px);
     left: 0;
+
     width: 100%;
-    background: #040404;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    z-index: 3;
-    overflow: hidden;
-    padding: 5px;
+
+    flex-direction: column;
+
+    gap: 2px;
+
+    padding: 6px;
+
+    background: var(--surface-light);
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    box-shadow:
+        0 14px 40px rgba(0, 0, 0, 0.48),
+        0 0 0 1px rgba(215, 173, 103, 0.025);
+
+    z-index: 10;
 }
-.weaponDropdown button {
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    width: 100%;
-    border: none;
-    background: transparent;
-    color: #fff;
-    cursor: pointer;
-    padding: 5px;
-    border-radius: 4px;
-    gap: 5px;
-}
-.weaponDropdown button:hover {
-    background: rgba(255, 255, 255, 0.05);
-}
+
 .weaponDropdown.open {
     display: flex;
 }
-.dropDownIcon {
-    width: 20px;
-    height: 20px;
-    color: #fff;
-    flex-shrink: 0;
-}
-.weaponSelectorContainer {
-    display: flex;
-    justify-content: center;
-    align-items: start;
-    flex-direction: column;
-    gap: 10px;
-    color: #fff;
-}
-.skillSelectorContainer {
+
+.weaponDropdown button {
     width: 100%;
-    color: #fff;
+    min-height: 40px;
+
     display: flex;
-    justify-content: start;
-    align-items: start;
-    flex-direction: column;
-    gap: 10px;
-}
-.addSkillBtn {
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 0 10px;
+
+    border: none;
+    border-radius: 7px;
+
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #fff;
-    width: 200px;
-    height: 40px;
-    border-radius: 8px;
+
+    color: rgba(255, 255, 255, 0.68);
+
+    font-size: 13px;
+
     cursor: pointer;
-    transition: 0.3s;
-    font-size: 14px;
+
+    transition:
+        background 0.15s ease,
+        color 0.15s ease;
 }
-.addSkillBtn:hover {
-    background: rgba(255, 255, 255, 0.05);
+
+.weaponDropdown button:hover {
+    background: rgba(215, 173, 103, 0.08);
+
+    color: var(--gold-light);
 }
-.generateBuildsBtnContainer {
-    display: flex;
-    justify-content: center;
-    align-items: start;
-    flex-direction: column;
-    gap: 10px;
-    width: 100%;
-    max-width: 200px;
+
+
+/* =====================================================
+   SKILL FILTERS
+===================================================== */
+
+.skillSelectorContainer {
+    color: #fff;
 }
-.generateBuildsBtnContainer p {
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 12px;
-}
-.generateBuildsBtn {
+
+.addSkillBtn {
+    width: 150px;
+    height: 38px;
+
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
-    max-width: 200px;
-    height: 40px;
-    background: #2d7a4d;
-    border: 1px solid #57ff9d;
-    color: #fff;
-    border-radius: 8px;
-    flex-shrink: 0;
+
+    margin-top: 2px;
+
+    background: transparent;
+
+    border: 1px solid var(--border);
+    border-radius: 9px;
+
+    color: rgba(255, 255, 255, 0.55);
+
+    font-size: 12px;
+    font-weight: 550;
+
     cursor: pointer;
-    transition: 0.3s;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
 }
-.generateBuildsBtn:hover {
-    background: #24613d;
+
+.addSkillBtn:hover {
+    background: rgba(215, 173, 103, 0.06);
+
+    border-color: var(--border-hover);
+
+    color: var(--gold-light);
 }
+
+
+/* =====================================================
+   GENERATE BUILDS
+===================================================== */
+
+.generateBuildsBtnContainer {
+    width: 100%;
+    max-width: 220px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    gap: 10px;
+}
+
+.generateBuildsBtn {
+    width: 100%;
+    height: 44px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: 1px solid var(--gold);
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--gold-light),
+            var(--gold)
+        );
+
+    color: #090a0d;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.generateBuildsBtn:hover:not(:disabled) {
+    opacity: 0.92;
+
+    box-shadow: 0 7px 24px rgba(215, 173, 103, 0.14);
+}
+
+.generateBuildsBtn:active:not(:disabled) {
+    transform: scale(0.985);
+}
+
 .generateBuildsBtn:disabled {
-    opacity: 0.5;
-    cursor: unset;
+    background: var(--surface-light);
+
+    border-color: var(--border);
+
+    color: rgba(255, 255, 255, 0.22);
+
+    opacity: 1;
+
+    cursor: not-allowed;
+
+    box-shadow: none;
 }
-.generateBuildsBtn:disabled:hover {
-    background: #2d7a4d;
+
+.generateBuildsBtnContainer p {
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.35);
+
+    font-size: 11px;
+
+    line-height: 1.5;
 }
+
+
+/* =====================================================
+   RIGHT PANEL
+===================================================== */
+
 .generatedBuildsContainer {
     display: flex;
-    justify-content: start;
-    align-items: center;
     flex-direction: column;
-}
-.generatedBuildsContainer .header {
-    width: 100%;
-    flex: 0 0 50px;
-    display: flex;
-    justify-content: center;
     align-items: center;
-    color: #fff;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(19, 21, 26, 0.3),
+            rgba(9, 10, 13, 0)
+        );
 }
+
 .generatedBuilds {
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    flex-direction: column;
-    flex: 1 1 auto;
-    width: 100%;
     position: relative;
-    padding: 20px;
+
+    width: 100%;
+
+    flex: 1 1 auto;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: flex-start;
+
+    padding: 24px;
+
     overflow: auto;
 }
-.noBuildsMsg {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: rgba(255, 255, 255, 0.5);
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+
 .buildsContainer {
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    flex-direction: column;
-    flex: 1 1 auto;
-    width: 100%;
     position: relative;
+
+    width: 100%;
+
+    flex: 1 1 auto;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: flex-start;
+
     gap: 10px;
 }
-.centerArrow {
+
+
+/* =====================================================
+   EMPTY STATE
+===================================================== */
+
+.noBuildsMsg {
     position: absolute;
+
     top: 50%;
     left: 50%;
+
     transform: translate(-50%, -50%);
-    z-index: 50;
-    width: 30px;
-    height: 30px;
-    background: #040404;
-    border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    width: 100%;
+
+    margin: 0;
+
     display: flex;
     justify-content: center;
     align-items: center;
+
+    color: rgba(255, 255, 255, 0.3);
+
+    font-size: 13px;
+
+    text-align: center;
 }
-.centerArrow > * {
-    width: 16px;
-    height: 16px;
-    color: rgba(255, 255, 255, 0.6);
-}
+
+
+/* =====================================================
+   PANEL DIVIDER
+===================================================== */
+
 .mainContainer hr {
-    border: none;
     position: absolute;
-    bottom: 0;
+
     top: 0;
+    bottom: 0;
     left: 50%;
 
     width: 1px;
-    background: rgba(255, 255, 255, 0.1);
+
+    margin: 0;
+
+    border: none;
+
+    background: var(--border);
 }
+
+
+/* =====================================================
+   GENERATING STATE
+===================================================== */
+
 .progressContainer {
     width: 100%;
     height: 100%;
+
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+
+    gap: 22px;
+
+    padding: 30px;
+
     color: #fff;
-    gap: 20px;
-    padding: 20px 0;
 }
+
 .progress {
     width: 100%;
-    max-width: 200px;
+    max-width: 260px;
+
     display: flex;
-    justify-content: center;
-    align-items: center;
     flex-direction: column;
-    gap: 10px;
-    font-size: 14px;
+    align-items: center;
+
+    gap: 12px;
+
+    color: rgba(255, 255, 255, 0.7);
+
+    font-size: 13px;
 }
-.loadingBar {
-    width: 100%;
-    height: 8px;
-    background: #222;
-    border-radius: 4px;
-    overflow: hidden;
-}
-.progress h3 {
-    font-size: 18px;
-}
-.inner {
-    height: 100%;
-    background: #57ff9d;
-    transition: width 0.15s ease-out; /* smooth animation */
-}
+
 .buildsFoundContainer {
+    min-width: 150px;
+
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+
+    gap: 5px;
+
+    padding: 18px 24px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
 }
+
 .buildsFoundContainer h3 {
-    color: #fff;
-    font-size: 18px;
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.42);
+
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: 0.12em;
+
+    text-transform: uppercase;
 }
+
+.buildsFoundContainer p {
+    margin: 0;
+
+    color: var(--gold-light);
+
+    font-size: 24px;
+    font-weight: 650;
+
+    letter-spacing: -0.03em;
+}
+
 .progressContainer button {
+    width: 150px;
+    height: 38px;
+
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 200px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    color: #fff;
-    border-radius: 8px;
+
+    background: transparent;
+
+    border: 1px solid var(--border);
+    border-radius: 9px;
+
+    color: rgba(255, 255, 255, 0.55);
+
+    font-size: 12px;
+
     cursor: pointer;
-    transition: 0.3s;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
 }
+
 .progressContainer button:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.035);
+
+    border-color: rgba(255, 255, 255, 0.14);
+
+    color: #fff;
 }
+
+
+/* =====================================================
+   SPINNERS
+===================================================== */
+
 .spinnerWrapper {
     display: inline-flex;
     align-items: center;
+
     gap: 8px;
 }
+
 .spinner {
-    width: 16px;
-    height: 16px;
-    border-radius: 999px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-top-color: rgba(255, 255, 255, 1);
-    animation: spin 0.6s linear infinite;
+    width: 15px;
+    height: 15px;
+
+    border-radius: 50%;
+
+    border: 2px solid rgba(9, 10, 13, 0.25);
+    border-top-color: #090a0d;
+
+    animation: spin 0.65s linear infinite;
 }
+
+.progressContainer .spinner {
+    border-color: rgba(255, 255, 255, 0.12);
+    border-top-color: var(--gold);
+}
+
 .spinnerWrapperBuildsContainer {
     display: inline-flex;
     align-items: center;
+
     gap: 8px;
+
     align-self: center;
 }
+
 .spinnerBuildsContainer {
     width: 30px;
     height: 30px;
-    border-radius: 999px;
-    border: 4px solid rgba(255, 255, 255, 0.3);
-    border-top-color: rgba(255, 255, 255, 1);
-    animation: spin 0.6s linear infinite;
+
+    border-radius: 50%;
+
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-top-color: var(--gold);
+
+    animation: spin 0.65s linear infinite;
 }
 
 @keyframes spin {
@@ -452,134 +707,210 @@
     }
 }
 
-.generateBuildsBtn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+
+/* =====================================================
+   CENTER ARROW
+===================================================== */
+
+.centerArrow {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    z-index: 50;
+
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+    border-radius: 50%;
+
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.35);
 }
-.weaponIcon {
-    display: inline-block;
-    flex-shrink: 0;
-    width: calc(64px * var(--weapon-icon-size));
-    height: calc(64px * var(--weapon-icon-size));
-    background-image: url("../../assets/gear.png");
-    background-size: calc(1280px * var(--weapon-icon-size)) calc(832px * var(--weapon-icon-size)); /* or set to sheet width/height if scaling */
-    background-repeat: no-repeat;
+
+.centerArrow > * {
+    width: 15px;
+    height: 15px;
+
+    color: var(--gold);
 }
-.bow {
-    background-position: calc((-64px * 13) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.footer {
+    width: 100%;
+
+    flex: 0 0 54px;
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 10px 14px;
+
+    background: var(--surface);
+
+    border-top: 1px solid var(--border);
 }
-.charge-blade {
-    background-position: calc((-64px * 9) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+
+.footer button {
+    min-width: 130px;
+    height: 36px;
+
+    border-radius: 8px;
+
+    font-size: 12px;
+    font-weight: 600;
 }
-.dual-blades {
-    background-position: calc((-64px * 3) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+
+.cancelBtn {
+    background: transparent;
+
+    border: 1px solid var(--border);
+
+    color: rgba(255, 255, 255, 0.6);
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease;
 }
-.great-sword {
-    background-position: calc((-64px * 1) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+
+.cancelBtn:hover {
+    background: rgba(255, 255, 255, 0.035);
+
+    border-color: rgba(255, 255, 255, 0.14);
+
+    color: #fff;
 }
-.gunlance {
-    background-position: calc((-64px * 5) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+
+.saveBtn {
+    background: linear-gradient(
+        135deg,
+        var(--gold-light),
+        var(--gold)
+    );
+
+    border: 1px solid var(--gold);
+
+    color: #090a0d;
+
+    cursor: pointer;
+
+    transition:
+        opacity 0.2s ease,
+        box-shadow 0.2s ease;
 }
-.hammer {
-    background-position: calc((-64px * 6) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
+
+.saveBtn:hover {
+    opacity: 0.9;
+
+    box-shadow: 0 5px 18px rgba(215, 173, 103, 0.12);
 }
-.heavy-bowgun {
-    background-position: calc((-64px * 12) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
-}
-.hunting-horn {
-    background-position: calc((-64px * 7) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
-}
-.insect-glaive {
-    background-position: calc((-64px * 10) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
-}
-.lance {
-    background-position: calc((-64px * 4) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
-}
-.light-bowgun {
-    background-position: calc((-64px * 11) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
-}
-.long-sword {
-    background-position: calc((-64px * 2) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
-}
-.switch-axe {
-    background-position: calc((-64px * 8) * var(--weapon-icon-size)) calc(-64px * var(--weapon-icon-size));
-}
-.sword-shield {
-    background-position: 0 calc(-64px * var(--weapon-icon-size));
-}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
 @media (max-width: 1000px) {
     .builderWrapper {
-        background: transparent;
+        background: var(--background);
     }
+
     .builderContainer {
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
         border: none;
         border-radius: 0;
     }
 }
+
 @media (max-width: 900px) {
     .mainContainer {
         flex-direction: column;
-        overflow-y: auto;   /* scroll HERE on mobile */
-        /* flex: 1 1 auto and min-height: 0 are inherited from base */
+
+        overflow-y: auto;
     }
 
     .buildInfoContainer,
     .generatedBuildsContainer {
         width: 100%;
-        /* Let them size to content instead of forcing height */
+
         height: auto;
         min-height: auto;
-        overflow: visible;  /* or overflow: unset; both okay */
-        flex: 0 0 auto;     /* take up only as much space as content needs */
-    }
-    .generatedBuildsContainer {
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        flex: 1 1 100%;
 
+        overflow: visible;
+
+        flex: 0 0 auto;
     }
-    .builderContainer hr {
-        display: none;
+
+    .generatedBuildsContainer {
+        min-height: 450px;
+
+        border-top: 1px solid var(--border);
     }
+
+    .mainContainer hr,
     .centerArrow {
         display: none;
     }
-    .footer {
-        bottom: 0;
-        left: 0;
-        right: 0;
-    }
-    .builderContainer hr {
-        display: none;
-    }
+
     .progressContainer {
-        position: unset;
-        top: unset;
-        left: unset;
-        transform: unset;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        color: #fff;
-        gap: 20px;
+        min-height: 400px;
     }
 }
+
 @media (max-width: 500px) {
+    .buildGeneratorHeader {
+        flex-basis: 52px;
+
+        font-size: 13px;
+    }
+
     .buildInfoContainer {
-        padding: 30px 10px;
+        padding: 26px 14px;
+
+        gap: 28px;
     }
+
     .weaponSelectorWrapper {
-        max-width: unset;
+        max-width: none;
     }
+
     .weaponSelector {
+        height: 46px;
+
         font-size: 14px;
     }
+
+    .addSkillBtn {
+        width: 100%;
+    }
+
+    .generateBuildsBtnContainer {
+        max-width: none;
+    }
+
+    .generateBuildsBtn {
+        max-width: none;
+    }
+
     .generatedBuilds {
-        padding: 10px;
+        padding: 14px;
     }
 }

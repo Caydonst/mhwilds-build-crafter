@@ -1,349 +1,1264 @@
 .charmCreatorWrapper {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0;
+
+    z-index: 20;
+
     width: 100%;
     height: 100%;
-    background: #090a0d;
-    transform: translateY(100%);
-    transition: 0.3s;
+
+    display: flex;
+    flex-direction: column;
+
+    background: var(--surface);
+
+    transform: translateX(100%);
+
+    transition:
+        transform 0.35s
+        cubic-bezier(
+            0.23,
+            1,
+            0.32,
+            1
+        );
+
+    overflow: hidden;
 }
-.open {
-    transform: translateY(0);
+
+.charmCreatorWrapper.open {
+    transform: translateX(0);
 }
+
+
+/* HEADER */
+
+.charmCreatorHeader {
+    width: 100%;
+
+    flex-shrink: 0;
+
+    padding:
+        22px
+        30px
+        24px;
+
+    border-bottom:
+        1px solid
+        var(--border);
+
+    background:
+        var(--surface);
+}
+
+.backBtn {
+    width: fit-content;
+    height: 32px;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    gap: 6px;
+
+    margin-bottom: 18px;
+
+    padding: 0 9px;
+
+    background: transparent;
+
+    border:
+        1px solid
+        transparent;
+
+    border-radius: 7px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.4
+        );
+
+    font-family: inherit;
+    font-size: 11px;
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.backBtn svg {
+    width: 15px;
+    height: 15px;
+}
+
+.backBtn:hover {
+    color: #fff;
+
+    background:
+        var(--surface-light);
+
+    border-color:
+        var(--border);
+}
+
+.charmHeaderTitle {
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.charmHeaderTitle > span {
+    color: var(--gold);
+
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: 0.16em;
+}
+
+.charmHeaderTitle h2 {
+    margin: 0;
+
+    color: #fff;
+
+    font-size: 24px;
+    font-weight: 650;
+
+    letter-spacing: -0.03em;
+}
+
+.charmHeaderTitle p {
+    margin: 0;
+
+    max-width: 450px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.4
+        );
+
+    font-size: 13px;
+
+    line-height: 1.55;
+}
+
+
+/* CONTENT */
+
 .charmCreatorInner {
     width: 100%;
-    height: 100%;
+    min-height: 0;
+
+    flex: 1;
+
     display: flex;
-    padding-top: 60px;
-    justify-content: start;
-    align-items: center;
     flex-direction: column;
+
+    overflow-y: auto;
 }
-.charmCreatorInner h3 {
-    color: #fff;
-}
-.backBtn {
-    position: fixed;
-    top: 0;
+
+.charmSection {
     width: 100%;
-    height: 40px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 18px;
+
+    padding: 26px 30px;
+
+    border-bottom:
+        1px solid
+        var(--border);
+}
+
+.sectionHeader {
+    width: 100%;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    gap: 20px;
+}
+
+.sectionHeader > div {
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+.sectionHeader h3 {
+    margin: 0;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.88
+        );
+
+    font-size: 14px;
+    font-weight: 650;
+}
+
+.sectionHeader p {
+    margin: 0;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.35
+        );
+
+    font-size: 11px;
+
+    line-height: 1.5;
+}
+
+.sectionCount {
+    min-width: 38px;
+    height: 25px;
+
     display: flex;
     justify-content: center;
     align-items: center;
-    background: transparent;
-    border: none;
+
+    padding: 0 8px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.035
+        );
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 6px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.4
+        );
+
+    font-size: 10px;
+    font-weight: 600;
+}
+
+
+/* SKILLS */
+
+.skillsContainer {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.skillRow {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+}
+
+.reinforcement {
+    position: relative;
+
+    flex: 1;
+
+    min-width: 0;
+}
+
+.reinforcementInner,
+.lvlContainer {
+    width: 100%;
+    height: 44px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 0 11px;
+
+    background:
+        var(--background);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 9px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.82
+        );
+
+    font-family: inherit;
+    font-size: 12px;
+
     cursor: pointer;
-    z-index: 3;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
 }
-.backBtn:hover {
-    background: rgba(255, 255, 255, 0.05);
+
+.reinforcementInner:hover,
+.lvlContainer:hover {
+    background:
+        var(--surface-light);
+
+    border-color:
+        rgba(
+            255,
+            255,
+            255,
+            0.14
+        );
 }
-.arrowLeftIcon {
-    width: 20px;
-    height: 20px;
-    color: #fff;
+
+.reinforcementInner:focus-visible,
+.lvlContainer:focus-visible {
+    outline: none;
+
+    border-color:
+        var(--border-hover);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(
+            215,
+            173,
+            103,
+            0.06
+        );
 }
-.skillsContainer, .decoContainer {
+
+.reinforcementInnerLeft {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    overflow: hidden;
+}
+
+.reinforcementInnerLeft > span:last-child {
+    overflow: hidden;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.chevronIcon {
+    width: 14px;
+    height: 14px;
+
+    flex-shrink: 0;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.35
+        );
+
+    transition:
+        transform 0.15s ease;
+}
+
+.chevronIcon.rotated {
+    transform: rotate(180deg);
+}
+
+
+/* SKILL DROPDOWN */
+
+.reinforcementDropdown {
+    position: absolute;
+
+    top: calc(100% + 6px);
+    left: 0;
+
+    z-index: 20;
+
     width: 100%;
+    max-height: 320px;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    background:
+        var(--surface);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 10px;
+
+    box-shadow:
+        0 16px 45px
+        rgba(
+            0,
+            0,
+            0,
+            0.5
+        );
+
+    animation:
+        dropdownIn
+        0.15s ease;
+}
+
+@keyframes dropdownIn {
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(-4px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+.dropdownSearch {
+    position: relative;
+
+    width: 100%;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+
+    padding: 6px;
+
+    border-bottom:
+        1px solid
+        var(--border);
+}
+
+.dropdownSearch > svg {
+    position: absolute;
+
+    left: 17px;
+
+    width: 14px;
+    height: 14px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.25
+        );
+
+    pointer-events: none;
+}
+
+.dropdownSearch input {
+    width: 100%;
+    height: 37px;
+
+    padding:
+        0
+        10px
+        0
+        34px;
+
+    background:
+        var(--background);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 7px;
+
+    outline: none;
+
+    color: #fff;
+
+    font-family: inherit;
+    font-size: 11px;
+
+    transition:
+        border-color 0.2s ease;
+}
+
+.dropdownSearch input::placeholder {
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.2
+        );
+}
+
+.dropdownSearch input:focus {
+    border-color:
+        var(--border-hover);
+}
+
+.dropdownSkillsContainer {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+
+    padding: 5px;
+
+    overflow-y: auto;
+}
+
+.dropdownSkillsContainer button {
+    width: 100%;
+    min-height: 38px;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 5px 8px;
+
+    background: transparent;
+
+    border: none;
+    border-radius: 6px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.75
+        );
+
+    font-family: inherit;
+    font-size: 11px;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        color 0.15s ease,
+        background 0.15s ease;
+}
+
+.dropdownSkillsContainer button:hover {
+    color: #fff;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.05
+        );
+}
+
+.dropdownEmpty {
+    padding: 24px 12px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.3
+        );
+
+    font-size: 11px;
+    text-align: center;
+}
+
+
+/* LEVEL */
+
+.lvlWrapper {
+    position: relative;
+
+    width: 88px;
+
+    flex-shrink: 0;
+}
+
+.lvlContainer {
+    padding: 0 9px;
+}
+
+.levelDropdown {
+    min-width: 88px;
+}
+
+.skillLvlContainer {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+
+    padding: 5px;
+}
+
+.skillLvlContainer button {
+    width: 100%;
+    height: 34px;
+
+    background: transparent;
+
+    border:
+        1px solid
+        transparent;
+
+    border-radius: 6px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.65
+        );
+
+    font-family: inherit;
+    font-size: 11px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        color 0.15s ease,
+        border-color 0.15s ease;
+}
+
+.skillLvlContainer button:hover {
+    color: #fff;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.05
+        );
+}
+
+.skillLvlContainer button.activeLevel {
+    color:
+        var(--gold-light);
+
+    background:
+        rgba(
+            215,
+            173,
+            103,
+            0.08
+        );
+
+    border-color:
+        rgba(
+            215,
+            173,
+            103,
+            0.18
+        );
+}
+
+
+/* DELETE */
+
+.deleteBtn {
+    width: 36px;
+    height: 36px;
+
+    flex-shrink: 0;
+
     display: flex;
     justify-content: center;
-    align-items: start;
-    flex-direction: column;
-    gap: 10px;
-    color: #fff;
-    padding: 30px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    align-items: center;
+
+    padding: 0;
+
+    background: transparent;
+
+    border:
+        1px solid
+        transparent;
+
+    border-radius: 8px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.28
+        );
+
+    cursor: pointer;
+
+    transition:
+        color 0.15s ease,
+        background 0.15s ease,
+        border-color 0.15s ease;
 }
+
+.deleteBtn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.deleteBtn:hover:not(:disabled) {
+    color: #ff6464;
+
+    background:
+        rgba(
+            255,
+            80,
+            80,
+            0.07
+        );
+
+    border-color:
+        rgba(
+            255,
+            80,
+            80,
+            0.12
+        );
+}
+
+.deleteBtn:disabled {
+    opacity: 0.2;
+
+    cursor: default;
+}
+
+
+/* ADD SKILL */
+
+.addSkillBtn {
+    width: fit-content;
+    height: 34px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: 6px;
+
+    margin-top: 4px;
+
+    padding: 0 11px;
+
+    background:
+        rgba(
+            215,
+            173,
+            103,
+            0.05
+        );
+
+    border:
+        1px solid
+        rgba(
+            215,
+            173,
+            103,
+            0.18
+        );
+
+    border-radius: 8px;
+
+    color:
+        var(--gold-light);
+
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.addSkillBtn span {
+    font-size: 16px;
+
+    line-height: 1;
+}
+
+.addSkillBtn:hover:not(:disabled) {
+    background:
+        rgba(
+            215,
+            173,
+            103,
+            0.1
+        );
+
+    border-color:
+        rgba(
+            215,
+            173,
+            103,
+            0.32
+        );
+}
+
+.addSkillBtn:disabled {
+    opacity: 0.3;
+
+    cursor: not-allowed;
+}
+
+
+/* INFO */
+
+.msgContainer {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    gap: 6px;
+
+    margin-top: 2px;
+}
+
+.msgContainer > svg {
+    width: 14px;
+    height: 14px;
+
+    flex-shrink: 0;
+
+    margin-top: 1px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.26
+        );
+}
+
+.msg {
+    margin: 0;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.3
+        );
+
+    font-size: 10px;
+
+    line-height: 1.5;
+}
+
+
+/* DECORATION SLOTS */
+
 .decoSlotsContainer {
     width: 100%;
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(
+                0,
+                1fr
+            )
+        );
+
+    gap: 7px;
 }
+
 .decoCard {
+    min-height: 52px;
+
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 5px;
-    padding: 5px 8px 5px 5px;
 
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 6px;
-    will-change: transform;
-    transition: 0.1s;
+    gap: 5px;
+
+    padding: 8px;
+
+    background:
+        var(--background);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 9px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.6
+        );
+
+    font-family: inherit;
+    font-size: 10px;
+
     cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
 }
+
 .decoCard:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background:
+        var(--surface-light);
+
+    border-color:
+        rgba(
+            255,
+            255,
+            255,
+            0.15
+        );
 }
+
 .decoCard:active {
-    transform: scale(0.95);
+    transform: scale(0.98);
 }
+
 .decoCard.selected {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: #fff;
+    color:
+        var(--gold-light);
+
+    background:
+        rgba(
+            215,
+            173,
+            103,
+            0.07
+        );
+
+    border-color:
+        rgba(
+            215,
+            173,
+            103,
+            0.35
+        );
+
+    box-shadow:
+        inset 0 0 0 1px
+        rgba(
+            215,
+            173,
+            103,
+            0.04
+        );
 }
+
 .decoSlot {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 5px;
+
+    gap: 2px;
 }
-.msgContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
+
+.noSlots {
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.3
+        );
+
+    font-size: 10px;
 }
-.msg {
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.5);
-}
-.msgContainer span {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.msgContainer span > * {
-    width: 20px;
-    height: 20px;
-    color: rgba(255, 255, 255, 0.5);
-}
-.addSkillBtn {
-    width: 200px;
-    height: 34px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: transparent;
-    border-radius: 10px;
-    color: #fff;
-    cursor: pointer;
-}
-.addSkillBtn:hover {
-    background: rgba(255, 255, 255, 0.05);
-}
-.addSkillBtn:disabled {
-    opacity: 0.7;
-    pointer-events: none;
-}
-.reinforcement {
-    position: relative;
+
+
+/* FOOTER */
+
+.charmFooter {
     width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-}
-.reinforcementWrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-}
-.reinforcementInner {
-    width: 100%;
-    height: 44px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
+
+    flex-shrink: 0;
+
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #fff;
-    padding: 0 10px;
-    font-size: 14px;
-    cursor: pointer;
+
+    gap: 20px;
+
+    padding: 16px 30px;
+
+    background:
+        rgba(
+            9,
+            10,
+            13,
+            0.96
+        );
+
+    border-top:
+        1px solid
+        var(--border);
 }
-.reinforcementInnerLeft {
+
+.charmFooterText {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-}
-.reinforcementInner p {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-}
-.reinforcementInner:hover {
-    border-color: rgba(255, 255, 255, 0.2);
-}
-.reinforcementDropdown {
-    position: absolute;
-    top: calc(100% + 5px);
-    left: 0;
-    width: 100%;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    background: #090a0d;
-    z-index: 3;
-    max-height: 400px;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     flex-direction: column;
+
+    gap: 3px;
 }
+
+.charmFooterText > span {
+    color:
+        var(--gold);
+
+    font-size: 8px;
+    font-weight: 700;
+
+    letter-spacing: 0.15em;
+}
+
+.charmFooterText p {
+    margin: 0;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.35
+        );
+
+    font-size: 10px;
+}
+
+.addBtn {
+    width: 150px;
+    height: 40px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 0 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--gold-light),
+            var(--gold)
+        );
+
+    border: none;
+    border-radius: 8px;
+
+    color:
+        var(--background);
+
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.addBtn:hover:not(:disabled) {
+    opacity: 0.92;
+
+    box-shadow:
+        0 6px 22px
+        rgba(
+            215,
+            173,
+            103,
+            0.12
+        );
+}
+
+.addBtn:active:not(:disabled) {
+    transform: scale(0.985);
+}
+
+.addBtn:disabled {
+    opacity: 0.3;
+
+    cursor: not-allowed;
+}
+
+
+/* SCROLLBARS */
+
+.charmCreatorInner::-webkit-scrollbar,
 .dropdownSkillsContainer::-webkit-scrollbar {
-    width: 10px;
+    width: 6px;
 }
+
+.charmCreatorInner::-webkit-scrollbar-track,
 .dropdownSkillsContainer::-webkit-scrollbar-track {
     background: transparent;
 }
+
+.charmCreatorInner::-webkit-scrollbar-thumb,
 .dropdownSkillsContainer::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,0.3);
-    border-radius: 10px;
-    background-clip: padding-box;
-    border: 2px solid transparent;
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.15
+        );
+
+    border-radius: 0;
 }
-.chevronIcon {
-    width: 16px;
-    height: 16px;
-    color: #fff;
-}
-.dropdownSkillsContainer button:hover {
-    background: rgba(255, 255, 255, 0.1);
-}
+
+.charmCreatorInner,
 .dropdownSkillsContainer {
-    width: 100%;
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    flex-direction: column;
-    padding: 0 5px 5px 5px;
-    overflow: auto;
+    scrollbar-width: thin;
+
+    scrollbar-color:
+        rgba(
+            255,
+            255,
+            255,
+            0.15
+        )
+        transparent;
 }
-.dropdownSkillsContainer button {
-    width: 100%;
-    color: #fff;
-    border: none;
-    background: transparent;
-    border-radius: 6px;
-    cursor: pointer;
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    gap: 5px;
-    padding: 3px 10px;
-    font-size: 14px;
-    font-weight: 300;
-}
-.searchContainer input:focus {
-    border-color: #fff;
-}
-.searchContainer {
-    height: 50px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0;
-    padding: 5px;
-    background: #090a0d;
-}
-.searchContainer input {
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    outline: none;
-    border-radius: 6px;
-    padding: 0 10px;
-    color: #fff;
-    font-size: 16px;
-}
-.skillLvlContainer {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    padding: 5px;
-}
-.skillLvlContainer button {
-    width: 100%;
-    height: 40px;
-    background: transparent;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    color: #fff;
-}
-.skillLvlContainer button:hover {
-    background: rgba(255, 255, 255, 0.1);
-}
-.lvlWrapper {
-    position: relative;
-    width: 80px;
-    height: 44px;
-}
-.lvlContainer {
-    height: 100%;
-    width: 100%;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: #fff;
-    padding: 0 10px;
-    cursor: pointer;
-}
-.lvlContainer:hover {
-    border-color: rgba(255, 255, 255, 0.2);
-}
-.deleteBtn {
-    background: transparent;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: none;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-    flex-shrink: 0;
-}
-.deleteBtn:hover {
-    background: rgba(255, 255, 255, 0.1);
-}
-.deleteBtn > * {
-    color: #fff;
-    width: 22px;
-    height: 22px;
-}
-.addBtnContainer {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 30px;
-}
-.addBtn {
-    width: 100%;
-    height: 44px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #fff;
-    border: none;
-    border-radius: 50px;
-    color: #000;
-    cursor: pointer;
-    transition: 0.2s;
-}
-.addBtn:hover {
-    opacity: 0.7;
-}
-.addBtn:disabled {
-    opacity: 0.3;
-    pointer-events: none;
-}
-.addBtn:disabled:hover {
-    opacity: 0.3;
+
+
+/* MOBILE */
+
+@media (max-width: 500px) {
+    .charmCreatorHeader {
+        padding:
+            18px
+            14px
+            20px;
+    }
+
+    .charmHeaderTitle h2 {
+        font-size: 21px;
+    }
+
+    .charmSection {
+        padding:
+            22px
+            12px;
+    }
+
+    .skillRow {
+        gap: 5px;
+    }
+
+    .lvlWrapper {
+        width: 78px;
+    }
+
+    .deleteBtn {
+        width: 32px;
+        height: 32px;
+    }
+
+    .decoSlotsContainer {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(
+                    0,
+                    1fr
+                )
+            );
+    }
+
+    .charmFooter {
+        padding:
+            12px
+            14px;
+    }
+
+    .charmFooterText {
+        display: none;
+    }
+
+    .addBtn {
+        width: 100%;
+        height: 42px;
+    }
 }
 
 @media (max-width: 500px) {

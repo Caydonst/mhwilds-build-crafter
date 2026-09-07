@@ -3,24 +3,6 @@
     --stats-icon-size: 0.35;
 }
 
-.gearSelectorContainer {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    visibility: hidden;
-    opacity: 0;
-    transition: 0.15s;
-    animation: fadeIn 0.15s;
-    z-index: 5;
-    padding: 10px;
-
-}
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -37,145 +19,696 @@
         transform: scale(1);
     }
 }
+
+.gearSelectorContainer {
+    position: fixed;
+    inset: 0;
+
+    z-index: 1000;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+
+    background: rgba(0, 0, 0, 0.72);
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    visibility: hidden;
+    opacity: 0;
+
+    animation: fadeIn 0.2s forwards;
+
+    transition:
+        opacity 0.2s ease,
+        visibility 0.2s ease;
+}
+
 .gearSelectorContainer.open {
     visibility: visible;
     opacity: 1;
 }
+
 .gearSelectorInnerWrapper {
     width: 100%;
-    max-width: 800px;
-    height: 100%;
-    max-height: 800px;
-    background: #090a0d;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
+    max-width: 820px;
+
+    height: min(800px, calc(100vh - 40px));
+
     overflow: hidden;
+
     display: flex;
-    gap: 20px;
-    transform: scale(0.9);
-    transition: 0.15s;
-    animation: scaleIn 0.15s;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+    border-radius: 16px;
+
+    box-shadow:
+        0 24px 70px rgba(0, 0, 0, 0.55);
+
+    transform:
+        translateY(8px)
+        scale(0.99);
+
+    transition:
+        transform 0.2s ease;
+
+    animation: scaleIn 0.2s forwards;
 }
+
+.gearSelectorContainer.open
+.gearSelectorInnerWrapper {
+    transform:
+        translateY(0)
+        scale(1);
+}
+
 .gearSelectorInner {
+    position: relative;
+
     width: 100%;
     min-width: 100%;
     height: 100%;
+
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-    padding: 20px;
+
+    padding: 30px;
+
+    overflow: hidden;
 }
-.gearSelectorContainer.open .gearSelectorInnerWrapper {
-    transform: scale(1);
-}
-.gearSelectorInner .info {
+
+
+/* HEADER */
+
+.info {
     width: 100%;
+
+    flex-shrink: 0;
+
     display: flex;
-    justify-content: center;
-    align-items: start;
     flex-direction: column;
-    color: #fff;
-    gap: 20px;
+
+    gap: 22px;
+
+    padding-bottom: 22px;
+
+    border-bottom: 1px solid var(--border);
 }
-.info .header {
+
+.header {
     width: 100%;
+
     display: flex;
     justify-content: space-between;
+    align-items: start;
+
+    padding-right: 40px;
+}
+
+.headerText {
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.headerText > span {
+    color: var(--gold);
+
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: 0.16em;
+}
+
+.headerText h2 {
+    margin: 0;
+
+    color: #fff;
+
+    font-size: 24px;
+    font-weight: 650;
+
+    letter-spacing: -0.03em;
+}
+
+.headerText p {
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.4);
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.bonusLegend {
+    width: 100%;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    gap: 18px;
+
+    flex-shrink: 0;
+
+    padding: 14px 4px 0;
+
+    color: rgba(255, 255, 255, 0.5);
+
+    font-size: 11px;
+}
+
+.bonusLegend .setBonusRef,
+.bonusLegend .groupBonusRef {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    gap: 6px;
+}
+
+.bonusLegend .setBonusRef p,
+.bonusLegend .groupBonusRef p {
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.45);
+
+    font-size: 11px;
+}
+
+.bonusLegend .setBonusRef span,
+.bonusLegend .groupBonusRef span {
+    width: 7px;
+    height: 7px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+}
+
+.bonusLegend .setBonusRef span {
+    background: #F2BBAA;
+}
+
+.bonusLegend .groupBonusRef span {
+    background: #AAF1F2;
+}
+
+
+/* SEARCH */
+
+.searchContainer {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.searchContainer > .searchInputWrapper {
+    width: 100%;
+}
+
+.searchToolbar {
+    width: 100%;
+
+    display: flex;
+    align-items: stretch;
+
+    gap: 8px;
+}
+
+.searchInputWrapper {
+    position: relative;
+
+    width: 100%;
+
+    display: flex;
     align-items: center;
 }
 
-.info .searchContainer {
+.searchInputWrapper > svg {
+    position: absolute;
+
+    left: 13px;
+
+    width: 16px;
+    height: 16px;
+
+    color: rgba(255, 255, 255, 0.28);
+
+    pointer-events: none;
+}
+
+.searchInputWrapper input {
+    width: 100%;
+    height: 46px;
+
+    padding:
+        0
+        14px
+        0
+        40px;
+
+    background: var(--background);
+
+    border: 1px solid var(--border);
+    border-radius: 9px;
+
+    outline: none;
+
+    color: rgba(255, 255, 255, 0.88);
+
+    font-family: inherit;
+    font-size: 13px;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.searchInputWrapper input::placeholder {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.searchInputWrapper input:hover {
+    border-color:
+        rgba(255, 255, 255, 0.14);
+}
+
+.searchInputWrapper input:focus {
+    border-color: var(--border-hover);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(215, 173, 103, 0.06);
+}
+
+
+/* WEAPON SELECT */
+
+.weaponSelectorWrapper {
+    position: relative;
+
+    width: 68px;
+
+    flex-shrink: 0;
+}
+
+.weaponSelector {
+    width: 100%;
+    height: 46px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: 2px;
+
+    padding: 0 7px;
+
+    background: var(--background);
+
+    border: 1px solid var(--border);
+    border-radius: 9px;
+
+    color: #fff;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+.weaponSelector:hover {
+    background: var(--surface-light);
+
+    border-color:
+        rgba(255, 255, 255, 0.14);
+}
+
+.weaponSelector .weaponIcon {
+    --weapon-icon-size: 0.44;
+}
+
+.dropDownIcon {
+    width: 15px;
+    height: 15px;
+
+    flex-shrink: 0;
+
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.weaponDropdown {
+    position: absolute;
+
+    top: calc(100% + 7px);
+    right: 0;
+
+    z-index: 10;
+
+    width: 68px;
+    max-height: 330px;
+
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: start;
-    gap: 5px;
+
+    gap: 2px;
+
+    padding: 5px;
+
+    overflow-y: auto;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+    border-radius: 9px;
+
+    box-shadow:
+        0 14px 40px
+        rgba(0, 0, 0, 0.45);
+
+    opacity: 0;
+    visibility: hidden;
+
+    transform: translateY(-4px);
+
+    transition:
+        opacity 0.15s ease,
+        transform 0.15s ease,
+        visibility 0.15s ease;
+}
+
+.weaponDropdown.open {
+    opacity: 1;
+    visibility: visible;
+
+    transform: translateY(0);
+}
+
+.weaponDropdown button {
     width: 100%;
-}
-.info .searchContainer input {
-    width: 100%;
-    outline: none;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 10px;
-    color: #fff;
-    border-radius: 8px;
-    font-size: 16px;
-    transition: 0.2s;
-}
-.info .searchContainer input:hover {
-    background: rgba(255, 255, 255, 0.05);
-}
-.info .searchContainer input:focus {
-    background: rgba(255, 255, 255, 0.03);
-    border-color: #fff;
-}
-.closeBtn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 34px;
-    height: 34px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    min-height: 45px;
+
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.05);
-    cursor: pointer;
-}
-.closeBtn:hover {
-    background: rgba(255, 255, 255, 0.1);
-}
-.closeBtn > * {
-    width: 22px;
-    height: 22px;
-    color: #fff;
-}
-.artianWeaponBtn {
-    width: 100%;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
+    padding: 4px;
+
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #fff;
-    border-radius: 8px;
+
+    border: 1px solid transparent;
+    border-radius: 6px;
+
     cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        border-color 0.15s ease;
 }
+
+.weaponDropdown button:hover {
+    background:
+        rgba(255, 255, 255, 0.05);
+}
+
+.weaponDropdown button.selectedWeapon {
+    background:
+        rgba(215, 173, 103, 0.08);
+
+    border-color:
+        rgba(215, 173, 103, 0.22);
+}
+
+.weaponDropdown .weaponIcon {
+    --weapon-icon-size: 0.46;
+}
+
+
+/* ARTIAN BUTTON */
+
+.artianWeaponBtn {
+    width: fit-content;
+    height: 36px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 0 12px;
+
+    background:
+        rgba(215, 173, 103, 0.05);
+
+    border:
+        1px solid
+        rgba(215, 173, 103, 0.2);
+
+    border-radius: 8px;
+
+    color: var(--gold-light);
+
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.artianWeaponBtn span {
+    font-size: 16px;
+    font-weight: 400;
+
+    line-height: 1;
+}
+
 .artianWeaponBtn:hover {
-    border-color: rgba(255, 255, 255, 0.3);
+    background:
+        rgba(215, 173, 103, 0.1);
+
+    border-color:
+        rgba(215, 173, 103, 0.35);
+
+    color: var(--gold-light);
 }
-.slideLeft {
-    transform: translateX(calc(-100% - 20px));
-    transition: 0.5s cubic-bezier(0.23, 1.00, 0.32, 1.00);
-}
-.slideRight {
-    transform: translateX(0);
-    transition: 0.5s cubic-bezier(0.23, 1.00, 0.32, 1.00);
-}
+
+
+/* RESULTS */
 
 .main {
     width: 100%;
-    height: 100%;
-    overflow: auto;
+    min-height: 0;
+
+    flex: 1;
+
     display: flex;
     flex-direction: column;
-    justify-content: start;
-    align-items: center;
-    gap: 5px;
-    padding-right: 5px;
+
+    overflow: hidden;
+
+    padding-top: 18px;
 }
+
+.resultsHeader {
+    width: 100%;
+
+    flex-shrink: 0;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0 4px 10px;
+}
+
+.resultsHeader p {
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.3);
+
+    font-size: 10px;
+    font-weight: 600;
+
+    letter-spacing: 0.04em;
+}
+
 .mainInner {
     width: 100%;
+    min-height: 0;
+
+    flex: 1;
+
     display: flex;
     flex-direction: column;
-    justify-content: start;
+
+    gap: 6px;
+
+    padding-right: 5px;
+
+    overflow-y: auto;
+}
+
+.gearContainer {
+    width: 100%;
+
+    display: block;
+
+    padding: 0;
+
+    background: transparent;
+
+    border: none;
+    border-radius: 14px;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        transform 0.15s ease;
+}
+
+.gearContainer:hover {
+    background:
+        rgba(255, 255, 255, 0.035);
+}
+
+.gearContainer:active {
+    transform: scale(0.995);
+}
+
+
+/* NO RESULTS */
+
+.noResults {
+    width: 100%;
+
+    flex: 1;
+
+    display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 5px;
+    flex-direction: column;
+
+    gap: 6px;
+
+    padding: 40px 20px;
+
+    text-align: center;
+}
+
+.noResults h3 {
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.78);
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.noResults p {
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.3);
+
+    font-size: 12px;
+}
+
+
+/* CLOSE */
+
+.closeBtn {
+    position: absolute;
+
+    top: 18px;
+    right: 18px;
+
+    z-index: 4;
+
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 0;
+
+    background: transparent;
+
+    border: 1px solid transparent;
+    border-radius: 8px;
+
+    color: rgba(255, 255, 255, 0.38);
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.closeBtn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.closeBtn:hover {
+    color: #fff;
+
+    background: var(--surface-light);
+
+    border-color: var(--border);
+}
+
+
+/* SCROLLBAR */
+
+.mainInner::-webkit-scrollbar,
+.weaponDropdown::-webkit-scrollbar {
+    width: 6px;
+}
+
+.mainInner::-webkit-scrollbar-track,
+.weaponDropdown::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.mainInner::-webkit-scrollbar-thumb,
+.weaponDropdown::-webkit-scrollbar-thumb {
+    background:
+        rgba(255, 255, 255, 0.16);
+
+    border-radius: 0;
+}
+
+.mainInner,
+.weaponDropdown {
+    scrollbar-width: thin;
+
+    scrollbar-color:
+        rgba(255, 255, 255, 0.16)
+        transparent;
 }
 .gearContainer {
     width: 100%;
@@ -187,108 +720,33 @@
 }
 .decoContainer {
     width: 100%;
-    cursor: pointer;
-    border-radius: 8px;
-}
-.decoContainer:hover {
-    background: rgba(255, 255, 255, 0.03);
-}
-.main::-webkit-scrollbar {
-    width: 10px;
-}
-.main::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-}
-.main::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,0.3);
+
+    border: 1px solid transparent;
     border-radius: 10px;
-    background-clip: padding-box;
-    border: 2px solid transparent;
+
+    cursor: pointer;
+
+    transition: 0.2s;
 }
+
+.decoContainer:hover {
+    background:
+        rgba(255, 255, 255, 0.035);
+
+    border-color:
+        rgba(255, 255, 255, 0.05);
+}
+
+.decoContainer:active {
+    transform: scale(0.995);
+}
+
 .inputFilterContainer {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     gap: 5px;
-}
-.weaponSelectorWrapper {
-    height: 100%;
-    position: relative;
-}
-.weaponSelector {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    cursor: pointer;
-    color: #fff;
-    position: relative;
-    padding: 0 5px;
-    background: rgba(255, 255, 255, 0.05);
-    transition: 0.2s;
-}
-.weaponSelectorLeft {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-}
-.weaponSelector:hover {
-    background: rgba(255, 255, 255, 0.1);
-}
-.weaponDropdown {
-    display: none;
-    position: absolute;
-    justify-content: start;
-    align-items: center;
-    flex-direction: column;
-    top: calc(100% + 5px);
-    left: 0;
-    width: 100%;
-    background: #090a0d;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    z-index: 3;
-    overflow: hidden;
-    padding: 5px;
-}
-.weaponDropdown button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    border: none;
-    background: transparent;
-    color: #fff;
-    cursor: pointer;
-    padding: 5px;
-    border-radius: 4px;
-    gap: 5px;
-}
-.weaponDropdown button:hover {
-    background: rgba(255, 255, 255, 0.05);
-}
-.weaponDropdown.open {
-    display: flex;
-}
-.dropDownIcon {
-    width: 20px;
-    height: 20px;
-    color: rgba(255, 255, 255, 0.7);
-    flex-shrink: 0;
-}
-.weaponSelectorContainer {
-    display: flex;
-    justify-content: center;
-    align-items: start;
-    flex-direction: column;
-    gap: 10px;
-    color: #fff;
-    z-index: 2;
 }
 .skillsComponentContainer {
     width: 100%;
@@ -1242,15 +1700,64 @@
     .gearSelectorContainer {
         padding: 0;
     }
+
     .gearSelectorInnerWrapper {
-        max-width: unset;
-        max-height: unset;
-        border-radius: 0;
+        max-width: none;
+
+        height: 100%;
+        max-height: none;
+
         border: none;
+        border-radius: 0;
     }
+
     .gearSelectorInner {
-        padding: 10px;
+        padding:
+            22px
+            12px
+            12px;
     }
+
+    .header {
+        padding-right: 40px;
+    }
+
+    .headerText h2 {
+        font-size: 21px;
+    }
+
+    .info {
+        gap: 18px;
+
+        padding-bottom: 18px;
+    }
+
+    .searchToolbar {
+        gap: 6px;
+    }
+
+    .searchInputWrapper input {
+        height: 44px;
+
+        font-size: 12px;
+    }
+
+    .weaponSelectorWrapper {
+        width: 62px;
+    }
+
+    .weaponSelector {
+        height: 44px;
+    }
+
+    .weaponDropdown {
+        width: 62px;
+    }
+
+    .artianWeaponBtn {
+        width: 100%;
+    }
+
     .closeBtn {
         top: 10px;
         right: 10px;

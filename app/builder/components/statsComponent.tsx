@@ -97,7 +97,7 @@ export default function StatsComponent({ build }: Props) {
                             <span className={`${styles.statsIcon} ${styles.damageIcon}`}></span>
                             <p>Effective Raw</p>
                         </div>
-                        <p>{buildStats.effectiveRaw}</p>
+                        <p>{buildStats.effectiveRaw.toFixed(2)}</p>
                     </div>
                     <div className={styles.rawContainer}>
                         <div className={styles.attackLeft}>

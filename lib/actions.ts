@@ -5,6 +5,9 @@ import { BuilderBuild } from "@/app/api/types/types"
 import {User} from "@supabase/auth-js";
 import {redirect} from "next/navigation";
 
+import { headers } from "next/headers";
+import { shareRateLimit } from "@/lib/rateLimit";
+
 type BuildId = {
     id: string;
 }
@@ -109,6 +112,72 @@ export async function checkBuildLimit() {
 
 }
 
+export async function shareBuild(
+    build: BuilderBuild,
+    name: string,
+) {
+
+    const serialized = JSON.stringify(build);
+
+    if (serialized.length > 100_000) {
+        throw new Error("Build data is too large.");
+    }
+    
+    const supabase = await createClient();
+
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+
+    const headerStore = await headers();
+
+    const forwardedFor =
+        headerStore.get("x-forwarded-for");
+
+    const ip =
+        forwardedFor?.split(",")[0]?.trim() ??
+        headerStore.get("x-real-ip") ??
+        "unknown";
+
+    /*
+     * Logged-in users are rate-limited by user ID.
+     * Anonymous users are rate-limited by IP.
+     */
+    const identifier = user
+        ? `user:${user.id}`
+        : `ip:${ip}`;
+
+    const { success, reset } =
+        await shareRateLimit.limit(identifier);
+
+    if (!success) {
+        throw new Error(
+            "You've shared too many builds recently. Try again later.",
+        );
+    }
+
+    const buildName =
+        name.trim() && name !== "New build*"
+            ? name.trim()
+            : "Shared build";
+
+    const { data, error } = await supabase
+        .from("shared_builds")
+        .insert({
+            build_data: build,
+            build_name: buildName,
+            uuid: user?.id ?? null,
+        })
+        .select("id")
+        .single();
+
+    if (error) {
+        throw new Error(error.message);
+    }
+
+    return data.id as string;
+}
+
 export async function getData(user: User | null) {
     const supabase = await createClient();
 
@@ -172,50 +241,6 @@ export async function deleteBuild(id: number | null) {
         return null;
     }
 
-}
-
-export async function saveBuild(build: BuilderBuild, name: string, buildId: string | null) {
-
-    const supabase = await createClient();
-
-    const user = await checkUser();
-    if (!user) {
-        return;
-    }
-
-    console.log("user: " + user);
-
-    if (buildId) {
-        const { data, error } = await supabase
-            .from("test_builds")
-            .update({
-                build_data: build,
-            })
-            .eq("id", buildId)
-            .eq("uuid", user.id)
-            .select("*")
-
-        if (error) {
-            throw new Error(error.message);
-        }
-
-        return data;
-    } else {
-        const { data, error } = await supabase
-            .from("test_builds")
-            .insert({
-                build_data: build,
-                name: name.trim(),
-                uuid: user.id
-            })
-            .select("*")
-
-        if (error) {
-            throw new Error(error.message);
-        }
-
-        return data;
-    }
 }
 
 export async function checkUser() {
