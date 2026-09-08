@@ -1,72 +1,377 @@
+.sideNavOverlay {
+    position: fixed;
+    inset: 0;
+
+    z-index: 999;
+
+    background: rgba(0, 0, 0, 0.7);
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition:
+        opacity 0.3s ease,
+        visibility 0.3s ease;
+}
+
+.sideNavOverlay.open {
+    opacity: 1;
+    visibility: visible;
+}
+
 .sideNavContainer {
     position: fixed;
+
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    background: #090a0d;
-    visibility: hidden;
-    opacity: 0;
-    transition: 0.2s;
+
+    width: 100%;
+    height: 52vh;
+    min-height: 360px;
+    max-height: 520px;
+
     z-index: 1000;
-}
-.sideNavContainer.open {
-    visibility: visible;
-    opacity: 1;
-}
-.closeBtn {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: none;
-    border-radius: 50%;
-    background: transparent;
-}
-.closeBtn > * {
-    width: 24px;
-    height: 24px;
-    color: #fff;
-}
-.no-scroll {
-    overflow: hidden;
-}
-.navButtons {
+
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 14px;
-    height: 100%;
+
+    padding: 28px 32px 24px;
+
+    background:
+        var(--background);
+
+    border-bottom:
+        1px solid
+        var(--border);
+
+    backdrop-filter: blur(14px);
+
+    transform: translateY(-100%);
+
+    visibility: hidden;
+
+    transition:
+        transform 0.35s
+            cubic-bezier(
+                0.23,
+                1,
+                0.32,
+                1
+            ),
+        visibility 0.35s;
 }
-.builderBtn, .homeBtn {
-    text-decoration: none;
-    color: #fff;
-    font-size: 40px;
+
+.sideNavContainer.open {
+    transform: translateY(0);
+
+    visibility: visible;
+}
+
+
+/* HEADER */
+
+.sideNavHeader {
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+
+    margin-bottom: 28px;
+}
+
+.sideNavHeader > span {
+    color: var(--gold);
+
+    font-size: 9px;
     font-weight: 700;
+
+    letter-spacing: 0.16em;
 }
-.discordBtn {
+
+.sideNavHeader h2 {
+    margin: 0;
+
+    color: #fff;
+
+    font-size: 24px;
+    font-weight: 650;
+
+    letter-spacing: -0.03em;
+}
+
+
+/* CLOSE BUTTON */
+
+.closeBtn {
     position: absolute;
-    bottom: 20px;
+
+    top: 20px;
+    right: 22px;
+
+    width: 34px;
+    height: 34px;
+
     display: flex;
     justify-content: center;
     align-items: center;
-    border: none;
-    border-radius: 50%;
+
+    padding: 0;
+
     background: transparent;
+
+    border:
+        1px solid
+        transparent;
+
+    border-radius: 8px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.4
+        );
+
     cursor: pointer;
-    transition: 0.2s;
-    font-size: 16px;
-    color: #fff;
-    text-decoration: none;
-    gap: 5px;
+
+    transition:
+        color 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
 }
-.discordBtn > * {
-    fill: #5865F2;
-    width: 26px;
-    height: 26px;
+
+.closeBtn > * {
+    width: 18px;
+    height: 18px;
+}
+
+.closeBtn:hover {
+    color: #fff;
+
+    background:
+        var(--surface-light);
+
+    border-color:
+        var(--border);
+}
+
+
+/* NAVIGATION */
+
+.navButtons {
+    width: 100%;
+
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+
+    gap: 0;
+}
+
+.navLink {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 18px;
+
+    padding: 13px 4px;
+
+    border-bottom:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.06
+        );
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.9
+        );
+
+    text-decoration: none;
+
+    font-size: 30px;
+    font-weight: 600;
+
+    letter-spacing: -0.035em;
+
+    transition:
+        color 0.2s ease,
+        padding-left 0.2s ease;
+}
+
+.navLink:first-child {
+    border-top:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.06
+        );
+}
+
+.navLink > span {
+    width: 22px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.22
+        );
+
+    font-size: 9px;
+    font-weight: 600;
+
+    letter-spacing: 0.08em;
+
+    transition:
+        color 0.2s ease;
+}
+
+.navLink:hover {
+    padding-left: 10px;
+
+    color:
+        var(--gold-light);
+}
+
+.navLink:hover > span {
+    color: var(--gold);
+}
+
+
+/* FOOTER */
+
+.sideNavFooter {
+    width: 100%;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    padding-top: 18px;
+}
+
+.discordBtn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 8px 10px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.025
+        );
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 8px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.5
+        );
+
+    text-decoration: none;
+
+    font-size: 11px;
+    font-weight: 500;
+
+    transition:
+        color 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.discordBtn svg {
+    width: 18px;
+    height: 18px;
+
+    fill: #5865f2;
+}
+
+.discordBtn:hover {
+    color: #fff;
+
+    background:
+        rgba(
+            88,
+            101,
+            242,
+            0.07
+        );
+
+    border-color:
+        rgba(
+            88,
+            101,
+            242,
+            0.25
+        );
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+    .sideNavContainer {
+        height: 55vh;
+        min-height: 340px;
+
+        padding:
+            22px
+            18px
+            18px;
+    }
+
+    .sideNavHeader {
+        margin-bottom: 20px;
+    }
+
+    .sideNavHeader h2 {
+        font-size: 21px;
+    }
+
+    .closeBtn {
+        top: 14px;
+        right: 14px;
+    }
+
+    .navLink {
+        padding:
+            11px
+            2px;
+
+        font-size: 25px;
+    }
+
+    .sideNavFooter {
+        padding-top: 14px;
+    }
 }
