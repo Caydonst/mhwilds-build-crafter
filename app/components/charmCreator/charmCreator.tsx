@@ -486,16 +486,6 @@ export default function CharmCreator({
       </div>
 
       <div className={styles.charmFooter}>
-        <div className={styles.charmFooterText}>
-          <span>CUSTOM CHARM</span>
-
-          <p>
-            {skillList.filter((skill) => skill.skillId !== -1).length} selected{" "}
-            {skillList.filter((skill) => skill.skillId !== -1).length === 1
-              ? "skill"
-              : "skills"}
-          </p>
-        </div>
 
         <button
           type="button"

@@ -10,7 +10,6 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     z-index: 3;
     font-size: 14px;
-    background: rgba(215, 173, 103, 0.3);
     backdrop-filter: blur(10px);
 }
 
@@ -21,6 +20,7 @@
     justify-content: center;
     align-items: center;
     color: #000;
+    background: rgba(215, 173, 103, 0.3);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 .sharedHeader {
@@ -144,7 +144,7 @@
     align-items: center;
     background: rgba(215, 173, 103, 0.3);
     backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     z-index: 3;
 }
 
@@ -181,7 +181,7 @@
     stroke-width: 2;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
     .desktopHeader {
         display: none;
     }
