@@ -118,7 +118,7 @@ export default function SharedBuildClient({
                 <div className={styles.headerInner}>
                     <div className={styles.sharedHeader}>
                         <div className={styles.buildInfo}>
-                            <h1>{`< ${buildName} >`}</h1>
+                            <h1>{`< Shared build >`}</h1>
                         </div>
 
                         <button
@@ -162,7 +162,7 @@ export default function SharedBuildClient({
             {/* MOBILE HEADER */}
             <div className={styles.mobileHeader}>
                 <div className={styles.buildInfo}>
-                    <h1>{`< ${buildName} >`}</h1>
+                    <h1>{`< Shared build >`}</h1>
                 </div>
 
                 <button
