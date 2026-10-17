@@ -125,6 +125,16 @@ export default function Navbar() {
               >
                 Builder
               </Link>
+              <Link
+                href="/generator"
+                className={
+                  pathname.startsWith("/generator")
+                    ? styles.activeNavLink
+                    : undefined
+                }
+              >
+                Generator
+              </Link>
             </nav>
           </div>
 

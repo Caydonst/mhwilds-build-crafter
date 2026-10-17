@@ -1,4 +1,5 @@
 import {Weapon} from "@/app/api/types/types";
+import type { ArtianConfig } from "@/app/api/types/artianConfig";
 
 type PartType = {
     0: string;
@@ -126,51 +127,54 @@ const elementBoostMap: Record<string, Record<string, number>> = {
     },
 };
 
-function getBoost() {
 
-}
-
-export function CreateArtian(data: Artian) {
+export function CreateArtian(data: ArtianConfig): Weapon {
     const weapon: Weapon = {
-        "id": 999,
-        "gameId": 999,
-        "kind": data.kind,
-        "name": data.type,
-        "rarity": 8,
-        "damage": {
-            "raw": data.raw,
-            "display": 0
+        id: 999,
+        gameId: 999,
+        kind: data.kind,
+        name: data.type,
+        rarity: 8,
+
+        damage: {
+            raw: data.raw,
+            display: 0,
         },
-        "specials": [
+
+        specials: [
             {
-                "id": 999,
-                "damage": {
-                    "raw": 0,
-                    "display": data.elementDamage
+                id: 999,
+                damage: {
+                    raw: 0,
+                    display: data.elementDamage,
                 },
-                "hidden": false,
-                "kind": "element",
-                "element": data.element,
-            }
+                hidden: false,
+                kind: "element",
+                element: data.element,
+            },
         ],
-        "skills": [],
-        "defenseBonus": 0,
-        "elderseal": null,
-        "affinity": data.affinity,
-        "slots": [3, 3, 3],
-        "crafting": null,
-        "series": null,
-        "reinforcements": [],
-        "bonuses": null,
-        "tarredDevice": data.tarredDevice,
-    }
 
-    const newWeapon = calculateArtianStats(weapon, data, data.type);
+        skills: [],
+        defenseBonus: 0,
+        elderseal: null,
+        affinity: data.affinity,
+        slots: [3, 3, 3],
+        crafting: null,
+        series: null,
+        reinforcements: [],
+        bonuses: null,
+        tarredDevice: data.tarredDevice,
 
-    return newWeapon;
+        // Preserve the original configuration for editing.
+        artianConfig: structuredClone(data),
+        isDefaultConfig: false,
+    };
+
+    return calculateArtianStats(weapon, data, data.type);
 }
 
-function calculateArtianStats(weapon: Weapon, data: Artian, type: string) {
+
+function calculateArtianStats(weapon: Weapon, data: ArtianConfig, type: string) {
 
     if (weapon.kind !== "bow" && weapon.kind !== "light-bowgun" && weapon.kind !== "heavy-bowgun") {
         weapon.sharpness = {

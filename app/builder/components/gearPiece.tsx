@@ -10,7 +10,7 @@ import type {
   DecoPlacement,
 } from "@/app/api/types/types";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { TrashIcon, PlusIcon } from "@heroicons/react/24/outline";
+import { TrashIcon, PlusIcon, PencilIcon, InformationCircleIcon } from "@heroicons/react/24/outline";
 import {
   ChevronDoubleUpIcon,
   ChevronDoubleDownIcon,
@@ -48,6 +48,7 @@ interface Props {
     slotIndex: number,
   ) => void;
   deleteDecoration: (slot: ArmorSlotKey, slotIndex: number) => void;
+  openArtianEditor?: () => void;
 
   readOnly?: boolean;
 }
@@ -63,6 +64,7 @@ export default function GearPiece({
   openWeaponSelector,
   openDecoSelector,
   deleteDecoration,
+  openArtianEditor,
   readOnly = false,
 }: Props) {
   const [moreOptionsOpen, setMoreOptionsOpen] = useState(false);
@@ -310,6 +312,13 @@ export default function GearPiece({
                     </p>
                   ))}
                 </div>
+                {gearPiece.isDefaultConfig && (
+                  <div className={styles.defaultMsg}>
+                      <InformationCircleIcon />
+                      <p>This Artian weapon uses default settings.
+                        Select Edit Artian to customize it.</p>
+                  </div>
+                )}
               </div>
               <div className={styles.pieceContainerHeaderInner}></div>
             </div>
@@ -327,25 +336,47 @@ export default function GearPiece({
                 >
                   <EllipsisHorizontalIcon />
                 </button>
-                <div
-                  className={
-                    moreOptionsOpen
-                      ? `${styles.moreOptionsContainer} ${styles.open}`
-                      : styles.moreOptionsContainer
-                  }
-                >
-                  <div className={styles.optionBtnContainer}>
-                    <button
-                      className={styles.deleteBtn}
-                      onClick={() => {
-                        deleteBuildItem(slotKey);
-                        setMoreOptionsOpen((prev) => !prev);
-                      }}
-                    >
-                      <TrashIcon /> Delete
-                    </button>
+                  <div
+                    className={
+                      moreOptionsOpen
+                        ? `${styles.moreOptionsContainer} ${styles.open}`
+                        : styles.moreOptionsContainer
+                    }
+                  >
+                    {isWeaponPiece(gearPiece) && gearPiece.artianConfig && (
+                      <>
+                        <div className={styles.optionBtnContainer}>
+                          <button
+                            type="button"
+                            className={styles.editBtn}
+                            onClick={() => {
+                              setMoreOptionsOpen(false);
+                              openArtianEditor?.();
+                            }}
+                          >
+                            <PencilIcon />
+                            Edit Artian
+                          </button>
+                        </div>
+
+                        <hr />
+                      </>
+                    )}
+
+                    <div className={styles.optionBtnContainer}>
+                      <button
+                        type="button"
+                        className={styles.deleteBtn}
+                        onClick={() => {
+                          deleteBuildItem(slotKey);
+                          setMoreOptionsOpen(false);
+                        }}
+                      >
+                        <TrashIcon />
+                        Delete
+                      </button>
+                    </div>
                   </div>
-                </div>
               </div>
             )}
           </div>

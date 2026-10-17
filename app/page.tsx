@@ -8,7 +8,8 @@ import {
   ChartBarIcon,
   WrenchScrewdriverIcon,
   SparklesIcon,
-} from "@heroicons/react/24/outline";
+  BoltIcon,
+} from "@heroicons/react/24/solid";
 
 import landingImg from "@/app/assets/image.png";
 
@@ -24,18 +25,22 @@ export default function Home() {
           </h1>
 
           <p className={styles.heroDescription}>
-            Craft, compare, and optimize your Monster Hunter Wilds builds with
-            real-time stats, skills, decorations, and equipment calculations.
+            Create custom Monster Hunter Wilds builds or generate optimized
+            loadouts automatically. Fine-tune your equipment, skills, and
+            decorations with real-time stat calculations.
           </p>
 
           <div className={styles.actions}>
             <Link href="/builder" className={styles.primaryButton}>
+              <WrenchScrewdriverIcon />
               Open Builder
               <ChevronRightIcon />
             </Link>
 
-            <Link href="/builder" className={styles.secondaryButton}>
-              Start building
+            <Link href="/generator" className={styles.secondaryButton}>
+              <BoltIcon />
+              Build Generator
+              <ChevronRightIcon />
             </Link>
           </div>
 

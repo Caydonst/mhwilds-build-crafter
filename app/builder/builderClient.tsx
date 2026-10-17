@@ -116,6 +116,8 @@ export default function BuilderClient() {
   const [shareUrl, setShareUrl] = useState("");
   const [shareLoading, setShareLoading] = useState(false);
 
+  const [editingArtian, setEditingArtian] = useState(false);
+
   const DEFAULT_DECOS: BuildDecorations = {
     weapon: [],
     head: [],
@@ -353,6 +355,14 @@ export default function BuilderClient() {
     googleNoticeOpen,
   ]);
 
+  function openArtianEditor() {
+    if (!build.weapon?.artianConfig) return;
+
+    setType("weapon");
+    setEditingArtian(true);
+    setWeaponSelectorOpen(true);
+  }
+
   const ARMOR_SLOTS: ArmorSlotKey[] = [
     "weapon",
     "head",
@@ -370,6 +380,7 @@ export default function BuilderClient() {
 
   function openWeaponSelector(slot: ArmorSlotKey) {
     setType(slot);
+    setEditingArtian(false);
     setWeaponSelectorOpen(true);
   }
 
@@ -671,6 +682,7 @@ export default function BuilderClient() {
                     openWeaponSelector={openWeaponSelector}
                     openDecoSelector={openDecoSelector}
                     deleteDecoration={deleteDecoration}
+                    openArtianEditor={openArtianEditor}
                   />
                 ))}
             </div>
@@ -705,6 +717,7 @@ export default function BuilderClient() {
                       openWeaponSelector={openWeaponSelector}
                       openDecoSelector={openDecoSelector}
                       deleteDecoration={deleteDecoration}
+                      openArtianEditor={openArtianEditor}
                     />
                   ))}
               </div>
@@ -733,6 +746,7 @@ export default function BuilderClient() {
               type={type}
               build={build}
               setBuild={setBuild}
+              editingArtian={editingArtian}
             />
           )}
           {gearSelectorOpen && (

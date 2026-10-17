@@ -1,40 +1,256 @@
 :root {
-    --build-icon-size: 0.7;
-    --deco-icon-size: 0.7;
+    --build-icon-size: 0.58;
+    --deco-icon-size: 0.58;
     --size-factor: 0.35;
 }
 .buildContainer {
+    width: 100%;
+
     display: flex;
-    justify-content: center;
-    align-items: start;
     flex-direction: column;
-    width: 100%;
-    padding: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 10px;
-    gap: 20px;
+
+    background: rgba(255, 255, 255, 0.015);
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+
+    overflow: hidden;
 }
+
 .buildHeader {
+    margin: 0;
+
+    color: #fff;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    line-height: 1.2;
+}
+/* =====================================================
+   BUILD CARD HEADER
+===================================================== */
+
+.buildCardHeader {
     width: 100%;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 20px;
+
+    padding: 14px 16px;
+
+    background:
+        rgba(255, 255, 255, 0.02);
+
+    border-bottom:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+}
+
+.buildTitleContainer {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+.buildEyebrow {
+    color: var(--gold);
+
+    font-size: 8px;
+    font-weight: 700;
+
+    letter-spacing: 0.14em;
+
+    text-transform: uppercase;
+}
+
+.buildNumber {
+    flex-shrink: 0;
+
+    color:
+        rgba(255, 255, 255, 0.15);
+
+    font-size: 22px;
+    font-weight: 700;
+
+    line-height: 1;
+
+    letter-spacing: -0.04em;
+}
+/* =====================================================
+   EQUIPMENT
+===================================================== */
+
+.gearContainer {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+}
+.gearContainer .weapon {
+    width: 100%;
+}
+.gearContainer .armor {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 5px;
+}
+/* =====================================================
+   BUILD SECTIONS
+===================================================== */
+
+.buildSection {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+
+    padding: 14px 16px;
+
+    border-bottom:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+}
+
+.buildSectionHeader {
+    width: 100%;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 10px;
+}
+
+.buildSectionHeader > span:first-child {
+    color:
+        rgba(255, 255, 255, 0.4);
+
+    font-size: 9px;
+    font-weight: 700;
+
+    letter-spacing: 0.12em;
+
+    text-transform: uppercase;
+}
+
+/* =====================================================
+   SKILLS SECTION
+===================================================== */
+
+.skillsContainer {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 14px;
+}
+
+.skillGroup {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+.skillGroupLabel {
+    color:
+        rgba(255, 255, 255, 0.35);
+
+    font-size: 9px;
+    font-weight: 600;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+}
+
+.skillList {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+}
+.bonusSkill {
+    width: 100%;
+    min-height: 40px;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 5px 9px;
+
+    background:
+        rgba(255, 255, 255, 0.05);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.1);
+
+    border-radius: 8px;
+
     color: #fff;
-    font-size: 20px;
-    margin-top: 10px;
+
+    font-size: 12px;
+}
+
+.bonusSkill > span:last-child {
+    min-width: 0;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 .buildPieceContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    color: #fff;
     width: 100%;
-    height: 100%;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
+    min-width: 0;
+    min-height: 82px;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    gap: 10px;
+
     padding: 10px;
-    background: rgba(255, 255, 255, 0.03);
+
+    color: #fff;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.1);
+
+    border-radius: 12px;
+
+    background:
+        rgba(255, 255, 255, 0.03);
 }
 .buildPieceInfo {
     display: flex;
@@ -99,28 +315,39 @@
     width: 100%;
 }
 .skill {
-    display: block;
-    gap: 5px;
     width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
     color: #fff;
+
     border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.03);
+
     border-radius: 10px;
+
     position: relative;
+
     overflow: hidden;
-    max-height: 50px;
-}
-.skill.open {
-    max-height: 800px;
 }
 .skillHeader {
+    width: 100%;
+    height: 50px;
+    min-height: 50px;
+    max-height: 50px;
+
+    box-sizing: border-box;
+
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
-    height: 50px;
+
     overflow: hidden;
+
     position: relative;
+
+    flex: 0 0 50px;
 }
 .skillHeader:hover {
     cursor: pointer;
@@ -161,8 +388,8 @@
     transform: rotate(180deg);
 }
 .chevronDownIcon > * {
-    width: 18px;
-    height: 18px;
+    width: 12px;
+    height: 12px;
     color: #fff;
 }
 @keyframes animate {
@@ -231,16 +458,27 @@
     background: transparent;
 }
 .skillDesc {
-    display: flex;
+    display: none;
+
     justify-content: center;
-    align-items: start;
+    align-items: flex-start;
     flex-direction: column;
+
     font-size: 14px;
+
     gap: 10px;
+
     padding: 16px;
+
     width: 100%;
+
     border-top: 1px solid rgba(255, 255, 255, 0.15);
+
     background: #090a0d;
+}
+
+.skill.open .skillDesc {
+    display: flex;
 }
 .rankContainer {
     color: rgba(255, 255, 255, 0.4);
@@ -320,6 +558,14 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     padding: 5px 0;
 }
+.buildFooter {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    background: red;
+}
 .fullBuildBtn {
     display: flex;
     justify-content: center;
@@ -333,7 +579,8 @@
     border-radius: 8px;
     cursor: pointer;
     transition: 0.3s;
-    font-size: 16px;
+    font-size: 13px;
+    font-weight: 600;
     text-decoration: none;
 }
 .fullBuildBtn:hover {

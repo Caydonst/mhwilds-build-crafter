@@ -1,0 +1,957 @@
+:root {
+  --build-icon-size: 0.58;
+  --deco-icon-size: 0.58;
+  --size-factor: 0.35;
+}
+.buildContainer {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  background: rgba(255, 255, 255, 0.015);
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+
+  overflow: hidden;
+}
+
+.buildHeader {
+  margin: 0;
+
+  color: #fff;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  line-height: 1.2;
+}
+/* =====================================================
+   BUILD CARD HEADER
+===================================================== */
+
+.buildCardHeader {
+  width: 100%;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 20px;
+
+  padding: 14px 16px;
+
+  background: rgba(255, 255, 255, 0.02);
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.buildTitleContainer {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.buildEyebrow {
+  color: var(--gold);
+
+  font-size: 8px;
+  font-weight: 700;
+
+  letter-spacing: 0.14em;
+
+  text-transform: uppercase;
+}
+
+.buildNumber {
+  flex-shrink: 0;
+
+  color: var(--gold);
+
+  font-size: 22px;
+  font-weight: 700;
+
+  line-height: 1;
+
+  letter-spacing: -0.04em;
+}
+/* =====================================================
+   EQUIPMENT
+===================================================== */
+
+.gearContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+}
+.gearContainer .weapon {
+  width: 100%;
+}
+.gearContainer .armor {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 5px;
+}
+
+/* =====================================================
+   WEAPON CARD
+===================================================== */
+
+.buildPieceContainer {
+  width: 100%;
+  min-width: 0;
+  min-height: 92px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 10px;
+
+  background: rgba(255, 255, 255, 0.03);
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+
+  color: #fff;
+}
+
+/* =====================================================
+   MAIN CONTENT
+===================================================== */
+
+.weaponMainContent {
+  min-width: 0;
+
+  flex: 1;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+}
+
+.weaponIconWrapper {
+  width: calc(64px * var(--build-icon-size));
+  height: calc(64px * var(--build-icon-size));
+
+  flex-shrink: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* =====================================================
+   WEAPON INFO
+===================================================== */
+
+.weaponPieceInfo {
+  min-width: 0;
+
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+/* =====================================================
+   WEAPON SKILLS
+===================================================== */
+
+.weaponSkillsContainer {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.weaponSkill {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  overflow: hidden;
+
+  color: rgba(255, 255, 255, 0.42);
+
+  font-size: 14px;
+}
+
+.weaponSetBonus {
+  color: #f2bbaa;
+}
+
+.weaponGroupBonus {
+  color: #aaf1f2;
+}
+
+/* =====================================================
+   WEAPON DECORATION SLOTS
+===================================================== */
+
+.buildPieceContainer .decoSlotsContainer {
+  flex-shrink: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: stretch;
+
+  width: 50%;
+  gap: 4px;
+}
+
+.buildPieceContainer .slot {
+  width: 100%;
+  height: 28px;
+
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  gap: 5px;
+
+  padding: 5px;
+
+  background: rgba(255, 255, 255, 0.05);
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+}
+
+.buildPieceContainer .decoName {
+  overflow: hidden;
+
+  color: #fff;
+
+  font-size: 14px;
+}
+
+/* =====================================================
+   BUILD SECTIONS
+===================================================== */
+
+.buildSection {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+
+  padding: 14px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.buildSectionHeader {
+  width: 100%;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 10px;
+}
+
+.buildSectionHeader > span:first-child {
+  color: rgba(255, 255, 255, 0.4);
+
+  font-size: 9px;
+  font-weight: 700;
+
+  letter-spacing: 0.12em;
+
+  text-transform: uppercase;
+}
+
+/* =====================================================
+   SKILLS SECTION
+===================================================== */
+
+.skillsContainer {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+}
+
+.skillGroup {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.skillGroupLabel {
+  color: rgba(255, 255, 255, 0.35);
+
+  font-size: 9px;
+  font-weight: 600;
+
+  letter-spacing: 0.08em;
+
+  text-transform: uppercase;
+}
+
+.skillList {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 5px;
+}
+.bonusSkill {
+  width: 100%;
+  min-height: 40px;
+
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  gap: 7px;
+
+  padding: 5px 9px;
+
+  background: rgba(255, 255, 255, 0.05);
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  border-radius: 8px;
+
+  color: #fff;
+
+  font-size: 12px;
+}
+
+.bonusSkill > span:last-child {
+  min-width: 0;
+
+  overflow: hidden;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.buildPieceContainer {
+  width: 100%;
+  min-width: 0;
+  min-height: 82px;
+
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 10px;
+
+  color: #fff;
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.03);
+}
+.buildPieceInfo {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  flex-direction: column;
+  gap: 10px;
+}
+.gearPieceSkillsContainer {
+  color: gray;
+  font-size: 14px;
+}
+.pieceContainerHeader {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+.setBonusSkillName {
+  color: #f2bbaa;
+}
+.groupSkillName {
+  color: #aaf1f2;
+}
+.decoSlotsContainer {
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+}
+.slot {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.025);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  padding: 3px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  height: 24px;
+}
+.decoDash {
+  height: 100%;
+  padding-left: 8px;
+  color: #b3b3b3;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.equipSkillsContainer,
+.setBonusSkillsContainer {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+}
+.skill {
+  display: block;
+  gap: 5px;
+  width: 100%;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  max-height: 50px;
+}
+.skill.open {
+  max-height: 800px;
+}
+.skillHeader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 50px;
+  overflow: hidden;
+  position: relative;
+}
+.skillHeader:hover {
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.05);
+}
+.skillHeader span {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: animate 0.8s linear forwards;
+  border-radius: 50%;
+}
+.headerInfo {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 10px;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  gap: 5px;
+}
+.chevronDownIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 100%;
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.skill.open .skillHeader .chevronDownIcon .icon {
+  transform: rotate(180deg);
+}
+.chevronDownIcon > * {
+  width: 18px;
+  height: 18px;
+  color: #fff;
+}
+@keyframes animate {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 0.25;
+  }
+  100% {
+    width: 800px;
+    height: 800px;
+    opacity: 0;
+  }
+}
+.skillInfo {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+}
+.skillInfo p {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.maxLvl {
+  color: #ffdd00;
+}
+.notMaxLvl {
+  color: #fff;
+}
+.skillLvlContainerWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 5px;
+}
+.skillLvlContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+}
+.filled {
+  height: 100%;
+  width: 100%;
+  background: #ffdd00;
+}
+.skillLvlWrapper {
+  width: 16px;
+  height: 16px;
+  padding: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.skillLvlWrapper.fill {
+  border-color: #ffdd00;
+}
+.empty {
+  height: 100%;
+  width: 100%;
+  background: transparent;
+}
+.skillDesc {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  flex-direction: column;
+  font-size: 14px;
+  gap: 10px;
+  padding: 16px;
+  width: 100%;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  background: #090a0d;
+}
+.rankContainer {
+  color: rgba(255, 255, 255, 0.4);
+}
+.rankContainer.activeSkillLevel > p:nth-child(1) {
+  color: #ffdd00;
+}
+.rankContainer.activeSkillLevel > p:nth-child(2) {
+  color: #fff;
+}
+.pieceTitle {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+}
+.pieceRarity {
+  font-weight: 600;
+  font-size: 14px;
+}
+.weaponStatsContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+.rawValContainer,
+.affinityValContainer,
+.elementValContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.rawValContainer p,
+.affinityValContainer p,
+.elementValContainer p {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+}
+.weaponSharpness {
+  width: 150px;
+  height: 6px;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  background: transparent;
+  gap: 2px;
+}
+.sharpnessColor {
+  height: 100%;
+}
+.red {
+  background: #ff6b6b;
+}
+.orange {
+  background: #ff906b;
+}
+.yellow {
+  background: #ffeb6b;
+}
+.green {
+  background: #6bff6e;
+}
+.blue {
+  background: #6ba4ff;
+}
+.white {
+  background: white;
+}
+.equipSkillsText,
+.setBonusSkillsText {
+  color: #fff;
+  font-weight: 600;
+  width: 100%;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 5px 0;
+}
+.buildFooter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 14px;
+}
+.fullBuildBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  height: 44px;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold));
+  border: none;
+  color: #000;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.fullBuildBtn:hover {
+  opacity: 0.7;
+}
+.fullBuildBtn > * {
+  width: 14px;
+  height: 14px;
+  color: #000;
+  stroke-width: 2;
+  transition: 0.2s;
+}
+.fullBuildBtn:hover > * {
+  transform: translateX(3px);
+}
+.rarity1 {
+  color: #b3b8b5;
+}
+.rarity2 {
+  color: #e4e2e0;
+}
+.rarity3 {
+  color: #b3cd2e;
+}
+.rarity4 {
+  color: #48bb51;
+}
+.rarity5 {
+  color: #5bb9be;
+}
+.rarity6 {
+  color: #5964e1;
+}
+.rarity7 {
+  color: #9a5ff1;
+}
+.rarity8 {
+  color: #cf7046;
+}
+
+.skillIcon {
+  display: inline-block;
+  flex-shrink: 0;
+  width: calc(100px * var(--size-factor));
+  height: calc(100px * var(--size-factor));
+  background-image: url("../../../assets/skills.png");
+  background-size: calc(1400px * var(--size-factor))
+    calc(100px * var(--size-factor)); /* or set to sheet width/height if scaling */
+  background-repeat: no-repeat;
+}
+.skill1 {
+  background-position: 0 0;
+}
+.skill2 {
+  background-position: calc(-100px * var(--size-factor)) 0;
+}
+.skill3 {
+  background-position: calc(-200px * var(--size-factor)) 0;
+}
+.skill4 {
+  background-position: calc(-300px * var(--size-factor)) 0;
+}
+.skill5 {
+  background-position: calc(-400px * var(--size-factor)) 0;
+}
+.skill6 {
+  background-position: calc(-500px * var(--size-factor)) 0;
+}
+.skill7 {
+  background-position: calc(-600px * var(--size-factor)) 0;
+}
+.skill8 {
+  background-position: calc(-700px * var(--size-factor)) 0;
+}
+.skill9 {
+  background-position: calc(-800px * var(--size-factor)) 0;
+}
+.skill10 {
+  background-position: calc(-900px * var(--size-factor)) 0;
+}
+.skill11 {
+  background-position: calc(-1000px * var(--size-factor)) 0;
+}
+.skill12 {
+  background-position: calc(-1100px * var(--size-factor)) 0;
+}
+.skill13 {
+  background-position: calc(-1200px * var(--size-factor)) 0;
+}
+.skill14 {
+  background-position: calc(-1300px * var(--size-factor)) 0;
+}
+.buildPieceIcon {
+  display: inline-block;
+  flex-shrink: 0;
+  width: calc(64px * var(--build-icon-size));
+  height: calc(64px * var(--build-icon-size));
+  background-image: url("../../../assets/gear.png");
+  background-size: calc(1280px * var(--build-icon-size))
+    calc(832px * var(--build-icon-size)); /* or set to sheet width/height if scaling */
+  background-repeat: no-repeat;
+}
+.bow {
+  background-position: calc((-64px * 13) * var(--build-icon-size))
+    calc((-64px * 8) * var(--build-icon-size));
+}
+.charge-blade {
+  background-position: calc((-64px * 9) * var(--build-icon-size))
+    calc((-64px * 8) * var(--build-icon-size));
+}
+.dual-blades {
+  background-position: calc((-64px * 3) * var(--build-icon-size))
+    calc((-64px * 8) * var(--build-icon-size));
+}
+.great-sword {
+  background-position: calc((-64px * 1) * var(--build-icon-size))
+    calc((-64px * 8) * var(--build-icon-size));
+}
+.gunlance {
+  background-position: calc((-64px * 5) * var(--build-icon-size))
+    calc((-64px * 8) * var(--build-icon-size));
+}
+.hammer {
+  background-position: calc((-64px * 6) * var(--build-icon-size))
+    calc((-64px * 8) * var(--build-icon-size));
+}
+.heavy-bowgun {
+  background-position: calc((-64px * 12) * var(--build-icon-size))
+    calc((-64px * 8) * var(--build-icon-size));
+}
+.hunting-horn {
+  background-position: calc((-64px * 7) * var(--build-icon-size))
+    calc((-64px * 8) * var(--build-icon-size));
+}
+.insect-glaive {
+  background-position: calc((-64px * 10) * var(--build-icon-size))
+    calc((-64px * 8) * var(--build-icon-size));
+}
+.lance {
+  background-position: calc((-64px * 4) * var(--build-icon-size))
+    calc((-64px * 8) * var(--build-icon-size));
+}
+.light-bowgun {
+  background-position: calc((-64px * 11) * var(--build-icon-size))
+    calc((-64px * 8) * var(--build-icon-size));
+}
+.long-sword {
+  background-position: calc((-64px * 2) * var(--build-icon-size))
+    calc((-64px * 8) * var(--build-icon-size));
+}
+.switch-axe {
+  background-position: calc((-64px * 8) * var(--build-icon-size))
+    calc((-64px * 8) * var(--build-icon-size));
+}
+.sword-shield {
+  background-position: 0 calc((-64px * 8) * var(--build-icon-size));
+}
+.decoIcon {
+  display: inline-block;
+  flex-shrink: 0;
+  width: calc(33px * var(--deco-icon-size));
+  height: calc(33px * var(--deco-icon-size));
+  background-image: url("../../../assets/decorations.png");
+  background-size: calc(660px * var(--deco-icon-size))
+    calc(840px * var(--deco-icon-size)); /* or set to sheet width/height if scaling */
+  background-repeat: no-repeat;
+}
+.deco1 {
+  background-position: 0 0;
+}
+.deco2 {
+  background-position: calc((-33px * 5) * var(--deco-icon-size)) 0;
+}
+.deco3 {
+  background-position: calc((-33px * 10) * var(--deco-icon-size)) 0;
+}
+
+.statsIcon {
+  display: inline-block;
+  flex-shrink: 0;
+  width: calc(64px * var(--stats-icon-size));
+  height: calc(64px * var(--stats-icon-size));
+  background-image: url("@/app/assets/status.png");
+  background-size: calc(512px * var(--stats-icon-size))
+    calc(1024px * var(--stats-icon-size)); /* or set to sheet width/height if scaling */
+  background-repeat: no-repeat;
+}
+
+.damageIcon {
+  background-position: calc((-64px * 1) * var(--stats-icon-size))
+    calc((-64px * 3) * var(--stats-icon-size));
+}
+.affinityIcon {
+  background-position: calc((-64px * 3) * var(--stats-icon-size))
+    calc((-64px * 3) * var(--stats-icon-size));
+}
+.fire {
+  background-position: calc((-64px * 3) * var(--stats-icon-size))
+    calc((-64px * 0) * var(--stats-icon-size));
+}
+.water {
+  background-position: calc((-64px * 4) * var(--stats-icon-size))
+    calc((-64px * 0) * var(--stats-icon-size));
+}
+.thunder {
+  background-position: calc((-64px * 5) * var(--stats-icon-size))
+    calc((-64px * 0) * var(--stats-icon-size));
+}
+.ice {
+  background-position: calc((-64px * 6) * var(--stats-icon-size))
+    calc((-64px * 0) * var(--stats-icon-size));
+}
+.dragon {
+  background-position: calc((-64px * 7) * var(--stats-icon-size))
+    calc((-64px * 0) * var(--stats-icon-size));
+}
+.poison {
+  background-position: calc((-64px * 0) * var(--stats-icon-size))
+    calc((-64px * 1) * var(--stats-icon-size));
+}
+.paralysis {
+  background-position: calc((-64px * 2) * var(--stats-icon-size))
+    calc((-64px * 1) * var(--stats-icon-size));
+}
+.stun {
+  background-position: calc((-64px * 3) * var(--stats-icon-size))
+    calc((-64px * 1) * var(--stats-icon-size));
+}
+.sleep {
+  background-position: calc((-64px * 4) * var(--stats-icon-size))
+    calc((-64px * 1) * var(--stats-icon-size));
+}
+.blast {
+  background-position: calc((-64px * 5) * var(--stats-icon-size))
+    calc((-64px * 1) * var(--stats-icon-size));
+}
+
+@media screen and (min-width: 900px) and (max-width: 1140px) {
+  .buildPieceContainer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .buildPieceContainer .decoSlotsContainer {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .buildPieceContainer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .buildPieceContainer .decoSlotsContainer {
+    width: 100%;
+  }
+}
+
+@media (max-width: 440px) {
+  .gearContainer .armor {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+  }
+}

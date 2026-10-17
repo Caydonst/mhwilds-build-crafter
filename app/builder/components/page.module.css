@@ -794,8 +794,8 @@
     line-height: 1;
 }
 .chevronIcon {
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     color: #fff;
     display: flex;
     justify-content: center;
@@ -952,6 +952,11 @@
     font-weight: 500;
 }
 .gearPieceSkillsContainer {
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    gap: 2px;
     color: rgba(255, 255, 255, 0.6);
     font-size: 14px;
 }
@@ -966,6 +971,18 @@
 }
 .groupSkillName {
     color: #AAF1F2;
+}
+.defaultMsg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+}
+.defaultMsg svg {
+    width: 24px;
+    height: 24px;
 }
 .skillBonusRefContainer {
     width: 100%;
@@ -1180,6 +1197,39 @@
     justify-content: center;
     align-items: center;
     width: 100%;
+}
+.editBtn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  width: 100%;
+  padding: 10px 14px;
+
+  border: none;
+  background: transparent;
+  border-radius: 12px;
+
+  color: #fff;
+  font-size: 14px;
+
+  cursor: pointer;
+  text-align: left;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.editBtn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: white;
+}
+
+.editBtn svg {
+  width: 16px;
+  height: 16px;
+  color: #fff;
 }
 .deleteBtn {
     border: none;

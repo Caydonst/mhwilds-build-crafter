@@ -1,0 +1,564 @@
+:root {
+  --size-factor: 0.3;
+}
+
+/* =====================================================
+   SKILL ROW
+===================================================== */
+
+.skillFilterContainer {
+  position: relative;
+
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+}
+
+/* =====================================================
+   SKILL SELECTOR
+===================================================== */
+
+.skillFilterWrapper {
+  position: relative;
+
+  flex: 1;
+
+  min-width: 0;
+}
+
+.skillFilter {
+  width: 100%;
+  height: 44px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 0 11px;
+
+  background: var(--background);
+
+  border: 1px solid var(--border);
+
+  border-radius: 9px;
+
+  color: #fff;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.skillFilter:hover {
+  background: var(--surface-light);
+
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.skillFilter:focus-visible {
+  outline: none;
+
+  border-color: var(--border-hover);
+
+  box-shadow: 0 0 0 3px rgba(215, 173, 103, 0.06);
+}
+
+.skillFilterLeft {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  overflow: hidden;
+}
+
+.skillFilterLeft > span:last-child {
+  overflow: hidden;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* =====================================================
+   CHEVRON
+===================================================== */
+
+.skillChevronIcon {
+  width: 12px;
+  height: 12px;
+
+  flex-shrink: 0;
+
+  color: #fff;
+
+  transition: transform 0.15s ease;
+}
+
+.skillChevronIcon.rotated {
+  transform: rotate(180deg);
+}
+
+/* =====================================================
+   SKILL DROPDOWN
+===================================================== */
+
+.skillFilterDropdown {
+  position: absolute;
+
+  top: calc(100% + 6px);
+  left: 0;
+
+  z-index: 30;
+
+  width: 100%;
+  max-height: 320px;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  background: var(--surface);
+
+  border: 1px solid var(--border);
+
+  border-radius: 10px;
+
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.5);
+
+  animation: skillDropdownIn 0.15s ease;
+}
+
+@keyframes skillDropdownIn {
+  from {
+    opacity: 0;
+
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+}
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+.skillDropdownSearch {
+  position: relative;
+
+  width: 100%;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+
+  padding: 6px;
+
+  border-bottom: 1px solid var(--border);
+}
+
+.skillDropdownSearch > svg {
+  position: absolute;
+
+  left: 17px;
+
+  width: 18px;
+  height: 18px;
+
+  color: rgba(255, 255, 255, 0.25);
+
+  pointer-events: none;
+}
+
+.skillDropdownSearch input {
+  width: 100%;
+  height: 40px;
+
+  padding: 0 10px 0 34px;
+
+  background: var(--background);
+
+  border: 1px solid var(--border);
+
+  border-radius: 7px;
+
+  outline: none;
+
+  color: #fff;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  transition: border-color 0.2s ease;
+}
+
+.skillDropdownSearch input::placeholder {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.skillDropdownSearch input:focus {
+  border-color: var(--border-hover);
+}
+
+/* =====================================================
+   SKILL LIST
+===================================================== */
+
+.skillDropdownList {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+
+  padding: 5px;
+
+  overflow-y: auto;
+}
+
+.skillDropdownList button {
+  width: 100%;
+  min-height: 38px;
+
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  gap: 7px;
+
+  padding: 5px 8px;
+
+  background: transparent;
+
+  border: none;
+  border-radius: 6px;
+
+  color: #fff;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  text-align: left;
+
+  cursor: pointer;
+}
+
+.skillDropdownList button:hover {
+  color: #fff;
+
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.skillDropdownEmpty {
+  padding: 24px 12px;
+
+  color: rgba(255, 255, 255, 0.3);
+
+  font-size: 11px;
+
+  text-align: center;
+}
+
+/* =====================================================
+   LEVEL SELECTOR
+===================================================== */
+
+.skillLevelWrapper {
+  position: relative;
+
+  width: 70px;
+
+  flex-shrink: 0;
+}
+
+.skillLevelButton {
+  width: 100%;
+  height: 44px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 5px;
+
+  padding: 0 9px;
+
+  background: var(--background);
+
+  border: 1px solid var(--border);
+
+  border-radius: 9px;
+
+  color: #fff;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.skillLevelButton:hover {
+  background: var(--surface-light);
+
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.skillLevelButton:focus-visible {
+  outline: none;
+
+  border-color: var(--border-hover);
+
+  box-shadow: 0 0 0 3px rgba(215, 173, 103, 0.06);
+}
+
+.skillLevelDropdown {
+  position: absolute;
+
+  top: calc(100% + 6px);
+  left: 0;
+
+  z-index: 30;
+
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+
+  padding: 5px;
+
+  background: var(--surface);
+
+  border: 1px solid var(--border);
+
+  border-radius: 10px;
+
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.5);
+
+  animation: skillDropdownIn 0.15s ease;
+}
+
+.skillLevelDropdown button {
+  width: 100%;
+  height: 34px;
+
+  background: transparent;
+
+  border: 1px solid transparent;
+
+  border-radius: 6px;
+
+  color: #fff;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  cursor: pointer;
+}
+
+.skillLevelDropdown button:hover {
+  color: #fff;
+
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.skillLevelDropdown button.activeLevel {
+  color: var(--gold-light);
+
+  background: rgba(215, 173, 103, 0.08);
+
+  border-color: rgba(215, 173, 103, 0.18);
+}
+
+/* =====================================================
+   DELETE BUTTON
+===================================================== */
+
+.removeSkillFilterBtn {
+  width: 36px;
+  height: 36px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 0;
+
+  background: transparent;
+
+  border: 1px solid transparent;
+
+  border-radius: 8px;
+
+  color: rgba(255, 255, 255, 0.6);
+
+  cursor: pointer;
+
+  transition:
+    color 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.removeSkillFilterBtn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.removeSkillFilterBtn:hover {
+  color: #ff6464;
+
+  background: rgba(255, 80, 80, 0.07);
+
+  border-color: rgba(255, 80, 80, 0.12);
+}
+
+/* =====================================================
+   SCROLLBAR
+===================================================== */
+
+.skillDropdownList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.skillDropdownList::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.skillDropdownList::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+
+  border-radius: 0;
+}
+
+.skillDropdownList {
+  scrollbar-width: thin;
+
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+/* =====================================================
+   SKILL SPRITES
+===================================================== */
+
+.skillIcon {
+  display: inline-block;
+
+  flex-shrink: 0;
+
+  width: calc(100px * var(--size-factor));
+
+  height: calc(100px * var(--size-factor));
+
+  background-image: url("../../../assets/skills.png");
+
+  background-size: calc(1400px * var(--size-factor))
+    calc(100px * var(--size-factor));
+
+  background-repeat: no-repeat;
+}
+
+.skill1 {
+  background-position: 0 0;
+}
+
+.skill2 {
+  background-position: calc(-100px * var(--size-factor)) 0;
+}
+
+.skill3 {
+  background-position: calc(-200px * var(--size-factor)) 0;
+}
+
+.skill4 {
+  background-position: calc(-300px * var(--size-factor)) 0;
+}
+
+.skill5 {
+  background-position: calc(-400px * var(--size-factor)) 0;
+}
+
+.skill6 {
+  background-position: calc(-500px * var(--size-factor)) 0;
+}
+
+.skill7 {
+  background-position: calc(-600px * var(--size-factor)) 0;
+}
+
+.skill8 {
+  background-position: calc(-700px * var(--size-factor)) 0;
+}
+
+.skill9 {
+  background-position: calc(-800px * var(--size-factor)) 0;
+}
+
+.skill10 {
+  background-position: calc(-900px * var(--size-factor)) 0;
+}
+
+.skill11 {
+  background-position: calc(-1000px * var(--size-factor)) 0;
+}
+
+.skill12 {
+  background-position: calc(-1100px * var(--size-factor)) 0;
+}
+
+.skill13 {
+  background-position: calc(-1200px * var(--size-factor)) 0;
+}
+
+.skill14 {
+  background-position: calc(-1300px * var(--size-factor)) 0;
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 500px) {
+  .skillDropdownSearch input {
+    font-size: 16px;
+  }
+  .skillFilterContainer {
+    gap: 5px;
+  }
+
+  .skillLevelWrapper {
+    width: 78px;
+  }
+
+  .removeSkillFilterBtn {
+    width: 32px;
+    height: 32px;
+  }
+}

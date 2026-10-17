@@ -31,26 +31,32 @@ export default function Skill({skill, skillData, totalLevel, clickEffect}: props
                     <div className={`${styles.skillIcon} ${styles[`skill${iconId}`]}`} />
                     <div className={styles.skillInfo}>
                         <p>{skill.name}</p>
-                        {skill.kind !== "set" && (
-                            <div className={styles.skillLvlContainerWrapper}>
-                                <div className={styles.skillLvlContainer}>
-                                    {Array.from({ length: totalLevel[1] }).map((_, i) => {
-                                        const key = `${skill.id}-lvl-${i}`;
-                                        return (
-                                            <div className={styles.skillLvlWrapper} key={key}>
-                                                <div
-                                                    key={key}
-                                                    className={i < totalLevel[0] ? styles.filled : styles.empty}
-                                                />
-                                            </div>
-
-                                        );
-                                    })}
-                                </div>
-
-                                <p className={totalLevel[0] === totalLevel[1] ? styles.maxLvl : styles.notMaxLvl}>Lv {totalLevel[0]}</p>
+                        <div className={styles.skillLvlContainerWrapper}>
+                            <div className={styles.skillLvlContainer}>
+                                {Array.from({ length: totalLevel[1] }).map((_, i) => (
+                                    <div
+                                        className={styles.skillLvlWrapper}
+                                        key={`${skill.id}-lvl-${i}`}
+                                    >
+                                        <div
+                                            className={
+                                                i < totalLevel[0] ? styles.filled : styles.empty
+                                            }
+                                        />
+                                    </div>
+                                ))}
                             </div>
-                        )}
+
+                            <p
+                                className={
+                                    totalLevel[0] === totalLevel[1]
+                                        ? styles.maxLvl
+                                        : styles.notMaxLvl
+                                }
+                            >
+                                Lv {totalLevel[0]}
+                            </p>
+                        </div>
                     </div>
                 </div>
                 <div className={styles.chevronDownIcon}>

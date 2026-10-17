@@ -1,3 +1,5 @@
+import type { ArtianConfig } from "./artianConfig";
+
 export type SkillRank = {
     id: number,
     name: string,
@@ -259,6 +261,8 @@ export interface Weapon {
     reinforcements?: ReinforcementType[];
     bonuses?: BonusesType | null;
     tarredDevice?: string;
+    artianConfig?: ArtianConfig;
+    isDefaultConfig?: boolean;
 }
 
 export interface ArtianWeapon {
@@ -380,10 +384,15 @@ export type ArmorBuild = {
     charm: CharmRank | null;
 };
 
-interface Bonuses {
-    skillSetBonuses: number[];
-    groupBonuses: number[];
-}
+export type BonusSkill = {
+    skillId: number;
+    level: number;
+};
+
+export type Bonuses = {
+    skillSetBonuses: BonusSkill[];
+    groupBonuses: BonusSkill[];
+};
 
 export type DecoPlacement = {
     slotLevel: SlotLevel;
@@ -403,6 +412,7 @@ export interface Build {
 }
 
 export interface GearWithReqSkills {
+    weapons: GearWithRelevantSkills<Weapon>[];
     heads: GearWithRelevantSkills<Armor>[];
     chests: GearWithRelevantSkills<Armor>[];
     arms: GearWithRelevantSkills<Armor>[];

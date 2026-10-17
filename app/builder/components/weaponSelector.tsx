@@ -37,6 +37,7 @@ interface Props {
   type: ArmorSlotKey;
   build: BuilderBuild;
   setBuild: React.Dispatch<React.SetStateAction<BuilderBuild>>;
+  editingArtian?: boolean;
 }
 
 export default function WeaponSelector({
@@ -45,6 +46,7 @@ export default function WeaponSelector({
   type,
   build,
   setBuild,
+  editingArtian = false,
 }: Props) {
   const [weaponFilter, setWeaponFilter] =
     useState<Exclude<WeaponKind, null>>("charge-blade");
@@ -95,17 +97,19 @@ export default function WeaponSelector({
 
   function addWeapon(weapon: Weapon) {
     setBuild((prev) => {
-      const emptySlots: DecoPlacement[] = weapon.slots.map(() => ({
-        slotLevel: 1,
-        decoration: null,
-      }));
+      const weaponDecorations: DecoPlacement[] = editingArtian
+        ? prev.decorations.weapon
+        : weapon.slots.map(() => ({
+          slotLevel: 1,
+          decoration: null,
+        }));
 
       return {
         ...prev,
         weapon,
         decorations: {
           ...prev.decorations,
-          weapon: emptySlots,
+          weapon: weaponDecorations,
         },
       };
     });
@@ -114,6 +118,7 @@ export default function WeaponSelector({
       setBaseElement(weapon.specials[0].damage.display);
     }
 
+    setShowArtian(false);
     setWeaponSelectorOpen(false);
   }
 
@@ -133,6 +138,17 @@ export default function WeaponSelector({
 
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [openWeaponSelectorDropdown]);
+
+  useEffect(() => {
+    if (!weaponSelectorOpen) {
+      setShowArtian(false);
+      return;
+    }
+
+    if (editingArtian && build.weapon?.artianConfig) {
+      setShowArtian(true);
+    }
+  }, [weaponSelectorOpen, editingArtian]);
 
   return (
     <div
@@ -272,6 +288,7 @@ export default function WeaponSelector({
           showArtian={showArtian}
           setShowArtian={setShowArtian}
           addWeapon={addWeapon}
+          editingWeapon={editingArtian ? build.weapon : null}
         />
       </div>
     </div>

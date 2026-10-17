@@ -1,0 +1,259 @@
+:root {
+  --generator-build-icon-size: 0.58;
+  --generator-deco-icon-size: 0.58;
+}
+
+/* =====================================================
+   CARD
+===================================================== */
+
+.armorPiece {
+  width: 100%;
+  min-width: 0;
+  min-height: 92px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 10px;
+
+  background: rgba(255, 255, 255, 0.03);
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  border-radius: 12px;
+
+  color: #fff;
+}
+
+/* =====================================================
+   MAIN CONTENT
+===================================================== */
+
+.mainContent {
+  min-width: 0;
+
+  flex: 1;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+}
+
+.iconWrapper {
+  width: calc(64px * var(--generator-build-icon-size));
+
+  height: calc(64px * var(--generator-build-icon-size));
+
+  flex-shrink: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* =====================================================
+   INFO
+===================================================== */
+
+.pieceInfo {
+  min-width: 0;
+
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.titleContainer {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+}
+.pieceTitle {
+  width: 100%;
+
+  margin: 0;
+
+  overflow: hidden;
+
+  color: rgba(255, 255, 255, 0.9);
+
+  font-size: 16px;
+  font-weight: 600;
+
+  line-height: 1.35;
+}
+
+/* =====================================================
+   SKILLS
+===================================================== */
+
+.skillsContainer {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.skill {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 4px;
+
+  overflow: hidden;
+
+  color: rgba(255, 255, 255, 0.42);
+
+  font-size: 14px;
+}
+.setBonus {
+  color: #f2bbaa;
+}
+
+.groupBonus {
+  color: #aaf1f2;
+}
+
+/* =====================================================
+   DECORATION SLOTS
+===================================================== */
+
+.decoSlotsContainer {
+    flex-shrink: 0;
+
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    gap: 4px;
+}
+
+.decoSlot {
+    width: 100%;
+    height: 28px;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 5px;
+
+    background:
+        rgba(255, 255, 255, 0.05);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.1);
+
+    border-radius: 6px;
+}
+
+.decoName {
+    overflow: hidden;
+
+    color: #fff;
+
+    font-size: 14px;
+}
+
+/* =====================================================
+   GEAR SPRITES
+===================================================== */
+
+.buildPieceIcon {
+  display: inline-block;
+
+  flex-shrink: 0;
+
+  width: calc(64px * var(--generator-build-icon-size));
+
+  height: calc(64px * var(--generator-build-icon-size));
+
+  background-image: url("@/app/assets/gear.png");
+
+  background-size: calc(1280px * var(--generator-build-icon-size))
+    calc(832px * var(--generator-build-icon-size));
+
+  background-repeat: no-repeat;
+}
+
+.emptyIcon {
+  opacity: 0.12;
+
+  background-image: none;
+
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+
+  border-radius: 8px;
+}
+
+/* =====================================================
+   DECORATION SPRITES
+===================================================== */
+
+.decoIcon {
+  display: inline-block;
+
+  flex-shrink: 0;
+
+  width: calc(33px * var(--generator-deco-icon-size));
+
+  height: calc(33px * var(--generator-deco-icon-size));
+
+  background-image: url("@/app/assets/decorations.png");
+
+  background-size: calc(660px * var(--generator-deco-icon-size))
+    calc(840px * var(--generator-deco-icon-size));
+
+  background-repeat: no-repeat;
+}
+
+.deco1 {
+  background-position: 0 0;
+}
+
+.deco2 {
+  background-position: calc((-33px * 5) * var(--generator-deco-icon-size)) 0;
+}
+
+.deco3 {
+  background-position: calc((-33px * 10) * var(--generator-deco-icon-size)) 0;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+@media screen and (min-width: 900px) and (max-width: 1515px) {
+  .armorPiece {
+    flex-direction: column;
+    align-items: start;
+  }
+  .decoSlotsContainer {
+    width: 100%;
+  }
+}
+@media (max-width: 768px) {
+  .armorPiece {
+    flex-direction: column;
+    align-items: start;
+  }
+  .decoSlotsContainer {
+    width: 100%;
+  }
+}

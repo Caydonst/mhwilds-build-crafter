@@ -24,7 +24,7 @@ import type {
 import CharmCreator from "@/app/components/charmCreator/charmCreator";
 
 type ArmorSlotKey =
-    | "weapon"
+    "weapon"
     | "head"
     | "chest"
     | "arms"

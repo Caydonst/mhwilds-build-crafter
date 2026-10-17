@@ -1,231 +1,316 @@
-import styles from "./page.module.css"
-import React, {useLayoutEffect, useMemo, useRef, useState} from "react";
-import {BuilderBuild, type Skill as SkillType, ArmorSet, type BuildWeapon} from "@/app/api/types/types";
+import styles from "./page.module.css";
+import React, { useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
-    addDecoSkillsToAggregate,
-    addSkillLevel,
-    updateElement,
-    updateAffinity,
-    updateAttackBoost,
-    updateCriticalBoost
+  BuilderBuild,
+  type Skill as SkillType,
+  ArmorSet,
+  type BuildWeapon,
+} from "@/app/api/types/types";
+import {
+  addDecoSkillsToAggregate,
+  addSkillLevel,
+  updateElement,
+  updateAffinity,
+  updateAttackBoost,
+  updateCriticalBoost,
 } from "@/app/components/builder/build/buildComponents/helperFunctions";
 import Skill from "@/app/components/builder/build/buildComponents/skill";
-import {ChevronDownIcon, XMarkIcon, CheckIcon, InformationCircleIcon} from "@heroicons/react/24/outline"
-import {findBonuses} from "./helperFunctions"
+import {
+  ChevronDownIcon,
+  XMarkIcon,
+  CheckIcon,
+  InformationCircleIcon,
+} from "@heroicons/react/24/outline";
+import { findBonuses } from "./helperFunctions";
 
 interface Props {
-    build: BuilderBuild;
-    skills: SkillType[];
-    armorSets: ArmorSet[];
+  build: BuilderBuild;
+  skills: SkillType[];
+  armorSets: ArmorSet[];
 }
 
 export default function SkillsComponent({ build, skills, armorSets }: Props) {
-    const [equipSkillsOpen, setEquipSkillsOpen] = useState(true);
-    const [bonusSkillsOpen, setBonusSkillsOpen] = useState(true);
-    const [groupSkillsOpen, setGroupSkillsOpen] = useState(true);
-    const equipSkillsRef = useRef<HTMLDivElement>(null);
-    const bonusSkillsRef = useRef<HTMLDivElement>(null);
-    const groupSkillsRef = useRef<HTMLDivElement>(null);
+  const [equipSkillsOpen, setEquipSkillsOpen] = useState(true);
+  const [bonusSkillsOpen, setBonusSkillsOpen] = useState(true);
+  const [groupSkillsOpen, setGroupSkillsOpen] = useState(true);
+  const equipSkillsRef = useRef<HTMLDivElement>(null);
+  const bonusSkillsRef = useRef<HTMLDivElement>(null);
+  const groupSkillsRef = useRef<HTMLDivElement>(null);
 
-    type AggregatedSkill = {
-        skill: SkillType;
-        totalLevel: [current: number, max: number];
-    };
+  type AggregatedSkill = {
+    skill: SkillType;
+    totalLevel: [current: number, max: number];
+  };
 
-    const aggregatedSkills = useMemo(() => {
-        const map: Record<number, AggregatedSkill> = {};
-        const pieces = [build.weapon, build.head, build.chest, build.arms, build.waist, build.legs, build.charm];
+  const aggregatedSkills = useMemo(() => {
+    const map: Record<number, AggregatedSkill> = {};
+    const pieces = [
+      build.weapon,
+      build.head,
+      build.chest,
+      build.arms,
+      build.waist,
+      build.legs,
+      build.charm,
+    ];
 
-        for (const piece of pieces) {
-            if (!piece) continue;
-            for (const s of piece.skills) {
-                const id = s.skill?.id;
-                if (!id) continue;
-                addSkillLevel(skills, id, s.level ?? 0, map);
+    for (const piece of pieces) {
+      if (!piece) continue;
+      for (const s of piece.skills) {
+        const id = s.skill?.id;
+        if (!id) continue;
+        addSkillLevel(skills, id, s.level ?? 0, map);
+      }
+    }
+
+    if (build.decorations) {
+      (
+        Object.keys(build.decorations) as (keyof typeof build.decorations)[]
+      ).forEach((slot) => {
+        addDecoSkillsToAggregate(skills, map, build.decorations[slot]);
+      });
+    }
+
+    updateElement(map, build.weapon);
+
+    return Object.values(map).sort((a, b) => b.totalLevel[0] - a.totalLevel[0]);
+  }, [build, skills]);
+
+  if (aggregatedSkills) {
+    updateAffinity(aggregatedSkills);
+    updateAttackBoost(aggregatedSkills, build.weapon);
+    updateCriticalBoost(aggregatedSkills);
+  }
+
+  const getBonuses = useMemo(() => {
+    const bonuses = findBonuses(build, armorSets, skills);
+    return bonuses;
+  }, [build, armorSets, skills]);
+
+  const setBonusSkills = useMemo(() => {
+    return getBonuses.setBonuses.map((bonus) => {
+      const skill =
+        skills.find((s) => s.id === bonus.bonus.id) ??
+        (bonus.bonus as SkillType);
+
+      const currentLevel = Math.min(bonus.ranks.length, 2);
+
+      return {
+        skill,
+        totalLevel: [currentLevel, 2] as [number, number],
+      };
+    });
+  }, [getBonuses, skills]);
+
+  const groupBonusSkills = useMemo(() => {
+    return getBonuses.groupBonuses.map((bonus) => {
+      const skill =
+        skills.find((s) => s.id === bonus.bonus.id) ??
+        (bonus.bonus as SkillType);
+
+      const currentLevel = Math.min(bonus.ranks.length, 1);
+
+      return {
+        skill,
+        totalLevel: [currentLevel, 1] as [number, number],
+      };
+    });
+  }, [getBonuses, skills]);
+
+  function getBonusCount(id: number) {
+    const bonus = getBonuses.bonusesArray.find((bonus) => bonus.id === id);
+    return bonus?.count;
+  }
+
+  function useCollapsibleHeight(
+    ref: React.RefObject<HTMLElement | null>,
+    isOpen: boolean,
+    headerHeight = 70,
+  ) {
+    const [height, setHeight] = React.useState(headerHeight);
+
+    React.useLayoutEffect(() => {
+      const el = ref.current;
+      if (!el) return;
+
+      const updateHeight = () => {
+        setHeight(isOpen ? headerHeight + el.scrollHeight : headerHeight);
+      };
+
+      // Initial measurement
+      updateHeight();
+
+      const observer = new ResizeObserver(updateHeight);
+      observer.observe(el);
+
+      return () => observer.disconnect();
+    }, [ref, isOpen, headerHeight]);
+
+    return height;
+  }
+
+  const equipSkillsHeight = useCollapsibleHeight(
+    equipSkillsRef,
+    equipSkillsOpen,
+  );
+
+  const bonusSkillsHeight = useCollapsibleHeight(
+    bonusSkillsRef,
+    bonusSkillsOpen,
+  );
+
+  const groupSkillsHeight = useCollapsibleHeight(
+    groupSkillsRef,
+    groupSkillsOpen,
+  );
+
+  function clickEffect(e: React.MouseEvent<HTMLDivElement>) {
+    const button = e.currentTarget;
+
+    const rect = button.getBoundingClientRect();
+
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const ripple = document.createElement("span");
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
+
+    button.appendChild(ripple);
+
+    setTimeout(() => {
+      ripple.remove();
+    }, 800);
+  }
+
+  return (
+    <div className={styles.skillsComponentContainer}>
+      <div
+        className={styles.equipmentSkillsContainer}
+        style={{ height: equipSkillsHeight }}
+      >
+        <div
+          className={styles.equipSkillsHeader}
+          onClick={(e) => {
+            setEquipSkillsOpen(!equipSkillsOpen);
+            clickEffect(e);
+          }}
+        >
+          <p>Equipment Skills</p>
+          <div
+            className={
+              equipSkillsOpen
+                ? `${styles.chevronContainer} ${styles.rotated}`
+                : ""
             }
-        }
-
-        if (build.decorations) {
-            (Object.keys(build.decorations) as (keyof typeof build.decorations)[]).forEach((slot) => {
-                addDecoSkillsToAggregate(skills, map, build.decorations[slot]);
-            });
-        }
-
-        updateElement(map, build.weapon)
-
-        return Object.values(map).sort((a, b) => b.totalLevel[0] - a.totalLevel[0]);
-    }, [build, skills]);
-
-    if (aggregatedSkills) {
-        updateAffinity(aggregatedSkills);
-        updateAttackBoost(aggregatedSkills, build.weapon);
-        updateCriticalBoost(aggregatedSkills);
-    }
-
-
-    const getBonuses = useMemo(() => {
-        const bonuses = findBonuses(build, armorSets, skills);
-        return bonuses;
-    }, [build, armorSets, skills]);
-
-    function getBonusCount(id: number) {
-        const bonus = getBonuses.bonusesArray.find(bonus => bonus.id === id);
-        return bonus?.count;
-    }
-
-    function useCollapsibleHeight(
-        ref: React.RefObject<HTMLElement | null>,
-        isOpen: boolean,
-        headerHeight = 70
-    ) {
-        const [height, setHeight] = React.useState(headerHeight);
-
-        React.useLayoutEffect(() => {
-            const el = ref.current;
-            if (!el) return;
-
-            const updateHeight = () => {
-                setHeight(isOpen ? headerHeight + el.scrollHeight : headerHeight);
-            };
-
-            // Initial measurement
-            updateHeight();
-
-            const observer = new ResizeObserver(updateHeight);
-            observer.observe(el);
-
-            return () => observer.disconnect();
-        }, [ref, isOpen, headerHeight]);
-
-        return height;
-    }
-
-    const equipSkillsHeight = useCollapsibleHeight(
-        equipSkillsRef,
-        equipSkillsOpen
-    );
-
-    const bonusSkillsHeight = useCollapsibleHeight(
-        bonusSkillsRef,
-        bonusSkillsOpen
-    );
-
-    const groupSkillsHeight = useCollapsibleHeight(
-        groupSkillsRef,
-        groupSkillsOpen
-    );
-
-    function clickEffect(e: React.MouseEvent<HTMLDivElement>) {
-        const button = e.currentTarget;
-
-        const rect = button.getBoundingClientRect();
-
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        const ripple = document.createElement("span");
-        ripple.style.left = `${x}px`;
-        ripple.style.top = `${y}px`;
-
-        button.appendChild(ripple);
-
-        setTimeout(() => {
-            ripple.remove();
-        }, 800);
-    }
-
-    return (
-        <div className={styles.skillsComponentContainer}>
-            <div className={styles.equipmentSkillsContainer} style={{ height: equipSkillsHeight }}>
-                <div className={styles.equipSkillsHeader} onClick={(e) => {
-                    setEquipSkillsOpen(!equipSkillsOpen);
-                    clickEffect(e);
-                }}>
-                    <p>Equipment Skills</p>
-                    <div className={equipSkillsOpen ? `${styles.chevronContainer} ${styles.rotated}` : ""}><ChevronDownIcon className={styles.chevronIcon} /></div>
-                </div>
-                <div ref={equipSkillsRef} className={styles.equipSkillsContent}>
-
-                    <p className={styles.tapMsg}><span><InformationCircleIcon /></span>Tap skills for more info.</p>
-                    {aggregatedSkills.length > 0 ? (
-                        aggregatedSkills.map(({ skill, totalLevel }) => {
-                            return (
-                                <Skill key={skill.id} skill={skill} skillData={skills} totalLevel={totalLevel} clickEffect={clickEffect} />
-                            );
-                        })
-                    ) : (
-                        <p className={styles.noSkills}>None</p>
-                    )}
-                </div>
-            </div>
-            <div className={styles.equipmentSkillsContainer} style={{ height: bonusSkillsHeight }}>
-                <div className={styles.equipSkillsHeader} onClick={(e) => {
-                    setBonusSkillsOpen(!bonusSkillsOpen);
-                    clickEffect(e);
-                }}>
-                    <p>Set Bonus Skills</p>
-                    <div className={bonusSkillsOpen ? `${styles.chevronContainer} ${styles.rotated}` : ""}><ChevronDownIcon className={styles.chevronIcon} /></div>
-                </div>
-                <div ref={bonusSkillsRef} className={styles.equipSkillsContent}>
-                    {getBonuses.setBonuses.length > 0 ? (
-                        getBonuses.setBonuses.map((bonus) => (
-                                <div key={bonus.bonus.id} className={styles.bonusSkillsContainer}>
-                                    <span className={`${styles.skillIcon} ${styles.setBonusSkill}`}></span>
-                                    <div className={styles.bonusSkill}>
-                                        <p className={styles.bonusSkillTitle}>{bonus.bonus.name}</p>
-                                        <div className={styles.bonusSkillRanksContainer}>
-                                            {bonus.bonus.ranks.map((rank, i) => {
-                                                const isActive = i in bonus.ranks;
-                                                return (
-                                                    <div key={rank.id} className={isActive ? `${styles.rank} ${styles.active}` : `${styles.rank} ${styles.notActive}`}>
-                                                        <div className={styles.lvlContainer}>{rank.level * 2}</div>
-                                                        <p>{rank.name}</p>
-                                                    </div>
-                                                )
-                                            })}
-                                        </div>
-                                    </div>
-                                </div>
-                            ))
-                    ) : (
-                        <p className={styles.noSkills}>None</p>
-                    )}
-                </div>
-            </div>
-            <div className={styles.equipmentSkillsContainer} style={{ height: groupSkillsHeight }}>
-                <div className={styles.equipSkillsHeader} onClick={(e) => {
-                    setGroupSkillsOpen(!groupSkillsOpen);
-                    clickEffect(e);
-                }}>
-                    <p>Group Skills</p>
-                    <div className={groupSkillsOpen ? `${styles.chevronContainer} ${styles.rotated}` : ""}><ChevronDownIcon className={styles.chevronIcon} /></div>
-                </div>
-                <div ref={groupSkillsRef} className={styles.equipSkillsContent}>
-                    {getBonuses.groupBonuses.length > 0 ? (
-                        getBonuses.groupBonuses.map((bonus) => (
-                            <div key={bonus.bonus.id} className={styles.bonusSkillsContainer}>
-                                <span className={`${styles.skillIcon} ${styles.groupSkill}`}></span>
-                                <div className={styles.bonusSkill}>
-                                    <p className={styles.bonusSkillTitle}>{bonus.bonus.name}</p>
-                                    <div className={styles.bonusSkillRanksContainer}>
-                                        {bonus.bonus.ranks.map((rank, i) => {
-                                            const isActive = i in bonus.ranks;
-                                            return (
-                                                <div key={rank.id} className={isActive ? `${styles.rank} ${styles.active}` : `${styles.rank} ${styles.notActive}`}>
-                                                    <div className={styles.lvlContainer}>{rank.level * 3}</div>
-                                                    <p>{rank.name}</p>
-                                                </div>
-                                            )
-                                        })}
-                                    </div>
-                                </div>
-                            </div>
-                        ))
-                    ) : (
-                        <p className={styles.noSkills}>None</p>
-                    )}
-                </div>
-            </div>
+          >
+            <ChevronDownIcon className={styles.chevronIcon} />
+          </div>
         </div>
-    )
+        <div ref={equipSkillsRef} className={styles.equipSkillsContent}>
+          <p className={styles.tapMsg}>
+            <span>
+              <InformationCircleIcon />
+            </span>
+            Tap skills for more info.
+          </p>
+          {aggregatedSkills.length > 0 ? (
+            aggregatedSkills.map(({ skill, totalLevel }) => {
+              return (
+                <Skill
+                  key={skill.id}
+                  skill={skill}
+                  skillData={skills}
+                  totalLevel={totalLevel}
+                  clickEffect={clickEffect}
+                />
+              );
+            })
+          ) : (
+            <p className={styles.noSkills}>None</p>
+          )}
+        </div>
+      </div>
+      <div
+        className={styles.equipmentSkillsContainer}
+        style={{ height: bonusSkillsHeight }}
+      >
+        <div
+          className={styles.equipSkillsHeader}
+          onClick={(e) => {
+            setBonusSkillsOpen(!bonusSkillsOpen);
+            clickEffect(e);
+          }}
+        >
+          <p>Set Bonus Skills</p>
+
+          <div
+            className={
+              bonusSkillsOpen
+                ? `${styles.chevronContainer} ${styles.rotated}`
+                : styles.chevronContainer
+            }
+          >
+            <ChevronDownIcon className={styles.chevronIcon} />
+          </div>
+        </div>
+
+        <div ref={bonusSkillsRef} className={styles.equipSkillsContent}>
+          {setBonusSkills.length > 0 ? (
+            setBonusSkills.map(({ skill, totalLevel }) => (
+              <Skill
+                key={skill.id}
+                skill={skill}
+                skillData={skills}
+                totalLevel={totalLevel}
+                clickEffect={clickEffect}
+              />
+            ))
+          ) : (
+            <p className={styles.noSkills}>None</p>
+          )}
+        </div>
+      </div>
+      <div
+        className={styles.equipmentSkillsContainer}
+        style={{ height: groupSkillsHeight }}
+      >
+        <div
+          className={styles.equipSkillsHeader}
+          onClick={(e) => {
+            setGroupSkillsOpen(!groupSkillsOpen);
+            clickEffect(e);
+          }}
+        >
+          <p>Group Skills</p>
+
+          <div
+            className={
+              groupSkillsOpen
+                ? `${styles.chevronContainer} ${styles.rotated}`
+                : styles.chevronContainer
+            }
+          >
+            <ChevronDownIcon className={styles.chevronIcon} />
+          </div>
+        </div>
+
+        <div ref={groupSkillsRef} className={styles.equipSkillsContent}>
+          {groupBonusSkills.length > 0 ? (
+            groupBonusSkills.map(({ skill, totalLevel }) => (
+              <Skill
+                key={skill.id}
+                skill={skill}
+                skillData={skills}
+                totalLevel={totalLevel}
+                clickEffect={clickEffect}
+              />
+            ))
+          ) : (
+            <p className={styles.noSkills}>None</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }

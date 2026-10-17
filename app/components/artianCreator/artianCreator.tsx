@@ -1,52 +1,26 @@
 import styles from "./page.module.css";
-import { ArrowLeftIcon, ChevronDownIcon, ChevronLeftIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowLeftIcon,
+  ChevronDownIcon,
+  ChevronLeftIcon,
+} from "@heroicons/react/24/outline";
 import React, { useEffect, useRef, useState } from "react";
 import { Weapon, type WeaponKind } from "@/app/api/types/types";
 import { CreateArtian } from "@/app/components/artianCreator/helperFunctions";
+import type { ArtianConfig } from "@/app/api/types/artianConfig";
 import { useGameData } from "@/app/hooks/useGameData";
 
 type Props = {
   showArtian: boolean;
   setShowArtian: React.Dispatch<React.SetStateAction<boolean>>;
   addWeapon: (weapon: Weapon) => void;
+  editingWeapon?: Weapon | null;
 };
-type PartType = {
-  0: string;
-  1: string;
-  2: string;
-};
-type ReinforcementType = {
-  reinforcement: string;
-  lvl: string;
-};
-type ReinforcementsType = {
-  0: ReinforcementType;
-  1: ReinforcementType;
-  2: ReinforcementType;
-  3: ReinforcementType;
-  4: ReinforcementType;
-};
-type BonusesType = {
-  setBonus: string;
-  groupBonus: string;
-};
-type Artian = {
-  element: string;
-  elementDamage: number;
-  kind: string;
-  type: string;
-  raw: number;
-  affinity: number;
-  parts: PartType;
-  reinforcements: ReinforcementsType;
-  tarredDevice?: string;
-  bonuses?: BonusesType;
-};
-
 export default function ArtianCreator({
   showArtian,
   setShowArtian,
   addWeapon,
+  editingWeapon = null,
 }: Props) {
   const { skills } = useGameData();
   const [sliderAmount, setSliderAmount] = useState(0);
@@ -67,13 +41,13 @@ export default function ArtianCreator({
     4: { reinforcement: "Select", lvl: "Lvl" },
   });
   const [weaponKind, setWeaponKind] = useState("charge-blade");
-  const [lvlListMap, setLvlListMap] = useState<Record<string, string[]>>({
+  const lvlListMap: Record<string, string[]> = {
     "Attack Boost": ["I", "II", "III", "EX"],
     "Affinity Boost": ["I", "II", "III", "EX"],
     "Sharpness Boost": ["I", "EX"],
     "Element Boost": ["I", "II", "EX"],
     "Ammo Boost": ["I", "EX"],
-  });
+  };
   const [tarredDevice, setTarredDevice] = useState("Attack Focus");
   const [setBonusSkills, setSetBonusSkills] = useState(
     skills.filter((skill) => skill.kind === "set"),
@@ -103,7 +77,9 @@ export default function ArtianCreator({
     "sword-shield": "Sword & Shield",
   };
 
-  const artianWeaponStats: Artian = {
+  const isEditing = Boolean(editingWeapon);
+
+  const artianWeaponStats: ArtianConfig = {
     element: element,
     elementDamage: getElementDamage(),
     kind: weaponKind,
@@ -206,7 +182,6 @@ export default function ArtianCreator({
         [index]: { ...prev[index], reinforcement, lvl: "Lvl" },
       };
 
-      checkReinforcementLevels(next); // uses updated state
       return next;
     });
   }
@@ -218,7 +193,6 @@ export default function ArtianCreator({
         [index]: { ...prev[index], lvl },
       };
 
-      checkReinforcementLevels(next); // uses updated state
       return next;
     });
   }
@@ -228,10 +202,46 @@ export default function ArtianCreator({
     setArtian(type);
   }
 
-  function addArtian() {
-    const weapon: Weapon = CreateArtian(artianWeaponStats);
-    addWeapon(weapon);
+  function saveArtian() {
+    const weapon = CreateArtian(artianWeaponStats);
+    addWeapon(weapon); // Parent replaces the equipped weapon in both modes.
+    setShowArtian(false);
   }
+
+  useEffect(() => {
+    if (!showArtian) return;
+    const config = editingWeapon?.artianConfig;
+    if (editingWeapon && !config) return;
+
+    setWeaponKind(config?.kind ?? "charge-blade");
+    setArtian(config?.type ?? "Artian");
+    setSliderAmount(config?.type === "Gogma Artian" ? 100 : 0);
+    setElement(config?.element ?? "fire");
+    setPart1(config?.parts[0] ?? "attack");
+    setPart2(config?.parts[1] ?? "attack");
+    setPart3(config?.parts[2] ?? "attack");
+    setReinforcements(
+      config
+        ? structuredClone(config.reinforcements)
+        : {
+            0: { reinforcement: "Select", lvl: "Lvl" },
+            1: { reinforcement: "Select", lvl: "Lvl" },
+            2: { reinforcement: "Select", lvl: "Lvl" },
+            3: { reinforcement: "Select", lvl: "Lvl" },
+            4: { reinforcement: "Select", lvl: "Lvl" },
+          },
+    );
+    setTarredDevice(config?.tarredDevice ?? "Attack Focus");
+    setSetBonus(config?.bonuses?.setBonus ?? "");
+    setGroupBonus(config?.bonuses?.groupBonus ?? "");
+    setOpenDropdown(null);
+  }, [showArtian, editingWeapon]);
+
+  useEffect(() => {
+    if (!setBonus && setBonusSkills.length) setSetBonus(setBonusSkills[0].name);
+    if (!groupBonus && groupBonusSkills.length)
+      setGroupBonus(groupBonusSkills[0].name);
+  }, [skills, setBonus, groupBonus]);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -265,41 +275,16 @@ export default function ArtianCreator({
     return true;
   }
 
-  function checkReinforcementLevels(nextReinforcements: typeof reinforcements) {
-    const reinforcementsMap: Record<string, number> = {
-      "Attack Boost": 0,
-      "Affinity Boost": 0,
-      "Sharpness Boost": 0,
-      "Element Boost": 0,
-      "Ammo Boost": 0,
-    };
-
-    Object.values(nextReinforcements).forEach((item) => {
-      if (item.lvl === "EX") {
-        reinforcementsMap[item.reinforcement] += 1;
-      }
-    });
-
-    Object.entries(reinforcementsMap).forEach(([key, value]) => {
-      if (value >= 2) {
-        setLvlListMap((prev) => ({
-          ...prev,
-          [key]: prev[key].filter((l) => l !== "EX"),
-        }));
-      } else if (value < 2) {
-        setLvlListMap((prev) => {
-          const existing = prev[key] ?? [];
-
-          // prevent duplicates
-          if (existing.includes("EX")) return prev;
-
-          return {
-            ...prev,
-            [key]: [...existing, "EX"],
-          };
-        });
-      }
-    });
+  // Compute available levels from the current weapon instead of mutating a list.
+  function getAvailableLevels(index: number, reinforcement: string) {
+    const base = lvlListMap[reinforcement] ?? [];
+    const exUsedElsewhere = Object.entries(reinforcements).filter(
+      ([slot, item]) =>
+        Number(slot) !== index &&
+        item.reinforcement === reinforcement &&
+        item.lvl === "EX",
+    ).length;
+    return exUsedElsewhere >= 2 ? base.filter((lvl) => lvl !== "EX") : base;
   }
 
   return (
@@ -323,7 +308,7 @@ export default function ArtianCreator({
         <div className={styles.artianHeaderTitle}>
           <span>CUSTOM EQUIPMENT</span>
 
-          <h2>Create Artian Weapon</h2>
+          <h2>{isEditing ? "Edit Artian Weapon" : "Create Artian Weapon"}</h2>
 
           <p>Configure your weapon type, parts, reinforcements, and bonuses.</p>
         </div>
@@ -875,10 +860,10 @@ export default function ArtianCreator({
         <button
           type="button"
           className={styles.addBtn}
-          onClick={addArtian}
+          onClick={saveArtian}
           disabled={!checkReinforcements()}
         >
-          Equip Weapon
+          {isEditing ? "Save Changes" : "Equip Weapon"}
         </button>
       </div>
     </div>

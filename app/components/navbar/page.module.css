@@ -58,7 +58,7 @@
   align-items: center;
   justify-content: space-between;
 
-  padding: 0 28px;
+  padding: 0 10px;
 }
 
 .navLeft,
@@ -364,12 +364,12 @@
 }
 
 .userBtnIcon {
-  width: 11px;
-  height: 11px;
+  width: 12px;
+  height: 12px;
 
   margin-right: 2px;
 
-  color: rgba(255, 255, 255, 0.35);
+  color: #fff;
 
   transition: transform 0.2s ease;
 }
