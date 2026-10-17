@@ -7,6 +7,8 @@ function BuilderFallback() {
 
 export default function Page() {
     return (
-        <BuilderClient />
+        <Suspense fallback={<BuilderFallback />}>
+            <BuilderClient />
+        </Suspense>
     );
 }
