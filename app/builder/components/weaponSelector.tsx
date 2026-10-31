@@ -77,6 +77,7 @@ export default function WeaponSelector({
     return weapons.filter((weapon) => weapon.kind === weaponFilter);
   }, [weapons, weaponFilter]);
 
+
   const searchedWeapons = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
 
@@ -84,10 +85,28 @@ export default function WeaponSelector({
       return filteredWeapons;
     }
 
-    return filteredWeapons.filter((piece) =>
-      piece.name.toLowerCase().includes(query),
-    );
+    return filteredWeapons.filter((weapon) => {
+      // Search by weapon name
+      const matchesName = weapon.name
+        .toLowerCase()
+        .includes(query);
+
+      // Search by weapon skill name
+      const matchesSkill = weapon.skills?.some((skillRank) =>
+        skillRank.skill.name
+          .toLowerCase()
+          .includes(query)
+      ) ?? false;
+
+      // Search by set or group bonus name
+      const matchesBonus =
+        (weapon.bonuses?.setBonus?.toLowerCase().includes(query) ?? false) ||
+        (weapon.bonuses?.groupBonus?.toLowerCase().includes(query) ?? false);
+
+      return matchesName || matchesSkill || matchesBonus;
+    });
   }, [searchQuery, filteredWeapons]);
+
 
   function updateWeapon(weapon: Exclude<WeaponKind, null>) {
     setWeaponFilter(weapon);

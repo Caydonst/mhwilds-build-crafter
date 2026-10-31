@@ -13,7 +13,7 @@ import {
   getElementDamage,
   getAffinityBoost,
   getAttackBoost,
-  getCriticalBoost
+  getCriticalBoost,
 } from "@/app/components/builder/build/buildComponents/helperFunctions";
 
 type BonusType = {
@@ -152,17 +152,17 @@ export function findGearPieceBonuses(piece: Armor, armorSets: ArmorSet[]) {
 }
 
 type BuildStats = {
-    raw: number;
-    effectiveRaw: number;
-    affinity: number;
-    element: string;
-    elementDamage: number;
-    defense: number;
-    fire: number;
-    water: number;
-    thunder: number;
-    ice: number;
-    dragon: number;
+  raw: number;
+  effectiveRaw: number;
+  affinity: number;
+  element: string;
+  elementDamage: number;
+  defense: number;
+  fire: number;
+  water: number;
+  thunder: number;
+  ice: number;
+  dragon: number;
 };
 export function updateStats(build: BuilderBuild) {
   const buildArmor = [
@@ -202,9 +202,9 @@ export function updateStats(build: BuilderBuild) {
     buildStats.affinity += buildWeapon.affinity + getAffinityBoost();
 
     buildStats.effectiveRaw = getEffectiveRaw(
-        buildStats.raw,
-        buildStats.affinity,
-        getCriticalBoost(),
+      buildStats.raw,
+      buildStats.affinity,
+      getCriticalBoost(),
     );
 
     if (buildWeapon.specials.length > 0) {
@@ -231,104 +231,62 @@ export function updateStats(build: BuilderBuild) {
   return buildStats;
 }
 
-function getEffectiveRaw(
-    raw: number,
-    affinity: number,
-    critMultiplier = 1.25,
-) {
-    const normalizedAffinity = Math.max(-100, Math.min(100, affinity)) / 100;
+function getEffectiveRaw(raw: number, affinity: number, critMultiplier = 1.25) {
+  const normalizedAffinity = Math.max(-100, Math.min(100, affinity)) / 100;
 
-    if (normalizedAffinity >= 0) {
-        return raw * (
-            1 + normalizedAffinity * (critMultiplier - 1)
-        );
-    }
+  if (normalizedAffinity >= 0) {
+    return raw * (1 + normalizedAffinity * (critMultiplier - 1));
+  }
 
-    // Negative critical hits deal 75% raw damage.
-    const negativeCritMultiplier = 0.75;
+  // Negative critical hits deal 75% raw damage.
+  const negativeCritMultiplier = 0.75;
 
-    return raw * (
-        1 +
-        Math.abs(normalizedAffinity) *
-        (negativeCritMultiplier - 1)
-    );
+  return (
+    raw * (1 + Math.abs(normalizedAffinity) * (negativeCritMultiplier - 1))
+  );
 }
 
-export function handleTranscendence(gearPiece: Armor) {
+
+export function handleTranscendence(
+  gearPiece: Armor,
+): Armor {
   const transcendence = !gearPiece.transcendence;
+
+  const originalSlots =
+    gearPiece.originalSlots ?? [...gearPiece.slots];
 
   return {
     ...gearPiece,
-    transcendence: !gearPiece.transcendence,
-    slots: updateSlots(gearPiece.slots, gearPiece.rarity, transcendence),
+    originalSlots,
+    transcendence,
+    slots: transcendence
+      ? updateSlots(originalSlots, gearPiece.rarity)
+      : [...originalSlots],
   };
 }
 
+
 function updateSlots(
-  currentSlots: number[],
+  originalSlots: number[],
   rarity: number,
-  transcendence: boolean,
-) {
-  let newSlots = [];
-  if (transcendence) {
-    switch (rarity) {
-      case 5:
-        for (let i = 0; i < 3; i++) {
-          if (currentSlots[i]) {
-            if (currentSlots[i] !== 3) {
-              newSlots.push(currentSlots[i] + 1);
-            }
-          } else {
-            newSlots.push(1);
-          }
-        }
-        break;
-      case 6:
-        for (let i = 0; i < 2; i++) {
-          if (currentSlots[i]) {
-            if (currentSlots[i] !== 3) {
-              newSlots.push(currentSlots[i] + 1);
-            }
-          } else {
-            newSlots.push(1);
-          }
-        }
-        if (currentSlots[2]) {
-          newSlots.push(1);
-        }
-        break;
-      default:
-        newSlots = [...currentSlots];
-    }
-  } else {
-    switch (rarity) {
-      case 5:
-        for (let i = 0; i < 3; i++) {
-          if (currentSlots[i]) {
-            if (currentSlots[i] !== 1) {
-              newSlots.push(currentSlots[i] - 1);
-            }
-          }
-        }
-        break;
-      case 6:
-        for (let i = 0; i < 2; i++) {
-          if (currentSlots[i]) {
-            if (currentSlots[i] !== 1) {
-              newSlots.push(currentSlots[i] - 1);
-            }
-          }
-        }
-        if (currentSlots[2]) {
-          newSlots.push(currentSlots[2]);
-        }
-        break;
-      default:
-        newSlots = [...currentSlots];
-    }
+): number[] {
+  const slots = [...originalSlots];
+
+  const upgradeCount =
+    rarity === 5 ? 3 :
+      rarity === 6 ? 2 :
+        0;
+
+  for (let i = 0; i < upgradeCount; i++) {
+    const currentSlot = slots[i] ?? 0;
+
+    slots[i] = Math.min(currentSlot + 1, 3);
   }
-  return newSlots;
+
+  return slots;
 }
+
+
 
 export function updateBuild(updatedBuild: BuilderBuild) {
   localStorage.setItem("savedBuild", JSON.stringify(updatedBuild));

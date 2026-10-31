@@ -134,6 +134,7 @@ export interface Armor {
     defense: ArmorDefense;
     resistances: ArmorResistances;
     slots: number[];
+    originalSlots?: number[],
     skills: ArmorSkill[];
     armorSet: ArmorSetStub | null;
     crafting: ArmorCrafting;
