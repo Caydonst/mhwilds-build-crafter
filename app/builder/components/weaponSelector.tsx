@@ -34,6 +34,7 @@ type ArmorSlotKey =
 interface Props {
   weaponSelectorOpen: boolean;
   setWeaponSelectorOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onCloseTransitionEnd: () => void;
   type: ArmorSlotKey;
   build: BuilderBuild;
   setBuild: React.Dispatch<React.SetStateAction<BuilderBuild>>;
@@ -43,6 +44,7 @@ interface Props {
 export default function WeaponSelector({
   weaponSelectorOpen,
   setWeaponSelectorOpen,
+  onCloseTransitionEnd,
   type,
   build,
   setBuild,
@@ -60,6 +62,28 @@ export default function WeaponSelector({
   const { weapons } = useGameData();
 
   const weaponDropdownRef = useRef<HTMLDivElement | null>(null);
+
+  const [animateOpen, setAnimateOpen] = useState(false);
+
+  useEffect(() => {
+      if (!weaponSelectorOpen) {
+        setAnimateOpen(false);
+        return;
+      }
+  
+      let secondFrame = 0;
+  
+      const firstFrame = requestAnimationFrame(() => {
+        secondFrame = requestAnimationFrame(() => {
+          setAnimateOpen(true);
+        });
+      });
+  
+      return () => {
+        cancelAnimationFrame(firstFrame);
+        cancelAnimationFrame(secondFrame);
+      };
+    }, [weaponSelectorOpen]);
 
   const weaponData = useMemo<Array<Exclude<WeaponKind, null>>>(() => {
     if (!weapons) return [];
@@ -173,7 +197,7 @@ export default function WeaponSelector({
     <div
       className={
         weaponSelectorOpen
-          ? `${styles.gearSelectorContainer} ${styles.open}`
+          ? `${styles.gearSelectorContainer} ${animateOpen ? styles.open : ""}`
           : styles.gearSelectorContainer
       }
       onMouseDown={(e) => {
@@ -182,7 +206,21 @@ export default function WeaponSelector({
         }
       }}
     >
-      <div className={styles.gearSelectorInnerWrapper}>
+      <div
+       className={styles.gearSelectorInnerWrapper}
+        onTransitionEnd={(e) => {
+          // Ignore transitions from nested elements.
+          if (e.target !== e.currentTarget) return;
+
+          // Only respond to the sliding animation.
+          if (e.propertyName !== "transform") return;
+
+          // Only unmount when closing.
+          if (!weaponSelectorOpen) {
+            onCloseTransitionEnd();
+          }
+        }}
+       >
         <div className={styles.gearSelectorInner}>
           <button
             type="button"

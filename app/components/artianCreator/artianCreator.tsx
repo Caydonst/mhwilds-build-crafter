@@ -186,19 +186,38 @@ export default function ArtianCreator({
     });
   }
 
-  function handleLvlClick(index: number, lvl: string, reinforcement: string) {
-    setReinforcements((prev) => {
-      const next = {
-        ...prev,
-        [index]: { ...prev[index], lvl },
-      };
 
-      return next;
+  function handleLvlClick(
+    index: number,
+    lvl: string,
+    reinforcement: string,
+  ) {
+    setReinforcements((prev) => {
+      if (artian === "Gogma Artian" && lvl === "EX") {
+        const exCount = Object.entries(prev).filter(
+          ([slot, item]) =>
+            Number(slot) !== index &&
+            item.reinforcement === reinforcement &&
+            item.lvl === "EX",
+        ).length;
+
+        if (exCount >= 2) {
+          return prev;
+        }
+      }
+
+      return {
+        ...prev,
+        [index]: {
+          ...prev[index],
+          lvl,
+        },
+      };
     });
   }
 
-  function changeArtian(val: number, type: string) {
-    setSliderAmount(val);
+
+  function changeArtian(type: "Artian" | "Gogma Artian") {
     setArtian(type);
   }
 
@@ -268,6 +287,19 @@ export default function ArtianCreator({
     } else if (artian === "Gogma Artian") {
       for (const [key, value] of Object.entries(reinforcements)) {
         if (value.reinforcement === "Select" || value.lvl === "Lvl") {
+          return false;
+        }
+      }
+
+      const exCounts: Record<string, number> = {};
+
+      for (const item of Object.values(reinforcements)) {
+        if (item.lvl !== "EX") continue;
+
+        exCounts[item.reinforcement] =
+          (exCounts[item.reinforcement] ?? 0) + 1;
+
+        if (exCounts[item.reinforcement] > 2) {
           return false;
         }
       }
@@ -381,38 +413,52 @@ export default function ArtianCreator({
             </div>
           </div>
 
-          <div className={styles.artianSelectorWrapper}>
-            <div className={styles.artianSelectorContainer}>
-              <div
-                className={styles.slider}
-                style={{
-                  transform: `translateX(${sliderAmount}%)`,
-                }}
-              />
+          <div className={styles.artianVariantSection}>
+            <div className={styles.variantGrid}>
+              {[
+                {
+                  name: "Artian" as const,
+                  subtitle: "Standard Artian",
+                  description: "Customize parts and standard reinforcements.",
+                },
+                {
+                  name: "Gogma Artian" as const,
+                  subtitle: "Advanced Artian",
+                  description:
+                    "Enhanced reinforcements, Tarred Devices, and bonuses.",
+                },
+              ].map((variant) => {
+                const selected = artian === variant.name;
 
-              <button
-                type="button"
-                className={
-                  artian === "Artian"
-                    ? `${styles.selectorBtn} ${styles.selected}`
-                    : styles.selectorBtn
-                }
-                onClick={() => changeArtian(0, "Artian")}
-              >
-                Artian
-              </button>
+                return (
+                  <button
+                    key={variant.name}
+                    type="button"
+                    aria-pressed={selected}
+                    className={`${styles.variantCard} ${
+                      selected ? styles.variantCardSelected : ""
+                    }`}
+                    onClick={() => changeArtian(variant.name)}
+                  >
+                    <div className={styles.variantCardTop}>
+                      {selected && <span className={styles.variantRadio} />}
+                    </div>
 
-              <button
-                type="button"
-                className={
-                  artian === "Gogma Artian"
-                    ? `${styles.selectorBtn} ${styles.selected}`
-                    : styles.selectorBtn
-                }
-                onClick={() => changeArtian(100, "Gogma Artian")}
-              >
-                Gogma Artian
-              </button>
+                    <div className={styles.variantCardContent}>
+                      <h4>{variant.name}</h4>
+
+                      <div
+                        className={`${styles.variantDetails} ${
+                          selected ? styles.variantDetailsVisible : ""
+                        }`}
+                      >
+                        <span>{variant.subtitle}</span>
+                        <p>{variant.description}</p>
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -715,15 +761,6 @@ export default function ArtianCreator({
 
               <p>Configure all five reinforcement slots.</p>
             </div>
-
-            <span className={styles.sectionCount}>
-              {
-                Object.values(reinforcements).filter(
-                  (item) => item.reinforcement !== "Select",
-                ).length
-              }
-              /5
-            </span>
           </div>
 
           <div className={styles.reinforcementList}>
@@ -740,10 +777,6 @@ export default function ArtianCreator({
 
               return (
                 <div key={dropdownIndex} className={styles.reinforcementRow}>
-                  <span className={styles.reinforcementNumber}>
-                    {dropdownIndex + 1}
-                  </span>
-
                   <div
                     ref={(el) => {
                       dropdownRefs.current[reinforcementKey] = el;
@@ -821,9 +854,10 @@ export default function ArtianCreator({
                           <div
                             className={`${styles.reinforcementDropdown} ${styles.levelDropdown}`}
                           >
-                            {lvlListMap[
-                              reinforcements[dropdownIndex].reinforcement
-                            ]?.map((lvl) => (
+                            {getAvailableLevels(
+                              dropdownIndex,
+                              reinforcements[dropdownIndex].reinforcement,
+                            ).map((lvl) => (
                               <button
                                 key={lvl}
                                 type="button"

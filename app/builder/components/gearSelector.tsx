@@ -2,7 +2,7 @@ import styles from "./page.module.css";
 
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { useGameData } from "@/app/hooks/useGameData";
 
@@ -29,6 +29,7 @@ type ArmorSlotKey =
 interface Props {
   gearSelectorOpen: boolean;
   setGearSelectorOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onCloseTransitionEnd: () => void;
   type: ArmorSlotKey;
   build: BuilderBuild;
   setBuild: React.Dispatch<React.SetStateAction<BuilderBuild>>;
@@ -37,10 +38,12 @@ interface Props {
 export default function GearSelector({
   gearSelectorOpen,
   setGearSelectorOpen,
+  onCloseTransitionEnd,
   type,
   build,
   setBuild,
 }: Props) {
+  const [animateOpen, setAnimateOpen] = useState(false);
   const { armorBySlot, charms } = useGameData();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -58,6 +61,26 @@ export default function GearSelector({
 
     return [];
   }, [type, charms, armorBySlot]);
+
+  useEffect(() => {
+    if (!gearSelectorOpen) {
+      setAnimateOpen(false);
+      return;
+    }
+
+    let secondFrame = 0;
+
+    const firstFrame = requestAnimationFrame(() => {
+      secondFrame = requestAnimationFrame(() => {
+        setAnimateOpen(true);
+      });
+    });
+
+    return () => {
+      cancelAnimationFrame(firstFrame);
+      cancelAnimationFrame(secondFrame);
+    };
+  }, [gearSelectorOpen]);
 
 
     const filteredGear = useMemo(() => {
@@ -124,7 +147,7 @@ export default function GearSelector({
     <div
       className={
         gearSelectorOpen
-          ? `${styles.gearSelectorContainer} ${styles.open}`
+          ? `${styles.gearSelectorContainer} ${animateOpen ? styles.open : ""}`
           : styles.gearSelectorContainer
       }
       onMouseDown={(e) => {
@@ -133,7 +156,21 @@ export default function GearSelector({
         }
       }}
     >
-      <div className={styles.gearSelectorInnerWrapper}>
+      <div
+        className={styles.gearSelectorInnerWrapper}
+        onTransitionEnd={(e) => {
+          // Ignore transitions from nested elements.
+          if (e.target !== e.currentTarget) return;
+
+          // Only respond to the sliding animation.
+          if (e.propertyName !== "transform") return;
+
+          // Only unmount when closing.
+          if (!gearSelectorOpen) {
+            onCloseTransitionEnd();
+          }
+        }}
+        >
         <div className={styles.gearSelectorInner}>
           <button
             type="button"

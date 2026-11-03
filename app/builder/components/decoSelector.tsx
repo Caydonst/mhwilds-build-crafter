@@ -10,7 +10,7 @@ import type {
   BuildDecorations,
 } from "@/app/api/types/types";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { useGameData } from "@/app/hooks/useGameData";
 
@@ -29,6 +29,7 @@ interface Props {
   kind: string;
   decoSelectorOpen: boolean;
   setDecoSelectorOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onCloseTransitionEnd: () => void;
   build: BuilderBuild;
   setBuild: React.Dispatch<React.SetStateAction<BuilderBuild>>;
   type: ArmorSlotKey;
@@ -40,6 +41,7 @@ export default function DecoSelector({
   kind,
   decoSelectorOpen,
   setDecoSelectorOpen,
+  onCloseTransitionEnd,
   build,
   setBuild,
   type,
@@ -59,6 +61,28 @@ export default function DecoSelector({
   };
 
   const thisKind = kind === "weapon" ? "weapon" : "armor";
+
+  const [animateOpen, setAnimateOpen] = useState(false);
+
+  useEffect(() => {
+    if (!decoSelectorOpen) {
+      setAnimateOpen(false);
+      return;
+    }
+
+    let secondFrame = 0;
+
+    const firstFrame = requestAnimationFrame(() => {
+      secondFrame = requestAnimationFrame(() => {
+        setAnimateOpen(true);
+      });
+    });
+
+    return () => {
+      cancelAnimationFrame(firstFrame);
+      cancelAnimationFrame(secondFrame);
+    };
+  }, [decoSelectorOpen]);
 
   const filteredDecos = useMemo(() => {
     return decorations
@@ -112,7 +136,7 @@ export default function DecoSelector({
     <div
       className={
         decoSelectorOpen
-          ? `${styles.gearSelectorContainer} ${styles.open}`
+          ? `${styles.gearSelectorContainer} ${animateOpen ? styles.open : ""}`
           : styles.gearSelectorContainer
       }
       onMouseDown={(e) => {
@@ -121,7 +145,21 @@ export default function DecoSelector({
         }
       }}
     >
-      <div className={styles.gearSelectorInnerWrapper}>
+      <div
+       className={styles.gearSelectorInnerWrapper}
+        onTransitionEnd={(e) => {
+          // Ignore transitions from nested elements.
+          if (e.target !== e.currentTarget) return;
+
+          // Only respond to the sliding animation.
+          if (e.propertyName !== "transform") return;
+
+          // Only unmount when closing.
+          if (!decoSelectorOpen) {
+            onCloseTransitionEnd();
+          }
+        }}
+       >
         <div className={styles.gearSelectorInner}>
           <button
             type="button"

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import { ChevronRightIcon } from "@heroicons/react/24/outline";
 
 import type {
     BuilderBuild,
@@ -127,7 +127,7 @@ export default function SharedBuildClient({
                             onClick={openInBuilder}
                         >
                             Open in Builder
-                            <ArrowRightIcon />
+                            <ChevronRightIcon />
                         </button>
                     </div>
                 </div>
@@ -172,7 +172,7 @@ export default function SharedBuildClient({
                     aria-label="Open in Builder"
                 >
                     Open in builder
-                    <ArrowRightIcon />
+                    <ChevronRightIcon />
                 </button>
             </div>
 

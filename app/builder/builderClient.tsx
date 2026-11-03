@@ -453,6 +453,33 @@ export default function BuilderClient() {
     }, 800);
   }
 
+  function useAnimatedMount(
+    isOpen: boolean,
+  ) {
+    const [shouldRender, setShouldRender] = useState(isOpen);
+
+    useEffect(() => {
+      if (isOpen) {
+        setShouldRender(true);
+      }
+    }, [isOpen]);
+
+    function handleTransitionEnd() {
+      if (!isOpen) {
+        setShouldRender(false);
+      }
+    }
+
+    return {
+      shouldRender,
+      handleTransitionEnd,
+    };
+  }
+
+  const weaponMount = useAnimatedMount(weaponSelectorOpen);
+  const gearMount = useAnimatedMount(gearSelectorOpen);
+  const decoMount = useAnimatedMount(decoSelectorOpen);
+
   function clearBuild() {
     localStorage.removeItem("savedBuild");
     setBuild(emptyBuild);
@@ -739,37 +766,46 @@ export default function BuilderClient() {
               </div>
             )}
           </div>
-          {weaponSelectorOpen && (
-            <WeaponSelector
-              weaponSelectorOpen={weaponSelectorOpen}
-              setWeaponSelectorOpen={setWeaponSelectorOpen}
-              type={type}
-              build={build}
-              setBuild={setBuild}
-              editingArtian={editingArtian}
-            />
-          )}
-          {gearSelectorOpen && (
-            <GearSelector
-              gearSelectorOpen={gearSelectorOpen}
-              setGearSelectorOpen={setGearSelectorOpen}
-              type={type}
-              build={build}
-              setBuild={setBuild}
-            />
-          )}
-          {decoSelectorOpen && (
-            <DecoSelector
-              decoSlotIndex={decoSlotIndex}
-              slotLevel={slotLevel}
-              kind={decoKind}
-              decoSelectorOpen={decoSelectorOpen}
-              setDecoSelectorOpen={setDecoSelectorOpen}
-              build={build}
-              setBuild={setBuild}
-              type={type}
-            />
-          )}
+
+            {weaponMount.shouldRender && (
+              <WeaponSelector
+                weaponSelectorOpen={weaponSelectorOpen}
+                setWeaponSelectorOpen={setWeaponSelectorOpen}
+                onCloseTransitionEnd={weaponMount.handleTransitionEnd}
+                type={type}
+                build={build}
+                setBuild={setBuild}
+                editingArtian={editingArtian}
+              />
+            )}
+
+            {gearMount.shouldRender && (
+              <GearSelector
+                gearSelectorOpen={gearSelectorOpen}
+                setGearSelectorOpen={setGearSelectorOpen}
+                onCloseTransitionEnd={gearMount.handleTransitionEnd}
+                type={type}
+                build={build}
+                setBuild={setBuild}
+              />
+            )}
+
+            {decoMount.shouldRender && (
+              <DecoSelector
+                decoSlotIndex={decoSlotIndex}
+                slotLevel={slotLevel}
+                kind={decoKind}
+                decoSelectorOpen={decoSelectorOpen}
+                setDecoSelectorOpen={setDecoSelectorOpen}
+                onCloseTransitionEnd={decoMount.handleTransitionEnd}
+                build={build}
+                setBuild={setBuild}
+                type={type}
+              />
+            )}
+
+
+
           <AuthContainer open={open} setOpen={setOpen} />
           <SaveBuildContainer
             saveBuildOpen={saveBuildOpen}

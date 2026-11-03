@@ -335,9 +335,9 @@
 }
 
 .fieldGroup label {
-    color: rgba(255, 255, 255, 0.48);
+    color: rgba(255, 255, 255, 0.6);
 
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 600;
 }
 
@@ -373,9 +373,9 @@
 }
 
 .fieldGroup input:focus {
-    border-color: rgba(215, 173, 103, 0.38);
+    border-color: rgba(215, 173, 103, 1);
 
-    outline: 3px solid rgba(215, 173, 103, 0.055);
+    outline: 3px solid rgba(215, 173, 103, 0.1);
 }
 
 /* -------------------------- */
@@ -440,7 +440,7 @@
 
     color: rgba(215, 173, 103, 0.65);
 
-    font-size: 9px;
+    font-size: 12px;
 
     cursor: pointer;
 }
@@ -659,5 +659,9 @@
 
     .authHeader h2 {
         font-size: 24px;
+    }
+
+    .authContainer input {
+        font-size: 16px;
     }
 }
